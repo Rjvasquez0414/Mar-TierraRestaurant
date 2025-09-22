@@ -304,6 +304,10 @@ function saveReservation(data) {
   // Generar ID de reserva
   const reservationId = 'RES-' + Date.now();
   
+  // Validar y formatear fecha y hora antes de guardar
+  const formattedDate = data.date || '';
+  const formattedTime = formatTime(data.time) || data.time || '';
+
   // Preparar datos de la fila
   const rowData = [
     reservationId,
@@ -311,8 +315,8 @@ function saveReservation(data) {
     data.name,
     data.phone,
     data.email,
-    data.date,
-    data.time,
+    formattedDate,
+    formattedTime,
     data.people,
     data.reservationType || 'regular',
     data.decorationPlan || 'none',
@@ -394,7 +398,7 @@ function sendInitialConfirmationEmail(data) {
               </div>
               <div class="detail-row">
                 <span class="detail-label">🕐 Hora:</span>
-                <span class="detail-value">${data.time}</span>
+                <span class="detail-value">${formatTime(data.time)}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">👥 Personas:</span>
@@ -500,7 +504,7 @@ function sendPaymentConfirmationEmail(data) {
           <div class="content">
             <div class="success-box">
               <h2 style="color: #28a745; margin: 0;">¡Todo listo para su visita!</h2>
-              <p>Lo esperamos el ${formatDate(data.date)} a las ${data.time}</p>
+              <p>Lo esperamos el ${formatDate(data.date)} a las ${formatTime(data.time)}</p>
             </div>
             
             <p>Estimado/a <strong>${data.name}</strong>,</p>
@@ -510,7 +514,7 @@ function sendPaymentConfirmationEmail(data) {
             <div class="details">
               <h3>Detalles de su Reserva Confirmada:</h3>
               <p>📅 <strong>Fecha:</strong> ${formatDate(data.date)}</p>
-              <p>🕐 <strong>Hora:</strong> ${data.time}</p>
+              <p>🕐 <strong>Hora:</strong> ${formatTime(data.time)}</p>
               <p>👥 <strong>Personas:</strong> ${data.people}</p>
               <p>✅ <strong>Estado:</strong> CONFIRMADA</p>
             </div>
@@ -734,7 +738,7 @@ function sendFinalConfirmationEmail(data) {
                 </div>
                 <div class="detail-item">
                   <div class="detail-label">Hora</div>
-                  <div class="detail-value">${data.time}</div>
+                  <div class="detail-value">${formatTime(data.time)}</div>
                 </div>
                 <div class="detail-item">
                   <div class="detail-label">Número de Personas</div>
@@ -860,7 +864,7 @@ function sendRestaurantNotification(data) {
               <span class="label">Fecha:</span> ${formatDate(data.date)}
             </div>
             <div class="detail-row">
-              <span class="label">Hora:</span> ${data.time}
+              <span class="label">Hora:</span> ${formatTime(data.time)}
             </div>
             <div class="detail-row">
               <span class="label">Personas:</span> ${data.people}
@@ -937,12 +941,46 @@ function sendRestaurantNotification(data) {
 /**
  * Formatea la fecha para mostrar
  */
-function formatDate(dateString) {
-  const date = new Date(dateString + 'T00:00:00');
+function formatDate(dateInput) {
+  // Validar entrada
+  if (!dateInput) {
+    return 'Fecha no especificada';
+  }
+
+  let date;
+
+  // Si ya es un objeto Date
+  if (dateInput instanceof Date) {
+    date = dateInput;
+  }
+  // Si es un string
+  else if (typeof dateInput === 'string') {
+    // Intentar parsear la fecha
+    // Formato esperado: YYYY-MM-DD
+    if (dateInput.includes('-')) {
+      const parts = dateInput.split('-');
+      if (parts.length === 3) {
+        // Crear fecha usando partes individuales para evitar problemas de timezone
+        date = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+      } else {
+        date = new Date(dateInput);
+      }
+    } else {
+      date = new Date(dateInput);
+    }
+  } else {
+    return 'Fecha inválida';
+  }
+
+  // Verificar que la fecha sea válida
+  if (isNaN(date.getTime())) {
+    return 'Fecha inválida';
+  }
+
   const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
                   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
   const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-  
+
   return `${days[date.getDay()]}, ${date.getDate()} de ${months[date.getMonth()]} de ${date.getFullYear()}`;
 }
 
@@ -988,6 +1026,41 @@ function getDecorationDetails(plan) {
   };
   
   return details[plan] || '';
+}
+
+/**
+ * Formatea la hora para mostrar
+ */
+function formatTime(timeInput) {
+  // Validar entrada
+  if (!timeInput) {
+    return 'Hora no especificada';
+  }
+
+  // Si es un string con formato HH:MM
+  if (typeof timeInput === 'string' && timeInput.includes(':')) {
+    return timeInput;
+  }
+
+  // Si es un objeto Date
+  if (timeInput instanceof Date && !isNaN(timeInput.getTime())) {
+    const hours = timeInput.getHours();
+    const minutes = timeInput.getMinutes();
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  }
+
+  // Intentar convertir a string
+  const timeStr = String(timeInput);
+
+  // Si contiene información de hora antigua (1899), solo extraer la hora
+  if (timeStr.includes('1899')) {
+    const match = timeStr.match(/(\d{1,2}):(\d{2})/);
+    if (match) {
+      return `${match[1]}:${match[2]}`;
+    }
+  }
+
+  return timeStr;
 }
 
 /**

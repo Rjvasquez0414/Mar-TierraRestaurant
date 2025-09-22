@@ -825,7 +825,7 @@ async function handleReservationSubmit(event) {
     
     try {
         // IMPORTANT: Replace with your Google Apps Script Web App URL
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwha2RPjZ2XspOZkL-WSlaw0WGbpe4Ul2DHBdq0hh_gUXmWpeKyMlEmZoOFSiLZS7vb/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzmcDhT8PX9LbJQJ92yTCVJBAyPNsu4RNoSuxhcT0blfm-v71xQGYC_vrDqgqIybhRe/exec';
         
         if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
             throw new Error('Por favor configure la URL de Google Apps Script');
