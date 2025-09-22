@@ -566,7 +566,9 @@ nav {
     color: var(--dorado-sutil);
     margin-bottom: 20px;
     position: relative;
-    display: inline-block;
+    display: block;
+    text-align: center;
+    width: 100%;
 }
 
 .section-overtitle::before,
@@ -575,6 +577,8 @@ nav {
     color: var(--dorado-sutil);
     margin: 0 15px;
     font-size: 0.6rem;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .section-title {

@@ -5,7 +5,8 @@
       "Bash(del \"C:\\Users\\Roberto\\Desktop\\MenuMarYtIERRA\\create_placeholder.py\")",
       "Bash(del \"C:\\Users\\Roberto\\Desktop\\MenuMarYtIERRA\\test-modal.html\")",
       "Read(//Users/rjvasquez/Documents/**)",
-      "Bash(tail:*)"
+      "Bash(tail:*)",
+      "Read(//c/Users/Roberto/Desktop/**)"
     ],
     "deny": [],
     "ask": []

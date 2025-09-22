@@ -199,7 +199,7 @@
 
             <!-- Tipos de Reserva -->
             <div class="reservation-types-grid">
-                <!-- Reserva Normal (Sin Anticipo) -->
+                <!-- Reserva Normal (Sin Anticipo de Reserva) -->
                 <div class="reservation-type-card" onclick="showReservationDetail('normal')" style="cursor: pointer;">
                     <div class="card-image" style="background: linear-gradient(135deg, #2c3e50, #34495e);">
                         <img src="images/placeholder.jpg" alt="Reserva Normal" onerror="this.style.display='none'">
@@ -210,10 +210,10 @@
                     </div>
                     <div class="card-content">
                         <ul class="feature-list">
-                            <li><span class="icon">✓</span> Ideal para grupos pequeños (1-6 personas)</li>
+                            <li><span class="icon">✓</span> Ideal para grupos pequeños (1-14 personas)</li>
                             <li><span class="icon">✓</span> Mesa en el salón principal</li>
-                            <li><span class="icon">✓</span> Sin costo de anticipo</li>
-                            <li><span class="icon">✓</span> Confirmación inmediata</li>
+                            <li><span class="icon">✓</span> Sin anticipo de reserva</li>
+                            <li><span class="icon">✓</span> Solo 50% de anticipo en servicios adicionales</li>
                             <li><span class="icon">✓</span> Sujeto a disponibilidad</li>
                         </ul>
                         <div class="card-footer">
@@ -233,11 +233,11 @@
                     </div>
                     <div class="card-content">
                         <ul class="feature-list">
-                            <li><span class="icon">✓</span> Anticipo fijo: $100.000 COP</li>
+                            <li><span class="icon">✓</span> Anticipo: $100.000 COP por persona</li>
                             <li><span class="icon">✓</span> Mesa garantizada y confirmada</li>
                             <li><span class="icon">✓</span> El anticipo se descuenta de la cuenta final</li>
                             <li><span class="icon">✓</span> Ideal para celebraciones especiales</li>
-                            <li><span class="icon">✓</span> Grupos de 7-14 personas</li>
+                            <li><span class="icon">✓</span> Pago anticipado del 100% de servicios adicionales</li>
                         </ul>
                         <div class="card-footer">
                             <p class="note">Reserva a nombre completo del cliente</p>
@@ -258,10 +258,10 @@
                         <ul class="feature-list">
                             <li><span class="icon">★</span> Grupos de 15+ personas</li>
                             <li><span class="icon">★</span> Acceso exclusivo al Salón Gold</li>
-                            <li><span class="icon">★</span> Anticipo fijo: $100.000 COP</li>
+                            <li><span class="icon">★</span> Anticipo: $100.000 COP por persona</li>
                             <li><span class="icon">★</span> Decoración personalizada disponible</li>
                             <li><span class="icon">★</span> Atención VIP garantizada</li>
-                            <li><span class="icon">★</span> Menú personalizable</li>
+                            <li><span class="icon">★</span> Pago anticipado del 100% de servicios adicionales</li>
                         </ul>
                         <div class="card-footer">
                             <p class="note">Experiencia VIP garantizada</p>
@@ -420,19 +420,21 @@
                 </div>
                 <div class="policies-grid">
                     <div class="policy-card">
-                        <h4>💳 Métodos de Pago</h4>
+                        <h4>💳 Métodos de Pago Autorizados</h4>
                         <ul>
-                            <li>Transferencia a cuentas bancarias oficiales</li>
-                            <li>Pago en efectivo en caja del restaurante</li>
-                            <li>Comprobante de pago obligatorio</li>
+                            <li>Transferencia a cuentas bancarias oficiales de Mar & Tierra</li>
+                            <li>Pago en efectivo únicamente en caja del restaurante</li>
+                            <li>Comprobante de pago obligatorio para validar reserva</li>
+                            <li>No nos responsabilizamos por pagos fuera de canales autorizados</li>
                         </ul>
                     </div>
                     <div class="policy-card">
-                        <h4>📅 Cancelaciones</h4>
+                        <h4>📅 Política de Cancelación y Reagendamiento</h4>
                         <ul>
-                            <li>Sin devolución de anticipo</li>
-                            <li>Reagendamiento sujeto a disponibilidad</li>
-                            <li>Aviso mínimo: 48 horas de anticipación</li>
+                            <li>No se realiza devolución de dinero en cancelaciones</li>
+                            <li>Posibilidad de reagendar según disponibilidad</li>
+                            <li>Productos perecederos no se pueden conservar</li>
+                            <li>Cancelar con al menos 48 horas de anticipación</li>
                         </ul>
                     </div>
                 </div>
@@ -817,9 +819,9 @@
                             <label for="resType">Tipo de Reserva *</label>
                             <select id="resType" name="reservationType" required onchange="updateReservationOptions()">
                                 <option value="normal">Reserva Normal (sin anticipo)</option>
-                                <option value="regular">Reserva Regular (con anticipo $100.000)</option>
-                                <option value="especial">Reserva Especial (15+ personas - $100.000)</option>
-                                <option value="salon-gold">Salón Gold Exclusivo ($100.000)</option>
+                                <option value="regular">Reserva Regular (con anticipo por persona)</option>
+                                <option value="especial">Reserva Especial (15+ personas)</option>
+                                <option value="salon-gold">Salón Gold Exclusivo</option>
                             </select>
                             <span class="error-message"></span>
                             <div id="reservationTypeAlert" class="alert-message" style="display: none;">

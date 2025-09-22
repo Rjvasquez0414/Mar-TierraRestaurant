@@ -574,7 +574,7 @@ function sendReminderEmail(data) {
               <p>Por favor complete el pago lo antes posible para garantizar su reserva.</p>
             </div>
             
-            <p>Si ya realizó el pago, por favor envíenos el comprobante respondiendo a este correo.</p>
+            <p>Si ya realizó el pago, por favor envíenos el comprobante a el siguiente numero de Whatsapp: 3014235498.</p>
           </div>
         </div>
       </body>

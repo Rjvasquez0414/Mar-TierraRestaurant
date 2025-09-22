@@ -886,84 +886,121 @@ function updateReservationType() {
     const typeSelect = document.getElementById('resType');
     const alert = document.getElementById('reservationTypeAlert');
     const alertText = alert?.querySelector('.alert-text');
-    
+
     if (!peopleSelect || !typeSelect) return;
-    
+
     const numPeople = parseInt(peopleSelect.value) || 0;
-    
-    // Auto-select tipo basado en número de personas
-    if (numPeople >= 15) {
+    const isPeople20Plus = peopleSelect.value === '20+';
+
+    // Auto-select tipo basado en número de personas según políticas
+    if (numPeople >= 15 || isPeople20Plus) {
         typeSelect.value = 'especial';
         if (alert && alertText) {
-            alertText.textContent = 'Para grupos de 15+ personas se requiere Reserva Especial con anticipo';
+            alertText.textContent = 'Para grupos de 15+ personas se requiere Reserva Especial con anticipo de $100,000 por persona';
             alert.style.display = 'block';
         }
-    } else if (numPeople > 6) {
-        // Sugerir reserva regular para grupos medianos
-        if (typeSelect.value === 'normal') {
-            typeSelect.value = 'regular';
-            if (alert && alertText) {
-                alertText.textContent = 'Recomendamos Reserva Regular para grupos de 7+ personas';
-                alert.style.display = 'block';
-            }
+
+        // Deshabilitar opción normal para grupos grandes
+        const normalOption = typeSelect.querySelector('option[value="normal"]');
+        if (normalOption) {
+            normalOption.disabled = true;
+            normalOption.textContent = 'Reserva Normal (no disponible para 15+ personas)';
         }
     } else {
-        // Grupos pequeños pueden usar reserva normal
+        // Grupos pequeños pueden usar cualquier tipo de reserva
+        const normalOption = typeSelect.querySelector('option[value="normal"]');
+        if (normalOption) {
+            normalOption.disabled = false;
+            normalOption.textContent = 'Reserva Normal (sin anticipo de reserva)';
+        }
+
         if (alert) {
             alert.style.display = 'none';
         }
     }
-    
+
     calculateTotal();
 }
 
 function updateReservationOptions() {
     const typeSelect = document.getElementById('resType');
+    const peopleSelect = document.getElementById('resPeople');
     const alert = document.getElementById('reservationTypeAlert');
     const alertText = alert?.querySelector('.alert-text');
     const costSummary = document.getElementById('costSummary');
-    
+
     if (!typeSelect) return;
-    
-    // Mostrar/ocultar resumen de costos según tipo
-    if (typeSelect.value === 'normal') {
-        // Sin anticipo para reserva normal
-        if (costSummary) costSummary.style.display = 'none';
-        if (alert && alertText) {
-            alertText.textContent = 'Reserva sin anticipo - Sujeta a disponibilidad';
-            alert.style.display = 'block';
-        }
-    } else {
-        // Mostrar costos para otros tipos
-        if (costSummary) costSummary.style.display = 'block';
-        
-        if (typeSelect.value === 'salon-gold' && alert && alertText) {
-            alertText.textContent = 'Salón Gold: Experiencia exclusiva con anticipo de $100.000';
-            alert.style.display = 'block';
-        } else if (typeSelect.value === 'regular' && alert && alertText) {
-            alertText.textContent = 'Reserva con anticipo de $100.000 - Mesa garantizada';
-            alert.style.display = 'block';
-        } else if (alert) {
-            alert.style.display = 'none';
+
+    const numPeople = parseInt(peopleSelect?.value) || 0;
+
+    // Mostrar alertas y resumen según tipo de reserva
+    if (alert && alertText) {
+        switch(typeSelect.value) {
+            case 'normal':
+                alertText.textContent = 'Sin anticipo de reserva. Solo 50% de anticipo en servicios adicionales. Sujeto a disponibilidad.';
+                alert.style.display = 'block';
+                break;
+            case 'regular':
+                alertText.textContent = `Anticipo: $100,000 por persona. Mesa garantizada. Se descuenta de la cuenta final.`;
+                alert.style.display = 'block';
+                break;
+            case 'especial':
+                alertText.textContent = `Grupos 15+ personas. Anticipo: $100,000 por persona. Servicio preferencial incluido.`;
+                alert.style.display = 'block';
+                break;
+            case 'salon-gold':
+                alertText.textContent = `Salón Gold exclusivo. Anticipo: $100,000 por persona. Experiencia VIP garantizada.`;
+                alert.style.display = 'block';
+                break;
+            default:
+                alert.style.display = 'none';
         }
     }
-    
+
     calculateTotal();
 }
 
 function calculateTotal() {
     const typeSelect = document.getElementById('resType');
+    const peopleSelect = document.getElementById('resPeople');
     const decorationSelect = document.getElementById('resDecoration');
     const serviceCheckboxes = document.querySelectorAll('input[name="services"]:checked');
     const costSummary = document.getElementById('costSummary');
-    
-    // Base deposit fijo según tipo de reserva
-    let baseDeposit = 0;
-    if (typeSelect?.value && typeSelect.value !== 'normal') {
-        baseDeposit = 100000; // Anticipo fijo de $100.000
+
+    // Obtener número de personas
+    let numberOfPeople = parseInt(peopleSelect?.value) || 0;
+    if (peopleSelect?.value === '20+') {
+        numberOfPeople = 20; // Usar 20 como mínimo para 20+
     }
-    
-    // Calculate decoration cost
+
+    // Calculate services cost primero
+    let servicesCost = 0;
+    const servicePrices = {
+        'saxofonista': 400000,
+        'violinista': 400000,
+        'fotografo': 480000,
+        'dj': 600000
+    };
+
+    serviceCheckboxes.forEach(checkbox => {
+        servicesCost += servicePrices[checkbox.value] || 0;
+    });
+
+    // Base deposit según tipo de reserva y políticas
+    let baseDeposit = 0;
+    let servicesDeposit = 0;
+
+    if (typeSelect?.value === 'normal') {
+        // Reserva normal: solo 50% de servicios adicionales
+        baseDeposit = 0;
+        servicesDeposit = servicesCost * 0.5; // 50% de servicios
+    } else if (typeSelect?.value && typeSelect.value !== 'normal') {
+        // Otras reservas: $100,000 por persona + 100% servicios
+        baseDeposit = 100000 * numberOfPeople;
+        servicesDeposit = servicesCost; // 100% de servicios
+    }
+
+    // Calculate decoration cost (siempre se paga completo)
     let decorationCost = 0;
     const decorationPrices = {
         'plata': 80000,
@@ -972,24 +1009,11 @@ function calculateTotal() {
         'combo-plata-luxury': 180000,
         'combo-oro-luxury': 220000
     };
-    
+
     if (decorationSelect?.value && decorationSelect.value !== 'none') {
         decorationCost = decorationPrices[decorationSelect.value] || 0;
     }
-    
-    // Calculate services cost
-    let servicesCost = 0;
-    const servicePrices = {
-        'saxofonista': 400000,
-        'violinista': 400000,
-        'fotografo': 480000,
-        'dj': 600000
-    };
-    
-    serviceCheckboxes.forEach(checkbox => {
-        servicesCost += servicePrices[checkbox.value] || 0;
-    });
-    
+
     // Update display
     const baseDepositSpan = document.getElementById('baseDeposit');
     const baseDepositItem = document.getElementById('baseDepositItem');
@@ -998,45 +1022,97 @@ function calculateTotal() {
     const servicesCostSpan = document.getElementById('servicesCost');
     const servicesCostItem = document.getElementById('servicesCostItem');
     const totalDepositSpan = document.getElementById('totalDeposit');
-    
-    // Mostrar/ocultar anticipo base
+
+    // Actualizar texto según tipo de reserva
     if (baseDepositItem) {
-        baseDepositItem.style.display = baseDeposit > 0 ? 'flex' : 'none';
+        const label = baseDepositItem.querySelector('span:first-child');
+        if (label) {
+            if (typeSelect?.value === 'normal') {
+                label.textContent = 'Anticipo servicios (50%):';
+            } else {
+                label.textContent = `Anticipo de reserva (${numberOfPeople} personas):`;
+            }
+        }
+        baseDepositItem.style.display = (baseDeposit > 0 || servicesDeposit > 0) ? 'flex' : 'none';
     }
+
     if (baseDepositSpan) {
-        baseDepositSpan.textContent = baseDeposit > 0 ? formatCurrency(baseDeposit) : '$0';
+        if (typeSelect?.value === 'normal') {
+            baseDepositSpan.textContent = formatCurrency(servicesDeposit);
+        } else {
+            baseDepositSpan.textContent = formatCurrency(baseDeposit);
+        }
     }
-    
+
     if (decorationCostSpan && decorationCostItem) {
         decorationCostSpan.textContent = formatCurrency(decorationCost);
         decorationCostItem.style.display = decorationCost > 0 ? 'flex' : 'none';
     }
-    
+
     if (servicesCostSpan && servicesCostItem) {
-        servicesCostSpan.textContent = formatCurrency(servicesCost);
-        servicesCostItem.style.display = servicesCost > 0 ? 'flex' : 'none';
+        if (typeSelect?.value !== 'normal' && servicesCost > 0) {
+            servicesCostSpan.textContent = formatCurrency(servicesDeposit);
+            servicesCostItem.style.display = 'flex';
+        } else {
+            servicesCostItem.style.display = 'none';
+        }
     }
-    
-    const total = baseDeposit + decorationCost + servicesCost;
+
+    // Calcular total según tipo de reserva
+    let total = 0;
+    if (typeSelect?.value === 'normal') {
+        total = servicesDeposit + decorationCost;
+    } else {
+        total = baseDeposit + servicesDeposit + decorationCost;
+    }
+
     if (totalDepositSpan) totalDepositSpan.textContent = formatCurrency(total);
-    
+
     // Mostrar/ocultar resumen según si hay costos
-    if (costSummary && typeSelect?.value !== 'normal') {
+    if (costSummary) {
         costSummary.style.display = total > 0 ? 'block' : 'none';
     }
 }
 
 function calculateTotalDeposit() {
     const typeSelect = document.getElementById('resType');
+    const peopleSelect = document.getElementById('resPeople');
     const decorationSelect = document.getElementById('resDecoration');
     const serviceCheckboxes = document.querySelectorAll('input[name="services"]:checked');
-    
-    // Base deposit fijo
-    let baseDeposit = 0;
-    if (typeSelect?.value && typeSelect.value !== 'normal') {
-        baseDeposit = 100000;
+
+    // Obtener número de personas
+    let numberOfPeople = parseInt(peopleSelect?.value) || 0;
+    if (peopleSelect?.value === '20+') {
+        numberOfPeople = 20; // Usar 20 como mínimo para 20+
     }
-    
+
+    // Calculate services cost
+    let servicesCost = 0;
+    const servicePrices = {
+        'saxofonista': 400000,
+        'violinista': 400000,
+        'fotografo': 480000,
+        'dj': 600000
+    };
+
+    serviceCheckboxes.forEach(checkbox => {
+        servicesCost += servicePrices[checkbox.value] || 0;
+    });
+
+    // Base deposit según tipo de reserva
+    let baseDeposit = 0;
+    let servicesDeposit = 0;
+
+    if (typeSelect?.value === 'normal') {
+        // Reserva normal: solo 50% de servicios adicionales
+        baseDeposit = 0;
+        servicesDeposit = servicesCost * 0.5; // 50% de servicios
+    } else if (typeSelect?.value && typeSelect.value !== 'normal') {
+        // Otras reservas: $100,000 por persona + 100% servicios
+        baseDeposit = 100000 * numberOfPeople;
+        servicesDeposit = servicesCost; // 100% de servicios
+    }
+
     let decorationCost = 0;
     const decorationPrices = {
         'plata': 80000,
@@ -1045,24 +1121,20 @@ function calculateTotalDeposit() {
         'combo-plata-luxury': 180000,
         'combo-oro-luxury': 220000
     };
-    
+
     if (decorationSelect?.value && decorationSelect.value !== 'none') {
         decorationCost = decorationPrices[decorationSelect.value] || 0;
     }
-    
-    let servicesCost = 0;
-    const servicePrices = {
-        'saxofonista': 400000,
-        'violinista': 400000,
-        'fotografo': 480000,
-        'dj': 600000
-    };
-    
-    serviceCheckboxes.forEach(checkbox => {
-        servicesCost += servicePrices[checkbox.value] || 0;
-    });
-    
-    return formatCurrency(baseDeposit + decorationCost + servicesCost);
+
+    // Calcular total según tipo de reserva
+    let total = 0;
+    if (typeSelect?.value === 'normal') {
+        total = servicesDeposit + decorationCost;
+    } else {
+        total = baseDeposit + servicesDeposit + decorationCost;
+    }
+
+    return formatCurrency(total);
 }
 
 function formatCurrency(amount) {
