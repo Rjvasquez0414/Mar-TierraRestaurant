@@ -199,48 +199,48 @@
 
             <!-- Tipos de Reserva -->
             <div class="reservation-types-grid">
-                <!-- Reserva Normal (Sin Anticipo de Reserva) -->
+                <!-- Reserva Estándar (Anticipo Consumible) -->
                 <div class="reservation-type-card" onclick="showReservationDetail('normal')" style="cursor: pointer;">
                     <div class="card-image" style="background: linear-gradient(135deg, #2c3e50, #34495e);">
-                        <img src="images/placeholder.jpg" alt="Reserva Normal" onerror="this.style.display='none'">
+                        <img src="images/placeholder.jpg" alt="Reserva Estándar" onerror="this.style.display='none'">
                     </div>
                     <div class="card-header">
-                        <h3>Reserva Normal</h3>
-                        <span class="card-badge">Sin Anticipo</span>
+                        <h3>Reserva Estándar</h3>
+                        <span class="card-badge">Anticipo Consumible</span>
                     </div>
                     <div class="card-content">
                         <ul class="feature-list">
                             <li><span class="icon">✓</span> Ideal para grupos pequeños (1-14 personas)</li>
-                            <li><span class="icon">✓</span> Mesa en el salón principal</li>
-                            <li><span class="icon">✓</span> Sin anticipo de reserva</li>
-                            <li><span class="icon">✓</span> Solo 50% de anticipo en servicios adicionales</li>
-                            <li><span class="icon">✓</span> Sujeto a disponibilidad</li>
+                            <li><span class="icon">✓</span> Anticipo: $100,000 totalmente consumibles</li>
+                            <li><span class="icon">✓</span> NO reembolsable en caso de no asistencia</li>
+                            <li><span class="icon">✓</span> Puede reprogramar en los próximos 10 días</li>
+                            <li><span class="icon">✓</span> Mesa garantizada en el salón principal</li>
                         </ul>
                         <div class="card-footer">
-                            <p class="note">Perfecto para cenas casuales y almuerzos</p>
+                            <p class="note">Perfecto para cenas y almuerzos con reserva confirmada</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Reservas Regulares -->
+                <!-- Reservas con Decoración -->
                 <div class="reservation-type-card" onclick="showReservationDetail('regular')" style="cursor: pointer;">
                     <div class="card-image" style="background: linear-gradient(135deg, #0056D2, #003d8f);">
-                        <img src="images/placeholder.jpg" alt="Reserva Regular" onerror="this.style.display='none'">
+                        <img src="images/placeholder.jpg" alt="Reserva con Decoración" onerror="this.style.display='none'">
                     </div>
                     <div class="card-header">
-                        <h3>Reserva Regular</h3>
-                        <span class="card-badge">Con Anticipo</span>
+                        <h3>Reserva con Decoración</h3>
+                        <span class="card-badge">Plan Especial</span>
                     </div>
                     <div class="card-content">
                         <ul class="feature-list">
-                            <li><span class="icon">✓</span> Anticipo: $100.000 COP por persona</li>
-                            <li><span class="icon">✓</span> Mesa garantizada y confirmada</li>
-                            <li><span class="icon">✓</span> El anticipo se descuenta de la cuenta final</li>
+                            <li><span class="icon">✓</span> Anticipo reemplazado por costo del plan</li>
+                            <li><span class="icon">✓</span> Dinero NO reembolsable NI consumible</li>
+                            <li><span class="icon">✓</span> Mesa garantizada con decoración incluida</li>
                             <li><span class="icon">✓</span> Ideal para celebraciones especiales</li>
-                            <li><span class="icon">✓</span> Pago anticipado del 100% de servicios adicionales</li>
+                            <li><span class="icon">✓</span> Planes desde $80,000 hasta $220,000</li>
                         </ul>
                         <div class="card-footer">
-                            <p class="note">Reserva a nombre completo del cliente</p>
+                            <p class="note">Experiencia personalizada para ocasiones especiales</p>
                         </div>
                     </div>
                 </div>
@@ -252,19 +252,19 @@
                     </div>
                     <div class="card-header">
                         <h3>Reservas Especiales</h3>
-                        <span class="card-badge gold">Salón Gold & Grupos</span>
+                        <span class="card-badge gold">Grupos 15+ Personas</span>
                     </div>
                     <div class="card-content">
                         <ul class="feature-list">
                             <li><span class="icon">★</span> Grupos de 15+ personas</li>
+                            <li><span class="icon">★</span> Anticipo: $150,000 por persona (consumible)</li>
+                            <li><span class="icon">★</span> Opción de pagar 50% del anticipo</li>
+                            <li><span class="icon">★</span> Servicios especiales: pago 100% anticipado</li>
                             <li><span class="icon">★</span> Acceso exclusivo al Salón Gold</li>
-                            <li><span class="icon">★</span> Anticipo: $100.000 COP por persona</li>
-                            <li><span class="icon">★</span> Decoración personalizada disponible</li>
                             <li><span class="icon">★</span> Atención VIP garantizada</li>
-                            <li><span class="icon">★</span> Pago anticipado del 100% de servicios adicionales</li>
                         </ul>
                         <div class="card-footer">
-                            <p class="note">Experiencia VIP garantizada</p>
+                            <p class="note">Experiencia premium para grupos grandes</p>
                         </div>
                     </div>
                 </div>
@@ -389,6 +389,7 @@
                     <h4>Saxofonista</h4>
                     <p class="service-duration">1 hora de show</p>
                     <div class="service-price">$400.000 COP</div>
+                    <p class="service-note" style="font-size: 0.85rem; color: #666; margin-top: 8px;">*Pago completo reemplaza anticipo - No reembolsable</p>
                 </div>
 
                 <div class="service-card">
@@ -396,6 +397,7 @@
                     <h4>Violinista</h4>
                     <p class="service-duration">1 hora de show</p>
                     <div class="service-price">$400.000 COP</div>
+                    <p class="service-note" style="font-size: 0.85rem; color: #666; margin-top: 8px;">*Pago completo reemplaza anticipo - No reembolsable</p>
                 </div>
 
                 <div class="service-card">
@@ -403,6 +405,7 @@
                     <h4>Fotógrafo</h4>
                     <p class="service-duration">2 horas de servicio</p>
                     <div class="service-price">$480.000 COP</div>
+                    <p class="service-note" style="font-size: 0.85rem; color: #666; margin-top: 8px;">*Pago completo reemplaza anticipo - No reembolsable</p>
                 </div>
 
                 <div class="service-card">
@@ -410,6 +413,7 @@
                     <h4>DJ Profesional</h4>
                     <p class="service-duration">3 horas de música</p>
                     <div class="service-price">$600.000 COP</div>
+                    <p class="service-note" style="font-size: 0.85rem; color: #666; margin-top: 8px;">*Pago completo reemplaza anticipo - No reembolsable</p>
                 </div>
             </div>
 
@@ -431,10 +435,11 @@
                     <div class="policy-card">
                         <h4>📅 Política de Cancelación y Reagendamiento</h4>
                         <ul>
-                            <li>No se realiza devolución de dinero en cancelaciones</li>
-                            <li>Posibilidad de reagendar según disponibilidad</li>
-                            <li>Productos perecederos no se pueden conservar</li>
+                            <li>Reserva Estándar: NO reembolsable, puede reprogramar en 10 días</li>
+                            <li>Decoración y servicios: NO reembolsables NI consumibles</li>
+                            <li>Grupos 15+: Anticipo consumible, servicios no reembolsables</li>
                             <li>Cancelar con al menos 48 horas de anticipación</li>
+                            <li>Pasados 10 días sin reprogramar, se pierde el anticipo</li>
                         </ul>
                     </div>
                 </div>
@@ -818,10 +823,10 @@
                         <div class="form-group full-width">
                             <label for="resType">Tipo de Reserva *</label>
                             <select id="resType" name="reservationType" required onchange="updateReservationOptions()">
-                                <option value="normal">Reserva Normal (sin anticipo)</option>
-                                <option value="regular">Reserva Regular (con anticipo por persona)</option>
+                                <option value="estandar">Reserva Estándar ($100,000 consumibles)</option>
+                                <option value="decoracion">Reserva con Decoración (costo según plan)</option>
                                 <option value="especial">Reserva Especial (15+ personas)</option>
-                                <option value="salon-gold">Salón Gold Exclusivo</option>
+                                <option value="servicios">Reserva con Servicios Especiales</option>
                             </select>
                             <span class="error-message"></span>
                             <div id="reservationTypeAlert" class="alert-message" style="display: none;">

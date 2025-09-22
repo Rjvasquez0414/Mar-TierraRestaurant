@@ -892,26 +892,26 @@ function updateReservationType() {
     const numPeople = parseInt(peopleSelect.value) || 0;
     const isPeople20Plus = peopleSelect.value === '20+';
 
-    // Auto-select tipo basado en número de personas según políticas
+    // Auto-select tipo basado en número de personas según nuevas políticas
     if (numPeople >= 15 || isPeople20Plus) {
         typeSelect.value = 'especial';
         if (alert && alertText) {
-            alertText.textContent = 'Para grupos de 15+ personas se requiere Reserva Especial con anticipo de $100,000 por persona';
+            alertText.textContent = 'Para grupos de 15+ personas: Anticipo de $150,000 por persona (puede pagar 50%). El anticipo es consumible.';
             alert.style.display = 'block';
         }
 
-        // Deshabilitar opción normal para grupos grandes
-        const normalOption = typeSelect.querySelector('option[value="normal"]');
-        if (normalOption) {
-            normalOption.disabled = true;
-            normalOption.textContent = 'Reserva Normal (no disponible para 15+ personas)';
+        // Deshabilitar opción estándar para grupos grandes
+        const estandarOption = typeSelect.querySelector('option[value="estandar"]');
+        if (estandarOption) {
+            estandarOption.disabled = true;
+            estandarOption.textContent = 'Reserva Estándar (no disponible para 15+ personas)';
         }
     } else {
         // Grupos pequeños pueden usar cualquier tipo de reserva
-        const normalOption = typeSelect.querySelector('option[value="normal"]');
-        if (normalOption) {
-            normalOption.disabled = false;
-            normalOption.textContent = 'Reserva Normal (sin anticipo de reserva)';
+        const estandarOption = typeSelect.querySelector('option[value="estandar"]');
+        if (estandarOption) {
+            estandarOption.disabled = false;
+            estandarOption.textContent = 'Reserva Estándar ($100,000 consumibles)';
         }
 
         if (alert) {
@@ -933,23 +933,23 @@ function updateReservationOptions() {
 
     const numPeople = parseInt(peopleSelect?.value) || 0;
 
-    // Mostrar alertas y resumen según tipo de reserva
+    // Mostrar alertas y resumen según tipo de reserva con nuevas políticas
     if (alert && alertText) {
         switch(typeSelect.value) {
-            case 'normal':
-                alertText.textContent = 'Sin anticipo de reserva. Solo 50% de anticipo en servicios adicionales. Sujeto a disponibilidad.';
+            case 'estandar':
+                alertText.textContent = 'Anticipo: $100,000 totalmente consumibles. NO reembolsable. Puede reprogramar en 10 días.';
                 alert.style.display = 'block';
                 break;
-            case 'regular':
-                alertText.textContent = `Anticipo: $100,000 por persona. Mesa garantizada. Se descuenta de la cuenta final.`;
+            case 'decoracion':
+                alertText.textContent = 'El costo del plan de decoración reemplaza el anticipo. NO reembolsable NI consumible.';
                 alert.style.display = 'block';
                 break;
             case 'especial':
-                alertText.textContent = `Grupos 15+ personas. Anticipo: $100,000 por persona. Servicio preferencial incluido.`;
+                alertText.textContent = `Grupos 15+ personas. Anticipo: $150,000 por persona (consumible). Puede pagar 50% del anticipo.`;
                 alert.style.display = 'block';
                 break;
-            case 'salon-gold':
-                alertText.textContent = `Salón Gold exclusivo. Anticipo: $100,000 por persona. Experiencia VIP garantizada.`;
+            case 'servicios':
+                alertText.textContent = 'El costo COMPLETO del servicio reemplaza el anticipo. NO reembolsable.';
                 alert.style.display = 'block';
                 break;
             default:
@@ -986,21 +986,7 @@ function calculateTotal() {
         servicesCost += servicePrices[checkbox.value] || 0;
     });
 
-    // Base deposit según tipo de reserva y políticas
-    let baseDeposit = 0;
-    let servicesDeposit = 0;
-
-    if (typeSelect?.value === 'normal') {
-        // Reserva normal: solo 50% de servicios adicionales
-        baseDeposit = 0;
-        servicesDeposit = servicesCost * 0.5; // 50% de servicios
-    } else if (typeSelect?.value && typeSelect.value !== 'normal') {
-        // Otras reservas: $100,000 por persona + 100% servicios
-        baseDeposit = 100000 * numberOfPeople;
-        servicesDeposit = servicesCost; // 100% de servicios
-    }
-
-    // Calculate decoration cost (siempre se paga completo)
+    // Calculate decoration cost
     let decorationCost = 0;
     const decorationPrices = {
         'plata': 80000,
@@ -1012,6 +998,62 @@ function calculateTotal() {
 
     if (decorationSelect?.value && decorationSelect.value !== 'none') {
         decorationCost = decorationPrices[decorationSelect.value] || 0;
+    }
+
+    // Calcular anticipos según nuevas políticas
+    let baseDeposit = 0;
+    let isConsumiable = false;
+    let showServicesApart = false;
+    let total = 0;
+
+    switch(typeSelect?.value) {
+        case 'estandar':
+            // Reserva estándar: $100,000 consumibles
+            if (decorationCost > 0) {
+                // Si hay decoración, esta reemplaza el anticipo
+                baseDeposit = 0;
+                total = decorationCost; // NO consumible
+            } else if (servicesCost > 0) {
+                // Si hay servicios, el costo completo reemplaza el anticipo
+                baseDeposit = 0;
+                total = servicesCost; // NO reembolsable
+            } else {
+                // Solo reserva estándar
+                baseDeposit = 100000;
+                isConsumiable = true;
+                total = baseDeposit;
+            }
+            break;
+
+        case 'decoracion':
+            // El costo del plan reemplaza el anticipo - NO consumible
+            baseDeposit = 0;
+            total = decorationCost + servicesCost;
+            break;
+
+        case 'servicios':
+            // El costo completo del servicio reemplaza el anticipo
+            baseDeposit = 0;
+            total = servicesCost + decorationCost;
+            break;
+
+        case 'especial':
+            // Grupos 15+: $150,000 por persona (puede ser 50%)
+            const anticipoPorPersona = 150000;
+            const porcentajeAnticipo = 0.5; // 50% opcional
+
+            if (numberOfPeople >= 15) {
+                baseDeposit = anticipoPorPersona * numberOfPeople * porcentajeAnticipo;
+                isConsumiable = true;
+                // Servicios se pagan completos aparte
+                total = baseDeposit + servicesCost + decorationCost;
+                showServicesApart = true;
+            }
+            break;
+
+        default:
+            baseDeposit = 100000;
+            total = baseDeposit + decorationCost + servicesCost;
     }
 
     // Update display
@@ -1027,43 +1069,56 @@ function calculateTotal() {
     if (baseDepositItem) {
         const label = baseDepositItem.querySelector('span:first-child');
         if (label) {
-            if (typeSelect?.value === 'normal') {
-                label.textContent = 'Anticipo servicios (50%):';
+            if (typeSelect?.value === 'especial') {
+                label.textContent = `Anticipo 50% (${numberOfPeople} personas - consumible):`;
+            } else if (typeSelect?.value === 'estandar' && baseDeposit > 0) {
+                label.textContent = 'Anticipo consumible:';
+            } else if (decorationCost > 0 && baseDeposit === 0) {
+                label.textContent = 'Plan de decoración (no consumible):';
+            } else if (servicesCost > 0 && baseDeposit === 0) {
+                label.textContent = 'Servicios especiales (no reembolsable):';
             } else {
-                label.textContent = `Anticipo de reserva (${numberOfPeople} personas):`;
+                label.textContent = 'Anticipo de reserva:';
             }
         }
-        baseDepositItem.style.display = (baseDeposit > 0 || servicesDeposit > 0) ? 'flex' : 'none';
+        baseDepositItem.style.display = (baseDeposit > 0 || (baseDeposit === 0 && (decorationCost > 0 || servicesCost > 0))) ? 'flex' : 'none';
     }
 
     if (baseDepositSpan) {
-        if (typeSelect?.value === 'normal') {
-            baseDepositSpan.textContent = formatCurrency(servicesDeposit);
-        } else {
+        if (baseDeposit > 0) {
             baseDepositSpan.textContent = formatCurrency(baseDeposit);
+        } else if (decorationCost > 0 && servicesCost === 0) {
+            baseDepositSpan.textContent = formatCurrency(decorationCost);
+        } else if (servicesCost > 0 && decorationCost === 0) {
+            baseDepositSpan.textContent = formatCurrency(servicesCost);
+        } else {
+            baseDepositSpan.textContent = formatCurrency(0);
         }
     }
 
+    // Mostrar decoración y servicios por separado solo cuando aplique
     if (decorationCostSpan && decorationCostItem) {
-        decorationCostSpan.textContent = formatCurrency(decorationCost);
-        decorationCostItem.style.display = decorationCost > 0 ? 'flex' : 'none';
+        if (showServicesApart && decorationCost > 0) {
+            decorationCostSpan.textContent = formatCurrency(decorationCost);
+            decorationCostItem.style.display = 'flex';
+        } else if (typeSelect?.value !== 'decoracion' && baseDeposit > 0 && decorationCost > 0) {
+            decorationCostSpan.textContent = formatCurrency(decorationCost);
+            decorationCostItem.style.display = 'flex';
+        } else {
+            decorationCostItem.style.display = 'none';
+        }
     }
 
     if (servicesCostSpan && servicesCostItem) {
-        if (typeSelect?.value !== 'normal' && servicesCost > 0) {
-            servicesCostSpan.textContent = formatCurrency(servicesDeposit);
+        if (showServicesApart && servicesCost > 0) {
+            servicesCostSpan.textContent = formatCurrency(servicesCost);
+            servicesCostItem.style.display = 'flex';
+        } else if (typeSelect?.value !== 'servicios' && baseDeposit > 0 && servicesCost > 0) {
+            servicesCostSpan.textContent = formatCurrency(servicesCost);
             servicesCostItem.style.display = 'flex';
         } else {
             servicesCostItem.style.display = 'none';
         }
-    }
-
-    // Calcular total según tipo de reserva
-    let total = 0;
-    if (typeSelect?.value === 'normal') {
-        total = servicesDeposit + decorationCost;
-    } else {
-        total = baseDeposit + servicesDeposit + decorationCost;
     }
 
     if (totalDepositSpan) totalDepositSpan.textContent = formatCurrency(total);
@@ -1099,20 +1154,7 @@ function calculateTotalDeposit() {
         servicesCost += servicePrices[checkbox.value] || 0;
     });
 
-    // Base deposit según tipo de reserva
-    let baseDeposit = 0;
-    let servicesDeposit = 0;
-
-    if (typeSelect?.value === 'normal') {
-        // Reserva normal: solo 50% de servicios adicionales
-        baseDeposit = 0;
-        servicesDeposit = servicesCost * 0.5; // 50% de servicios
-    } else if (typeSelect?.value && typeSelect.value !== 'normal') {
-        // Otras reservas: $100,000 por persona + 100% servicios
-        baseDeposit = 100000 * numberOfPeople;
-        servicesDeposit = servicesCost; // 100% de servicios
-    }
-
+    // Calculate decoration cost
     let decorationCost = 0;
     const decorationPrices = {
         'plata': 80000,
@@ -1126,12 +1168,46 @@ function calculateTotalDeposit() {
         decorationCost = decorationPrices[decorationSelect.value] || 0;
     }
 
-    // Calcular total según tipo de reserva
+    // Calcular total según nuevas políticas
     let total = 0;
-    if (typeSelect?.value === 'normal') {
-        total = servicesDeposit + decorationCost;
-    } else {
-        total = baseDeposit + servicesDeposit + decorationCost;
+
+    switch(typeSelect?.value) {
+        case 'estandar':
+            // Reserva estándar: $100,000 consumibles
+            if (decorationCost > 0) {
+                // Si hay decoración, esta reemplaza el anticipo
+                total = decorationCost;
+            } else if (servicesCost > 0) {
+                // Si hay servicios, el costo completo reemplaza el anticipo
+                total = servicesCost;
+            } else {
+                // Solo reserva estándar
+                total = 100000;
+            }
+            break;
+
+        case 'decoracion':
+            // El costo del plan reemplaza el anticipo
+            total = decorationCost + servicesCost;
+            break;
+
+        case 'servicios':
+            // El costo completo del servicio reemplaza el anticipo
+            total = servicesCost + decorationCost;
+            break;
+
+        case 'especial':
+            // Grupos 15+: $150,000 por persona (50% opcional)
+            if (numberOfPeople >= 15) {
+                const anticipoPorPersona = 150000;
+                const porcentajeAnticipo = 0.5; // 50%
+                const baseDeposit = anticipoPorPersona * numberOfPeople * porcentajeAnticipo;
+                total = baseDeposit + servicesCost + decorationCost;
+            }
+            break;
+
+        default:
+            total = 100000 + decorationCost + servicesCost;
     }
 
     return formatCurrency(total);
@@ -1149,126 +1225,126 @@ function formatCurrency(amount) {
 // Reservation Detail Modal Functions
 const reservationDetails = {
     normal: {
-        title: 'Reserva Normal',
-        badge: 'Sin Anticipo',
-        price: 'Gratis',
+        title: 'Reserva Estándar',
+        badge: 'Anticipo Consumible',
+        price: '$100.000 COP',
         image: 'images/placeholder.jpg',
         description: `
-            <p>La opción perfecta para quienes buscan disfrutar de una experiencia gastronómica sin complicaciones. 
-            Ideal para almuerzos de negocios, cenas casuales o encuentros improvisados con amigos y familia.</p>
-            <p>Este tipo de reserva está diseñada para grupos pequeños que valoran la flexibilidad y la simplicidad 
-            en su experiencia culinaria.</p>
+            <p>La nueva reserva estándar de Mar&Tierra garantiza tu mesa con un anticipo totalmente consumible.
+            Ideal para quienes buscan asegurar su experiencia gastronómica con la tranquilidad de una reserva confirmada.</p>
+            <p>Este tipo de reserva está diseñada para brindar seguridad tanto al cliente como al restaurante,
+            asegurando el mejor servicio posible.</p>
         `,
         features: [
-            '✓ Sin costo de anticipo - Reserva gratuita',
-            '✓ Confirmación inmediata vía email',
-            '✓ Perfecto para grupos de 1 a 6 personas',
+            '✓ Anticipo de $100.000 totalmente consumibles',
+            '✓ Mesa 100% garantizada y confirmada',
+            '✓ NO reembolsable en caso de no asistencia',
+            '✓ Puede reprogramar en los próximos 10 días',
+            '✓ Perfecto para grupos de 1 a 14 personas',
             '✓ Mesa en el salón principal del restaurante',
             '✓ Acceso al menú completo',
-            '✓ Servicio estándar de alta calidad',
-            '✓ Cancelación sin penalización'
+            '✓ El anticipo se descuenta de su cuenta final'
         ],
         extra: `
-            <h4>Condiciones:</h4>
+            <h4>Política de Cancelación:</h4>
             <ul>
-                <li>Sujeto a disponibilidad del momento</li>
-                <li>Tiempo de espera máximo: 15 minutos</li>
-                <li>En temporada alta puede haber lista de espera</li>
-                <li>Se recomienda llegar puntual</li>
+                <li>NO se realiza devolución del anticipo</li>
+                <li>Puede reprogramar dentro de los 10 días siguientes</li>
+                <li>Pasados los 10 días, se pierde el anticipo</li>
+                <li>Notificar cambios con 48 horas de anticipación</li>
             </ul>
             <h4>Recomendado para:</h4>
             <ul>
-                <li>Almuerzos ejecutivos</li>
-                <li>Cenas románticas</li>
-                <li>Encuentros familiares pequeños</li>
-                <li>Reuniones casuales</li>
+                <li>Cenas importantes de negocios</li>
+                <li>Celebraciones familiares</li>
+                <li>Fechas especiales y aniversarios</li>
+                <li>Reuniones con reserva confirmada</li>
             </ul>
         `
     },
     regular: {
-        title: 'Reserva Regular',
-        badge: 'Con Anticipo',
-        price: '$100.000 COP',
+        title: 'Reserva con Decoración',
+        badge: 'Plan Especial',
+        price: 'Según plan elegido',
         image: 'images/placeholder.jpg',
         description: `
-            <p>La elección ideal para celebraciones especiales y eventos importantes. Con esta reserva, 
-            garantizas tu mesa y recibes un servicio prioritario que hará de tu experiencia algo memorable.</p>
-            <p>El anticipo asegura que todo esté perfectamente preparado para tu llegada, con atención 
-            personalizada desde el momento de tu reserva.</p>
+            <p>Transforma tu experiencia con nuestros planes de decoración especial. El costo del plan elegido
+            reemplaza completamente el anticipo de reserva estándar.</p>
+            <p>IMPORTANTE: El pago del plan de decoración NO es reembolsable NI consumible. Este monto cubre
+            exclusivamente los servicios de decoración seleccionados.</p>
         `,
         features: [
-            '✓ Mesa 100% garantizada',
-            '✓ Anticipo descontable de la cuenta final',
-            '✓ Ubicación preferencial en el restaurante',
-            '✓ Atención prioritaria del personal',
-            '✓ Posibilidad de solicitudes especiales',
-            '✓ Decoración básica incluida para celebraciones',
-            '✓ Welcome drink de cortesía',
-            '✓ Ideal para grupos de 7 a 14 personas'
+            '✓ El costo del plan reemplaza el anticipo estándar',
+            '✓ Dinero NO reembolsable bajo ninguna circunstancia',
+            '✓ Dinero NO consumible en alimentos o bebidas',
+            '✓ Mesa garantizada con decoración incluida',
+            '✓ Plan Plata: $80.000 (globos + pastel)',
+            '✓ Plan Oro: $120.000 (vino + globos + pastel)',
+            '✓ Plan Luxury: $100.000 (rosas + pétalos)',
+            '✓ Combos disponibles hasta $220.000'
         ],
         extra: `
-            <h4>Beneficios Exclusivos:</h4>
+            <h4>Condiciones Especiales:</h4>
             <ul>
-                <li>Carta de vinos con descuento del 10%</li>
-                <li>Postre de cortesía en cumpleaños</li>
-                <li>Opción de pre-ordenar para agilizar servicio</li>
-                <li>Asesoría del chef para menú especial</li>
+                <li>El pago cubre ÚNICAMENTE la decoración</li>
+                <li>NO se descuenta de la cuenta de consumo</li>
+                <li>NO es reembolsable por cancelación</li>
+                <li>Los productos son preparados especialmente</li>
             </ul>
             <h4>Proceso de Reserva:</h4>
             <ul>
-                <li>1. Complete el formulario de reserva</li>
-                <li>2. Realice el pago del anticipo ($100.000)</li>
-                <li>3. Reciba confirmación en 24 horas</li>
-                <li>4. Disfrute de su experiencia gastronómica</li>
+                <li>1. Seleccione su plan de decoración</li>
+                <li>2. Realice el pago completo del plan</li>
+                <li>3. Su reserva queda confirmada</li>
+                <li>4. Disfrute de su celebración especial</li>
             </ul>
         `
     },
     gold: {
-        title: 'Salón Gold Exclusivo',
-        badge: 'VIP Experience',
-        price: '$100.000 COP',
+        title: 'Reserva Especial 15+ Personas',
+        badge: 'Grupos Grandes',
+        price: '$150.000 por persona',
         image: 'images/placeholder.jpg',
         description: `
-            <p>La máxima expresión de elegancia y exclusividad en Mar&Tierra. El Salón Gold ofrece 
-            un ambiente privado y sofisticado para eventos corporativos, celebraciones importantes 
-            y reuniones que requieren el más alto nivel de servicio.</p>
-            <p>Con capacidad para grupos grandes y decoración de lujo, este espacio transforma 
-            cualquier evento en una experiencia inolvidable.</p>
+            <p>Diseñado exclusivamente para grupos de 15 o más personas. Esta modalidad ofrece condiciones
+            especiales con un anticipo mayor que garantiza la mejor experiencia para eventos grandes.</p>
+            <p>El anticipo puede ser del 50% del valor por persona, siendo totalmente consumible. Si incluye
+            servicios especiales, estos se pagan completos adicionalmente.</p>
         `,
         features: [
-            '★ Salón privado exclusivo con ambiente VIP',
-            '★ Capacidad para 15 a 50 personas',
-            '★ Menú personalizable con el chef ejecutivo',
-            '★ Servicio de meseros dedicados',
-            '★ Decoración premium incluida',
-            '★ Sistema de sonido privado',
-            '★ Pantalla para presentaciones',
-            '★ Estacionamiento preferencial',
-            '★ Coctelería premium de bienvenida',
-            '★ Coordinador de eventos dedicado'
+            '★ Exclusivo para grupos de 15+ personas',
+            '★ Anticipo: $150.000 por persona (consumible)',
+            '★ Opción de pagar solo 50% del anticipo',
+            '★ El anticipo ES consumible en su cuenta',
+            '★ Servicios especiales: pago 100% adicional',
+            '★ Servicios NO son reembolsables',
+            '★ Acceso al Salón Gold disponible',
+            '★ Atención VIP con personal dedicado',
+            '★ Coordinador de eventos asignado',
+            '★ Posibilidad de menú personalizado'
         ],
         extra: `
-            <h4>Servicios Incluidos:</h4>
+            <h4>Cálculo del Anticipo:</h4>
             <ul>
-                <li>Montaje personalizado según el evento</li>
-                <li>Menú degustación previa (para el organizador)</li>
-                <li>Flores naturales y centros de mesa</li>
-                <li>Iluminación ambiental ajustable</li>
-                <li>Área de recepción con coctelería</li>
+                <li>Base: 50% de $150.000 por persona</li>
+                <li>Ejemplo 20 personas: $1.500.000 de anticipo</li>
+                <li>+ Costo completo de servicios especiales</li>
+                <li>El anticipo se descuenta del consumo final</li>
+                <li>Los servicios se pagan aparte y completos</li>
+            </ul>
+            <h4>Servicios Adicionales:</h4>
+            <ul>
+                <li>Saxofonista/Violinista: $400.000 (pago completo)</li>
+                <li>Fotógrafo: $480.000 (pago completo)</li>
+                <li>DJ: $600.000 (pago completo)</li>
+                <li>Estos montos NO son consumibles</li>
             </ul>
             <h4>Ideal para:</h4>
             <ul>
-                <li>Bodas y aniversarios</li>
-                <li>Cenas de gala corporativas</li>
-                <li>Lanzamientos de producto</li>
-                <li>Celebraciones de quinceañeras</li>
-                <li>Reuniones de directorio</li>
-            </ul>
-            <h4>Horarios Disponibles:</h4>
-            <ul>
-                <li>Almuerzo: 12:00 PM - 4:00 PM</li>
-                <li>Cena: 6:00 PM - 11:00 PM</li>
-                <li>Eventos especiales: Horario flexible</li>
+                <li>Bodas y grandes celebraciones</li>
+                <li>Eventos corporativos</li>
+                <li>Quinceañeras y graduaciones</li>
+                <li>Reuniones familiares extensas</li>
             </ul>
         `
     }
