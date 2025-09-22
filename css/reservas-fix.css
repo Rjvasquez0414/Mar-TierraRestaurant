@@ -1,0 +1,677 @@
+/* ==========================================
+   CORRECCIONES PARA LA SECCIÓN DE RESERVAS
+   ==========================================
+   Archivo creado para corregir los errores
+   de visualización en la sección de reservas
+   ========================================== */
+
+/* Corrección para las imágenes de las tarjetas */
+.reservation-type-card .card-image,
+.decoration-plan-card .plan-image {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 220px;
+    position: relative;
+}
+
+/* Asegurar que las imágenes vacías no rompan el diseño */
+.card-image img[src=""],
+.card-image img:not([src]),
+.plan-image img[src=""],
+.plan-image img:not([src]) {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Overlay para las tarjetas sin imagen */
+.card-image::after,
+.plan-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, 
+        transparent 0%, 
+        rgba(0,0,0,0.1) 50%, 
+        rgba(0,0,0,0.3) 100%);
+    pointer-events: none;
+}
+
+/* Mejoras para el modal de detalles */
+.detail-modal-image {
+    min-height: 400px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.detail-modal-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Fallback para cuando no hay imagen */
+.detail-modal-image::before {
+    content: '🍽️';
+    font-size: 80px;
+    position: absolute;
+    opacity: 0.1;
+    z-index: 0;
+}
+
+/* Mejoras visuales para las tarjetas */
+.reservation-types-grid,
+.decoration-plans-grid {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+/* Asegurar que los botones y enlaces funcionen */
+.reservation-type-card,
+.decoration-plan-card {
+    transition: all 0.3s ease;
+}
+
+.reservation-type-card:hover,
+.decoration-plan-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Mejora de la tipografía en las tarjetas */
+.reservation-type-card h3,
+.decoration-plan-card h4 {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.card-badge {
+    display: inline-block;
+    padding: 5px 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Asegurar que el contenido sea legible */
+.card-content,
+.plan-content {
+    padding: 20px;
+    background: white;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.feature-list li {
+    padding: 8px 0;
+    display: flex;
+    align-items: flex-start;
+    color: #333;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.feature-list .icon {
+    margin-right: 10px;
+    color: var(--dorado-premium, #D4AF37);
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+/* Mejoras para los servicios adicionales */
+.additional-services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin: 40px 0;
+}
+
+.service-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.service-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.service-price {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--dorado-premium, #D4AF37);
+    margin-top: 15px;
+}
+
+/* Políticas de reserva mejoradas */
+.policies-section {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 40px;
+    margin: 60px 0;
+}
+
+.policies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.policy-card {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.policy-card h4 {
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #333;
+}
+
+.policy-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.policy-card li {
+    padding: 8px 0;
+    color: #666;
+    font-size: 14px;
+    position: relative;
+    padding-left: 20px;
+}
+
+.policy-card li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--dorado-premium, #D4AF37);
+    font-weight: bold;
+}
+
+/* Botón de llamada a la acción mejorado - ELIMINADO PARA EVITAR BUGS VISUALES
+.reservation-cta {
+    text-align: center;
+    margin: 60px 0;
+}
+
+.btn-primary.large {
+    padding: 18px 45px;
+    font-size: 18px;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--dorado-premium, #D4AF37), var(--dorado-oscuro, #b8941f));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-primary.large:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 30px rgba(212, 175, 55, 0.4);
+    background: linear-gradient(135deg, var(--dorado-oscuro, #b8941f), var(--dorado-premium, #D4AF37));
+}
+*/
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .reservation-types-grid,
+    .decoration-plans-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .additional-services-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .policies-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-image,
+    .plan-image {
+        height: 180px;
+    }
+    
+    .detail-modal-image {
+        min-height: 250px;
+    }
+    
+    .btn-primary.large {
+        padding: 15px 35px;
+        font-size: 16px;
+    }
+}
+
+/* Animaciones suaves */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.reservation-info-section {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Mejoras de accesibilidad */
+.reservation-type-card:focus,
+.decoration-plan-card:focus,
+.service-card:focus {
+    outline: 3px solid var(--dorado-premium, #D4AF37);
+    outline-offset: 2px;
+}
+
+button:focus-visible {
+    outline: 3px solid var(--dorado-premium, #D4AF37);
+    outline-offset: 2px;
+}
+
+/* Fix para el scroll del modal */
+/* Fix para el modal de detalles */
+.detail-modal-overlay {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    display: none;
+    z-index: 10000;
+    overflow: auto;
+    padding: 40px 20px;
+}
+
+.detail-modal-overlay.active {
+    display: flex !important;
+    visibility: visible !important;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Asegurar que los modales se vean correctamente */
+.detail-modal-container {
+    position: relative;
+    background: white;
+    border-radius: 20px;
+    max-width: 1000px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--dorado-premium, #D4AF37) #f1f1f1;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.detail-modal-content {
+    display: flex;
+    flex-direction: row;
+    min-height: 400px;
+}
+
+.detail-modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.detail-modal-close:hover {
+    transform: rotate(90deg);
+    background: var(--dorado-premium, #D4AF37);
+    color: white;
+}
+
+.detail-modal-close svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+/* Estilos para el contenido del modal de detalles */
+.detail-modal-info {
+    padding: 40px;
+    flex: 1;
+}
+
+.detail-modal-header {
+    margin-bottom: 30px;
+}
+
+.detail-modal-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    background: var(--dorado-premium, #D4AF37);
+    color: white;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+.detail-modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    color: #333;
+    margin-bottom: 10px;
+    line-height: 1.2;
+}
+
+.detail-modal-price {
+    font-size: 28px;
+    color: var(--dorado-premium, #D4AF37);
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.detail-modal-description {
+    color: #666;
+    line-height: 1.8;
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+
+.detail-modal-description p {
+    margin-bottom: 15px;
+}
+
+.detail-modal-features {
+    margin-bottom: 30px;
+}
+
+.detail-modal-features h3 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.detail-modal-features ul {
+    list-style: none;
+    padding: 0;
+}
+
+.detail-modal-features li {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    color: #555;
+}
+
+.detail-modal-extra {
+    background: #f9f9f9;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+}
+
+.detail-modal-extra h4 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.detail-modal-extra ul {
+    list-style: none;
+    padding: 0;
+}
+
+.detail-modal-extra li {
+    padding: 8px 0;
+    color: #666;
+    position: relative;
+    padding-left: 20px;
+}
+
+.detail-modal-extra li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--dorado-premium, #D4AF37);
+}
+
+.detail-modal-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.modal-btn {
+    padding: 15px 30px;
+    border-radius: 50px;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-btn-primary {
+    background: var(--dorado-premium, #D4AF37);
+    color: white;
+}
+
+.modal-btn-primary:hover {
+    background: var(--dorado-oscuro, #b8941f);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+}
+
+.modal-btn-secondary {
+    background: #e5e5e5;
+    color: #333;
+}
+
+.modal-btn-secondary:hover {
+    background: #d0d0d0;
+}
+
+/* Responsive para el modal */
+@media (max-width: 768px) {
+    .detail-modal-container {
+        width: 95%;
+        margin: 20px;
+    }
+    
+    .detail-modal-content {
+        flex-direction: column;
+    }
+    
+    .detail-modal-image {
+        height: 250px;
+    }
+    
+    .detail-modal-info {
+        padding: 25px;
+    }
+    
+    .detail-modal-title {
+        font-size: 28px;
+    }
+    
+    .detail-modal-actions {
+        flex-direction: column;
+    }
+    
+    .modal-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+.detail-modal-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.detail-modal-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.detail-modal-container::-webkit-scrollbar-thumb {
+    background: var(--dorado-premium, #D4AF37);
+    border-radius: 4px;
+}
+
+.detail-modal-container::-webkit-scrollbar-thumb:hover {
+    background: var(--dorado-oscuro, #b8941f);
+}
+
+/* ==============================================
+   CORRECCIONES DE BUGS VISUALES CRÍTICOS
+   ============================================== */
+
+/* Asegurar que las secciones ocultas NO aparezcan */
+.reservation-info-section:not(.active) {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    left: -9999px !important;
+}
+
+/* Asegurar que los modales estén completamente ocultos cuando no están activos */
+.reservation-modal-overlay:not(.active),
+.dish-modal-overlay:not(.active),
+.detail-modal-overlay:not(.active) {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Prevenir que elementos internos de modales aparezcan fuera */
+.reservation-modal-overlay:not(.active) *,
+.dish-modal-overlay:not(.active) *,
+.detail-modal-overlay:not(.active) * {
+    display: none !important;
+}
+
+/* Prevenir overflow horizontal */
+body {
+    overflow-x: hidden;
+}
+
+html {
+    overflow-x: hidden;
+}
+
+/* Limpiar flotantes al final de cada sección */
+section {
+    position: relative;
+    overflow: hidden;
+}
+
+section::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Asegurar que el contenido no se desborde */
+.categories-section,
+.menu-section,
+.reservation-info-section,
+.contact-section {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Fix para elementos que puedan estar causando el placeholder bug */
+img[src=""],
+img:not([src]),
+img[alt="Imagen próximamente"] {
+    display: none !important;
+}
+
+/* Eliminar cualquier contenido generado no deseado */
+*::before,
+*::after {
+    max-width: 100%;
+}
+
+/* Asegurar que no haya elementos fantasma al final de la página */
+body > *:last-child {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* Ocultar cualquier texto de placeholder no deseado */
+*:contains("Imagen próximamente"),
+*:contains("proximamente") {
+    display: none !important;
+}
+
+/* Final del archivo */
+}

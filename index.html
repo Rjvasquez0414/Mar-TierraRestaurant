@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mar&Tierra | Menú Exclusivo</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="images/placeholder.svg">
+    
+    <!-- Preconnect para fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Bebas+Neue&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Meta tags para SEO -->
+    <meta name="description" content="Mar&Tierra Restaurant - Un encuentro de culturas, texturas e historias. Menú exclusivo donde el mar y la tierra se complementan en perfecta armonía.">
+    <meta name="keywords" content="restaurante, mar, tierra, gastronomía, Bucaramanga, menú, mariscos, carnes">
+    <meta name="author" content="Mar&Tierra Restaurant">
+    
+    <!-- Open Graph para redes sociales -->
+    <meta property="og:title" content="Mar&Tierra Restaurant - Menú Exclusivo">
+    <meta property="og:description" content="Donde el mar y la tierra no compiten, se complementan. Descubre nuestro menú exclusivo.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="images/placeholder.jpg">
+    
+    <!-- Estilos CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/reservas-fix.css">
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="loader-content">
+            <div class="loader-logo">
+                <div class="logo-main">
+                    <img src="contextocolores/Logomartierraconcolores.png" alt="Mar&Tierra Logo" class="main-logo"
+                         onerror="this.src='contextocolores/logomartierra3solologo.jpg';">
+                </div>
+                <div class="pulse-ring"></div>
+                <div class="pulse-ring-2"></div>
+            </div>
+            <div class="loader-subtitle">Cargando experiencia...</div>
+        </div>
+    </div>
+    
+    <!-- Header -->
+    <header id="header">
+        <div class="header-container">
+            <div class="logo-section" onclick="showSection('hero')">
+                <img src="contextocolores/LogoMartierra2.png" alt="Mar&Tierra" class="navbar-logo"
+                     onerror="this.src='contextocolores/Logomartierraconcolores';">
+            </div>
+            
+            <nav id="nav">
+                <a class="nav-link active" onclick="showSection('hero')">Inicio</a>
+                <a class="nav-link" onclick="showSection('categories')">Menú</a>
+                <a class="nav-link" onclick="showSection('reservation-info')">Reservas</a>
+                <a class="nav-link" onclick="showSection('contact')">Contacto</a>
+                <a href="#" class="reservation-btn" onclick="openReservationModal(event)"><span>Reservar Mesa</span></a>
+            </nav>
+            
+            <div class="mobile-toggle" id="mobileToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Mar&Tierra</h1>
+            <p class="hero-subtitle">Un encuentro de culturas, texturas e historias</p>
+            <p class="hero-description">
+                Donde el mar y la tierra no compiten, se complementan.<br>
+                Y en ese equilibrio es donde nace nuestra esencia.
+            </p>
+            <a href="#" class="hero-cta" onclick="showSection('categories')">Descubrir Menú</a>
+        </div>
+        <div class="wave-divider"></div>
+    </section>
+    
+    <!-- Categories Section -->
+    <section class="categories-section" id="categories">
+        <div class="section-header">
+            <p class="section-overtitle">Nuestra Carta</p>
+            <h2 class="section-title">Experiencias Gastronómicas</h2>
+            <div class="ornament">
+                <div class="ornament-line"></div>
+                <div class="ornament-center"></div>
+                <div class="ornament-line"></div>
+            </div>
+            <p class="section-description">
+                Cada plato es un viaje sensorial donde los ingredientes del mar y la tierra 
+                se encuentran en perfecta armonía
+            </p>
+        </div>
+        
+        <div class="categories-grid">
+            <div class="category-card" onclick="showMenuSection('entradas')">
+                <div class="category-icon">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="30" cy="50" r="15" stroke-dasharray="3 2"/>
+                        <circle cx="50" cy="50" r="15" stroke-dasharray="3 2"/>
+                        <circle cx="70" cy="50" r="15" stroke-dasharray="3 2"/>
+                        <path d="M20 35 Q50 25 80 35" stroke-dasharray="5 3"/>
+                    </svg>
+                </div>
+                <h3 class="category-name">Entradas</h3>
+                <p class="category-desc">Trilogía Amazónica y selección de ceviches que despiertan los sentidos</p>
+            </div>
+            
+            <div class="category-card" onclick="showMenuSection('mar')">
+                <div class="category-icon">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 20 C30 20 20 35 30 50 S50 80 50 80 S70 65 70 50 S70 20 50 20"/>
+                        <path d="M30 45 Q50 35 70 45" stroke-dasharray="3 2"/>
+                        <circle cx="40" cy="40" r="2" fill="#0056D2"/>
+                        <circle cx="60" cy="40" r="2" fill="#0056D2"/>
+                    </svg>
+                </div>
+                <h3 class="category-name">Ritual de Mar</h3>
+                <p class="category-desc">Pescados y mariscos frescos con técnicas mediterráneas nikkei</p>
+            </div>
+            
+            <div class="category-card" onclick="showMenuSection('tierra')">
+                <div class="category-icon">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M30 60 L30 40 Q30 30 40 30 L60 30 Q70 30 70 40 L70 60 Q70 70 60 70 L40 70 Q30 70 30 60"/>
+                        <path d="M35 50 L65 50" stroke-dasharray="5 2"/>
+                        <path d="M40 40 L40 60 M50 35 L50 65 M60 40 L60 60"/>
+                    </svg>
+                </div>
+                <h3 class="category-name">Ritual de Tierra</h3>
+                <p class="category-desc">Carnes seleccionadas con técnicas de cocción lenta al fuego</p>
+            </div>
+            
+            <div class="category-card" onclick="showMenuSection('pasta')">
+                <div class="category-icon">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 40 Q30 30 40 40 T60 40 T80 40" stroke-dasharray="none"/>
+                        <path d="M20 50 Q30 40 40 50 T60 50 T80 50" stroke-dasharray="none"/>
+                        <path d="M20 60 Q30 50 40 60 T60 60 T80 60" stroke-dasharray="none"/>
+                    </svg>
+                </div>
+                <h3 class="category-name">Pasta</h3>
+                <p class="category-desc">Herencia mediterránea con alma fusión</p>
+            </div>
+            
+            <div class="category-card" onclick="showMenuSection('arroces')">
+                <div class="category-icon">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="30"/>
+                        <circle cx="50" cy="50" r="20" stroke-dasharray="2 2"/>
+                        <path d="M35 50 Q50 40 65 50 Q50 60 35 50" fill="none"/>
+                        <circle cx="45" cy="48" r="2" fill="#D4AF37"/>
+                        <circle cx="55" cy="48" r="2" fill="#D4AF37"/>
+                        <circle cx="50" cy="52" r="2" fill="#D4AF37"/>
+                    </svg>
+                </div>
+                <h3 class="category-name">Arroces</h3>
+                <p class="category-desc">Ritual de fuego lento y sazón profunda</p>
+            </div>
+            
+            <div class="category-card" onclick="showMenuSection('bebidas')">
+                <div class="category-icon">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M40 20 L40 70 Q40 80 50 80 Q60 80 60 70 L60 20"/>
+                        <path d="M35 25 L65 25"/>
+                        <ellipse cx="50" cy="45" rx="8" ry="15" fill="none" stroke-dasharray="3 2"/>
+                        <path d="M30 75 L70 75"/>
+                    </svg>
+                </div>
+                <h3 class="category-name">Vinos y Bebidas</h3>
+                <p class="category-desc">Maridaje perfecto para cada momento</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Información de Reservas (Vista Separada) -->
+    <section class="reservation-info-section" id="reservation-info">
+        <div class="reservation-info-container">
+            <div class="section-header">
+                <p class="section-overtitle">Experiencias Exclusivas</p>
+                <h2 class="section-title">Tipos de Reserva</h2>
+                <div class="ornament">
+                    <div class="ornament-line"></div>
+                    <div class="ornament-center"></div>
+                    <div class="ornament-line"></div>
+                </div>
+                <p class="section-description">
+                    Cada mesa representa una experiencia única. Descubre nuestras opciones para hacer de tu celebración un recuerdo inolvidable.
+                </p>
+            </div>
+
+            <!-- Tipos de Reserva -->
+            <div class="reservation-types-grid">
+                <!-- Reserva Normal (Sin Anticipo) -->
+                <div class="reservation-type-card" onclick="showReservationDetail('normal')" style="cursor: pointer;">
+                    <div class="card-image" style="background: linear-gradient(135deg, #2c3e50, #34495e);">
+                        <img src="images/placeholder.jpg" alt="Reserva Normal" onerror="this.style.display='none'">
+                    </div>
+                    <div class="card-header">
+                        <h3>Reserva Normal</h3>
+                        <span class="card-badge">Sin Anticipo</span>
+                    </div>
+                    <div class="card-content">
+                        <ul class="feature-list">
+                            <li><span class="icon">✓</span> Ideal para grupos pequeños (1-6 personas)</li>
+                            <li><span class="icon">✓</span> Mesa en el salón principal</li>
+                            <li><span class="icon">✓</span> Sin costo de anticipo</li>
+                            <li><span class="icon">✓</span> Confirmación inmediata</li>
+                            <li><span class="icon">✓</span> Sujeto a disponibilidad</li>
+                        </ul>
+                        <div class="card-footer">
+                            <p class="note">Perfecto para cenas casuales y almuerzos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reservas Regulares -->
+                <div class="reservation-type-card" onclick="showReservationDetail('regular')" style="cursor: pointer;">
+                    <div class="card-image" style="background: linear-gradient(135deg, #0056D2, #003d8f);">
+                        <img src="images/placeholder.jpg" alt="Reserva Regular" onerror="this.style.display='none'">
+                    </div>
+                    <div class="card-header">
+                        <h3>Reserva Regular</h3>
+                        <span class="card-badge">Con Anticipo</span>
+                    </div>
+                    <div class="card-content">
+                        <ul class="feature-list">
+                            <li><span class="icon">✓</span> Anticipo fijo: $100.000 COP</li>
+                            <li><span class="icon">✓</span> Mesa garantizada y confirmada</li>
+                            <li><span class="icon">✓</span> El anticipo se descuenta de la cuenta final</li>
+                            <li><span class="icon">✓</span> Ideal para celebraciones especiales</li>
+                            <li><span class="icon">✓</span> Grupos de 7-14 personas</li>
+                        </ul>
+                        <div class="card-footer">
+                            <p class="note">Reserva a nombre completo del cliente</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reservas Especiales -->
+                <div class="reservation-type-card featured" onclick="showReservationDetail('gold')" style="cursor: pointer;">
+                    <div class="card-image" style="background: linear-gradient(135deg, #D4AF37, #b8941f);">
+                        <img src="images/placeholder.jpg" alt="Salón Gold" onerror="this.style.display='none'">
+                    </div>
+                    <div class="card-header">
+                        <h3>Reservas Especiales</h3>
+                        <span class="card-badge gold">Salón Gold & Grupos</span>
+                    </div>
+                    <div class="card-content">
+                        <ul class="feature-list">
+                            <li><span class="icon">★</span> Grupos de 15+ personas</li>
+                            <li><span class="icon">★</span> Acceso exclusivo al Salón Gold</li>
+                            <li><span class="icon">★</span> Anticipo fijo: $100.000 COP</li>
+                            <li><span class="icon">★</span> Decoración personalizada disponible</li>
+                            <li><span class="icon">★</span> Atención VIP garantizada</li>
+                            <li><span class="icon">★</span> Menú personalizable</li>
+                        </ul>
+                        <div class="card-footer">
+                            <p class="note">Experiencia VIP garantizada</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Planes de Decoración -->
+            <div class="section-header" style="margin-top: 80px;">
+                <p class="section-overtitle">Ambientación Especial</p>
+                <h2 class="section-title">Planes de Decoración</h2>
+                <div class="ornament">
+                    <div class="ornament-line"></div>
+                    <div class="ornament-center"></div>
+                    <div class="ornament-line"></div>
+                </div>
+                <p class="section-description">
+                    Transforma tu celebración con nuestros planes de decoración personalizados
+                </p>
+            </div>
+
+            <div class="decoration-plans-grid">
+                <!-- Plan Plata -->
+                <div class="decoration-plan-card" onclick="showDecorationDetail('plata')" style="cursor: pointer;">
+                    <div class="plan-image" style="background: linear-gradient(135deg, #C0C0C0, #999999);">
+                        <img src="images/placeholder.jpg" alt="Plan Plata" onerror="this.style.display='none'">
+                    </div>
+                    <div class="plan-header">
+                        <h4>Plan Plata</h4>
+                        <div class="plan-price">$80.000 COP</div>
+                    </div>
+                    <div class="plan-content">
+                        <div class="plan-features">
+                            <div class="feature-item">
+                                <span class="feature-icon">🎈</span>
+                                <span>3 globos con helio</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🍰</span>
+                                <span>1 porción de pastel</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plan Oro -->
+                <div class="decoration-plan-card featured" onclick="showDecorationDetail('oro')" style="cursor: pointer;">
+                    <div class="plan-image" style="background: linear-gradient(135deg, #FFD700, #e6c200);">
+                        <img src="images/placeholder.jpg" alt="Plan Oro" onerror="this.style.display='none'">
+                    </div>
+                    <div class="plan-header">
+                        <h4>Plan Oro</h4>
+                        <div class="plan-price">$120.000 COP</div>
+                    </div>
+                    <div class="plan-content">
+                        <div class="plan-features">
+                            <div class="feature-item">
+                                <span class="feature-icon">🍷</span>
+                                <span>1 botella de vino 375ml</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🎈</span>
+                                <span>3 globos con helio</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🍰</span>
+                                <span>1 porción de pastel</span>
+                            </div>
+                        </div>
+                        <p class="plan-note">*Vino según disponibilidad</p>
+                    </div>
+                </div>
+
+                <!-- Plan Luxury -->
+                <div class="decoration-plan-card luxury" onclick="showDecorationDetail('luxury')" style="cursor: pointer;">
+                    <div class="plan-image" style="background: linear-gradient(135deg, #8B4513, #6b3410);">
+                        <img src="images/placeholder.jpg" alt="Plan Luxury" onerror="this.style.display='none'">
+                    </div>
+                    <div class="plan-header">
+                        <h4>Plan Luxury</h4>
+                        <div class="plan-price">$100.000 COP</div>
+                    </div>
+                    <div class="plan-content">
+                        <div class="plan-features">
+                            <div class="feature-item">
+                                <span class="feature-icon">🌹</span>
+                                <span>Jarrón de rosas en la mesa</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">💐</span>
+                                <span>Pétalos decorativos</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-icon">🎨</span>
+                                <span>Color a elección</span>
+                            </div>
+                        </div>
+                        <p class="plan-note">*Según disponibilidad de flores</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="plans-note">
+                <p>✨ Los planes se pueden combinar para crear la experiencia perfecta</p>
+            </div>
+
+            <!-- Servicios Adicionales -->
+            <div class="section-header" style="margin-top: 80px;">
+                <p class="section-overtitle">Servicios Premium</p>
+                <h2 class="section-title">Servicios Adicionales</h2>
+                <div class="ornament">
+                    <div class="ornament-line"></div>
+                    <div class="ornament-center"></div>
+                    <div class="ornament-line"></div>
+                </div>
+                <p class="section-description">
+                    Complementa tu celebración con entretenimiento en vivo y servicios profesionales
+                </p>
+            </div>
+
+            <div class="additional-services-grid">
+                <div class="service-card">
+                    <div class="service-icon">🎷</div>
+                    <h4>Saxofonista</h4>
+                    <p class="service-duration">1 hora de show</p>
+                    <div class="service-price">$400.000 COP</div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">🎻</div>
+                    <h4>Violinista</h4>
+                    <p class="service-duration">1 hora de show</p>
+                    <div class="service-price">$400.000 COP</div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">📸</div>
+                    <h4>Fotógrafo</h4>
+                    <p class="service-duration">2 horas de servicio</p>
+                    <div class="service-price">$480.000 COP</div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">🎵</div>
+                    <h4>DJ Profesional</h4>
+                    <p class="service-duration">3 horas de música</p>
+                    <div class="service-price">$600.000 COP</div>
+                </div>
+            </div>
+
+            <!-- Políticas de Reserva -->
+            <div class="policies-section">
+                <div class="section-header">
+                    <h3>Políticas Importantes</h3>
+                </div>
+                <div class="policies-grid">
+                    <div class="policy-card">
+                        <h4>💳 Métodos de Pago</h4>
+                        <ul>
+                            <li>Transferencia a cuentas bancarias oficiales</li>
+                            <li>Pago en efectivo en caja del restaurante</li>
+                            <li>Comprobante de pago obligatorio</li>
+                        </ul>
+                    </div>
+                    <div class="policy-card">
+                        <h4>📅 Cancelaciones</h4>
+                        <ul>
+                            <li>Sin devolución de anticipo</li>
+                            <li>Reagendamiento sujeto a disponibilidad</li>
+                            <li>Aviso mínimo: 48 horas de anticipación</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Menu Sections (Se renderizarán dinámicamente) -->
+    <section class="menu-section" id="entradas">
+        <div class="menu-container">
+            <button class="back-btn" onclick="showSection('categories')">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Volver al Menú
+            </button>
+            
+            <div class="section-header">
+                <p class="section-overtitle">Para Comenzar</p>
+                <h2 class="section-title">Entradas</h2>
+                <div class="ornament">
+                    <div class="ornament-line"></div>
+                    <div class="ornament-center"></div>
+                    <div class="ornament-line"></div>
+                </div>
+                <p class="section-description">
+                    Experiencia de degustación con ceviches suaves y delicados
+                </p>
+            </div>
+            
+            <div class="menu-grid">
+                <!-- Los items se cargarán dinámicamente desde menu-data.js -->
+            </div>
+        </div>
+    </section>
+    
+    <section class="menu-section" id="mar">
+        <div class="menu-container">
+            <button class="back-btn" onclick="showSection('categories')">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Volver al Menú
+            </button>
+            
+            <div class="section-header">
+                <p class="section-overtitle">Del Océano</p>
+                <h2 class="section-title">Ritual de Mar</h2>
+                <div class="ornament">
+                    <div class="ornament-line"></div>
+                    <div class="ornament-center"></div>
+                    <div class="ornament-line"></div>
+                </div>
+                <p class="section-description">
+                    El mar es el protagonista. Pesca fresca y mariscos que honran la frescura del océano
+                </p>
+            </div>
+            
+            <div class="menu-grid">
+                <!-- Los items se cargarán dinámicamente desde menu-data.js -->
+            </div>
+        </div>
+    </section>
+    
+    <section class="menu-section" id="tierra">
+        <div class="menu-container">
+            <button class="back-btn" onclick="showSection('categories')">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Volver al Menú
+            </button>
+            
+            <div class="section-header">
+                <p class="section-overtitle">De la Tierra</p>
+                <h2 class="section-title">Ritual de Tierra</h2>
+                <div class="ornament">
+                    <div class="ornament-line"></div>
+                    <div class="ornament-center"></div>
+                    <div class="ornament-line"></div>
+                </div>
+                <p class="section-description">
+                    Homenaje a la riqueza del suelo con carnes seleccionadas y técnicas ancestrales
+                </p>
+            </div>
+            
+            <div class="menu-grid">
+                <!-- Los items se cargarán dinámicamente desde menu-data.js -->
+            </div>
+        </div>
+    </section>
+    
+    <section class="menu-section" id="pasta">
+        <div class="menu-container">
+            <button class="back-btn" onclick="showSection('categories')">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Volver al Menú
+            </button>
+            
+            <div class="section-header">
+                <p class="section-overtitle">Tradición Italiana</p>
+                <h2 class="section-title">Pasta</h2>
+                <div class="ornament">
+                    <div class="ornament-line"></div>
+                    <div class="ornament-center"></div>
+                    <div class="ornament-line"></div>
+                </div>
+                <p class="section-description">
+                    Celebración de la herencia mediterránea con ingredientes del mar y la tierra
+                </p>
+            </div>
+            
+            <div class="menu-grid">
+                <!-- Los items se cargarán dinámicamente desde menu-data.js -->
+            </div>
+        </div>
+    </section>
+    
+    <section class="menu-section" id="arroces">
+        <div class="menu-container">
+            <button class="back-btn" onclick="showSection('categories')">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Volver al Menú
+            </button>
+            
+            <div class="section-header">
+                <p class="section-overtitle">Fuego Lento</p>
+                <h2 class="section-title">Arroces</h2>
+                <div class="ornament">
+                    <div class="ornament-line"></div>
+                    <div class="ornament-center"></div>
+                    <div class="ornament-line"></div>
+                </div>
+                <p class="section-description">
+                    Ritual de fuego lento donde cada grano construye memorias intensas
+                </p>
+            </div>
+            
+            <div class="menu-grid">
+                <!-- Los items se cargarán dinámicamente desde menu-data.js -->
+            </div>
+        </div>
+    </section>
+    
+    <section class="menu-section" id="bebidas">
+        <div class="menu-container">
+            <button class="back-btn" onclick="showSection('categories')">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Volver al Menú
+            </button>
+            
+            <div class="section-header">
+                <p class="section-overtitle">Maridaje Perfecto</p>
+                <h2 class="section-title">Vinos y Bebidas</h2>
+                <div class="ornament">
+                    <div class="ornament-line"></div>
+                    <div class="ornament-center"></div>
+                    <div class="ornament-line"></div>
+                </div>
+                <p class="section-description">
+                    Viaje sensorial donde el vino es el puente entre culturas
+                </p>
+            </div>
+            
+            <div class="menu-grid">
+                <!-- Los items se cargarán dinámicamente desde menu-data.js -->
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <div class="section-header">
+            <p class="section-overtitle">Visítanos</p>
+            <h2 class="section-title">Contacto & Ubicación</h2>
+            <div class="ornament">
+                <div class="ornament-line"></div>
+                <div class="ornament-center"></div>
+                <div class="ornament-line"></div>
+            </div>
+        </div>
+        
+        <div class="contact-container">
+            <div class="contact-info">
+                <h3 class="contact-title">Encuéntranos</h3>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                    </div>
+                    <div class="contact-text">
+                        <div class="contact-label">Dirección</div>
+                        <div class="contact-value">
+                            Cra 35a #46-102<br>
+                            Barrio Cabecera del Llano<br>
+                            Bucaramanga, Colombia
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                        </svg>
+                    </div>
+                    <div class="contact-text">
+                        <div class="contact-label">Teléfono</div>
+                        <div class="contact-value">300 826 3403</div>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10h5v-2h-5c-4.34 0-8-3.66-8-8s3.66-8 8-8 8 3.66 8 8v1.43c0 .79-.71 1.57-1.5 1.57s-1.5-.78-1.5-1.57V12c0-2.76-2.24-5-5-5s-5 2.24-5 5 2.24 5 5 5c1.38 0 2.64-.56 3.54-1.47.65.89 1.77 1.47 2.96 1.47 1.97 0 3.5-1.6 3.5-3.57V12c0-5.52-4.48-10-10-10zm0 13c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>
+                        </svg>
+                    </div>
+                    <div class="contact-text">
+                        <div class="contact-label">Síguenos</div>
+                        <div class="contact-value">@marytierrarestaurantbga</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hours-grid">
+                <h3 class="contact-title">Horarios</h3>
+                <div class="hour-item">
+                    <span class="hour-day">Lunes - Viernes</span>
+                    <span class="hour-time">7:30 AM - 9:30 PM</span>
+                </div>
+                <div class="hour-item">
+                    <span class="hour-day">Sábado</span>
+                    <span class="hour-time">8:30 AM - 9:00 PM</span>
+                </div>
+                <div class="hour-item">
+                    <span class="hour-day">Domingo</span>
+                    <span class="hour-time">Cerrado</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Modal para Reservas -->
+    <div class="reservation-modal-overlay" id="reservationModal">
+        <div class="reservation-modal-container">
+            <div class="reservation-modal-close" onclick="closeReservationModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </div>
+            
+            <div class="reservation-modal-content">
+                <div class="reservation-header">
+                    <h2 class="reservation-title">Reservar Mesa</h2>
+                    <p class="reservation-subtitle">Complete el formulario para realizar su reserva</p>
+                </div>
+                
+                <form id="reservationForm" class="reservation-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="resName">Nombre Completo *</label>
+                            <input type="text" id="resName" name="name" required>
+                            <span class="error-message"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="resPhone">Teléfono *</label>
+                            <input type="tel" id="resPhone" name="phone" required>
+                            <span class="error-message"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="resEmail">Email *</label>
+                            <input type="email" id="resEmail" name="email" required>
+                            <span class="error-message"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="resPeople">Número de Personas *</label>
+                            <select id="resPeople" name="people" required onchange="updateReservationType()">
+                                <option value="">Seleccione</option>
+                                <option value="1">1 persona</option>
+                                <option value="2">2 personas</option>
+                                <option value="3">3 personas</option>
+                                <option value="4">4 personas</option>
+                                <option value="5">5 personas</option>
+                                <option value="6">6 personas</option>
+                                <option value="7">7 personas</option>
+                                <option value="8">8 personas</option>
+                                <option value="9">9 personas</option>
+                                <option value="10">10 personas</option>
+                                <option value="11">11 personas</option>
+                                <option value="12">12 personas</option>
+                                <option value="13">13 personas</option>
+                                <option value="14">14 personas</option>
+                                <option value="15">15 personas</option>
+                                <option value="16">16 personas</option>
+                                <option value="17">17 personas</option>
+                                <option value="18">18 personas</option>
+                                <option value="19">19 personas</option>
+                                <option value="20">20 personas</option>
+                                <option value="20+">Más de 20 personas</option>
+                            </select>
+                            <span class="error-message"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="resDate">Fecha de Reserva *</label>
+                            <input type="date" id="resDate" name="date" required>
+                            <span class="error-message"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="resTime">Hora de Reserva *</label>
+                            <select id="resTime" name="time" required>
+                                <option value="">Seleccione hora</option>
+                                <option value="07:30">7:30 AM</option>
+                                <option value="08:00">8:00 AM</option>
+                                <option value="08:30">8:30 AM</option>
+                                <option value="09:00">9:00 AM</option>
+                                <option value="09:30">9:30 AM</option>
+                                <option value="10:00">10:00 AM</option>
+                                <option value="10:30">10:30 AM</option>
+                                <option value="11:00">11:00 AM</option>
+                                <option value="11:30">11:30 AM</option>
+                                <option value="12:00">12:00 PM</option>
+                                <option value="12:30">12:30 PM</option>
+                                <option value="13:00">1:00 PM</option>
+                                <option value="13:30">1:30 PM</option>
+                                <option value="14:00">2:00 PM</option>
+                                <option value="14:30">2:30 PM</option>
+                                <option value="15:00">3:00 PM</option>
+                                <option value="15:30">3:30 PM</option>
+                                <option value="16:00">4:00 PM</option>
+                                <option value="16:30">4:30 PM</option>
+                                <option value="17:00">5:00 PM</option>
+                                <option value="17:30">5:30 PM</option>
+                                <option value="18:00">6:00 PM</option>
+                                <option value="18:30">6:30 PM</option>
+                                <option value="19:00">7:00 PM</option>
+                                <option value="19:30">7:30 PM</option>
+                                <option value="20:00">8:00 PM</option>
+                                <option value="20:30">8:30 PM</option>
+                                <option value="21:00">9:00 PM</option>
+                            </select>
+                            <span class="error-message"></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Tipo de Reserva -->
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="resType">Tipo de Reserva *</label>
+                            <select id="resType" name="reservationType" required onchange="updateReservationOptions()">
+                                <option value="normal">Reserva Normal (sin anticipo)</option>
+                                <option value="regular">Reserva Regular (con anticipo $100.000)</option>
+                                <option value="especial">Reserva Especial (15+ personas - $100.000)</option>
+                                <option value="salon-gold">Salón Gold Exclusivo ($100.000)</option>
+                            </select>
+                            <span class="error-message"></span>
+                            <div id="reservationTypeAlert" class="alert-message" style="display: none;">
+                                <span class="alert-icon">ℹ️</span>
+                                <span class="alert-text"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Plan de Decoración -->
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="resDecoration">Plan de Decoración (Opcional)</label>
+                            <select id="resDecoration" name="decorationPlan" onchange="calculateTotal()">
+                                <option value="none">Sin decoración</option>
+                                <option value="plata">Plan Plata - $80.000 (3 globos + pastel)</option>
+                                <option value="oro">Plan Oro - $120.000 (vino + 3 globos + pastel)</option>
+                                <option value="luxury">Plan Luxury - $100.000 (rosas + pétalos)</option>
+                                <option value="combo-plata-luxury">Combo Plata + Luxury - $180.000</option>
+                                <option value="combo-oro-luxury">Combo Oro + Luxury - $220.000</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Servicios Adicionales -->
+                    <div class="form-group full-width">
+                        <label>Servicios Adicionales (Opcional)</label>
+                        <div class="services-checkboxes">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="services" value="saxofonista" onchange="calculateTotal()">
+                                <span>🎷 Saxofonista (1 hora) - $400.000</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="services" value="violinista" onchange="calculateTotal()">
+                                <span>🎻 Violinista (1 hora) - $400.000</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="services" value="fotografo" onchange="calculateTotal()">
+                                <span>📸 Fotógrafo (2 horas) - $480.000</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="services" value="dj" onchange="calculateTotal()">
+                                <span>🎵 DJ (3 horas) - $600.000</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Resumen de Costos -->
+                    <div class="cost-summary" id="costSummary" style="display: none;">
+                        <h4>Resumen de Anticipo Requerido:</h4>
+                        <div class="cost-breakdown">
+                            <div class="cost-item" id="baseDepositItem">
+                                <span>Anticipo de reserva:</span>
+                                <span id="baseDeposit">$100.000</span>
+                            </div>
+                            <div class="cost-item" id="decorationCostItem" style="display: none;">
+                                <span>Decoración:</span>
+                                <span id="decorationCost">$0</span>
+                            </div>
+                            <div class="cost-item" id="servicesCostItem" style="display: none;">
+                                <span>Servicios adicionales:</span>
+                                <span id="servicesCost">$0</span>
+                            </div>
+                            <div class="cost-total">
+                                <span>Total Anticipo Requerido:</span>
+                                <span id="totalDeposit">$0</span>
+                            </div>
+                        </div>
+                        <div class="payment-info">
+                            <p><strong>Información de Pago:</strong></p>
+                            <p class="payment-details">
+                                [INFORMACIÓN DE PAGO PENDIENTE]
+                                <br>Cuenta: XXXX-XXXX-XXXX
+                                <br>Banco: [Por confirmar]
+                            </p>
+                            <p class="payment-note">
+                                ⚠️ Su reserva será confirmada únicamente después de verificar el pago del anticipo.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="resComments">Comentarios Especiales (Opcional)</label>
+                        <textarea id="resComments" name="comments" rows="3" 
+                                  placeholder="Alergias, celebraciones especiales, preferencias de ubicación..."></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-cancel" onclick="closeReservationModal()">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn-submit">
+                            <span class="btn-text">Confirmar Reserva</span>
+                            <span class="btn-loading" style="display: none;">
+                                <svg class="spinner" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="42" stroke-dashoffset="10">
+                                        <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/>
+                                    </circle>
+                                </svg>
+                                Procesando...
+                            </span>
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Success Message -->
+                <div class="reservation-success" id="reservationSuccess" style="display: none;">
+                    <div class="success-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9 12l2 2 4-4"></path>
+                        </svg>
+                    </div>
+                    <h3>¡Reserva Recibida!</h3>
+                    <p id="successMessage">Hemos recibido su solicitud de reserva. <strong>IMPORTANTE:</strong> Su reserva será confirmada únicamente después de verificar el pago del anticipo requerido.</p>
+                    <div id="paymentReminderSuccess" class="payment-reminder">
+                        <p><strong>Próximo paso:</strong> Realice el pago del anticipo a la cuenta indicada y su reserva será confirmada.</p>
+                    </div>
+                    <button class="btn-primary" onclick="closeReservationModal()">Cerrar</button>
+                </div>
+                
+                <!-- Error Message -->
+                <div class="reservation-error" id="reservationError" style="display: none;">
+                    <div class="error-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <h3>Error al procesar la reserva</h3>
+                    <p id="errorMessage">Ocurrió un error al procesar su reserva. Por favor, intente nuevamente.</p>
+                    <button class="btn-primary" onclick="resetReservationForm()">Intentar de nuevo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Detalles de Reserva/Decoración -->
+    <div class="detail-modal-overlay" id="detailModal">
+        <div class="detail-modal-container">
+            <div class="detail-modal-close" onclick="closeDetailModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </div>
+            
+            <div class="detail-modal-content">
+                <div class="detail-modal-image">
+                    <img id="detailImage" src="images/placeholder.jpg" alt="" onerror="this.src='images/placeholder.jpg'">
+                </div>
+                
+                <div class="detail-modal-info">
+                    <div class="detail-modal-header">
+                        <span class="detail-modal-badge" id="detailBadge"></span>
+                        <h2 class="detail-modal-title" id="detailTitle"></h2>
+                        <div class="detail-modal-price" id="detailPrice"></div>
+                    </div>
+                    
+                    <div class="detail-modal-description" id="detailDescription">
+                        <!-- Descripción dinámica -->
+                    </div>
+                    
+                    <div class="detail-modal-features" id="detailFeatures">
+                        <!-- Características dinámicas -->
+                    </div>
+                    
+                    <div class="detail-modal-extra" id="detailExtra">
+                        <!-- Información adicional dinámica -->
+                    </div>
+                    
+                    <div class="detail-modal-actions">
+                        <button class="modal-btn modal-btn-secondary" onclick="closeDetailModal()">
+                            Cerrar
+                        </button>
+                        <button class="modal-btn modal-btn-primary" onclick="openReservationModalFromDetail()">
+                            <span>Hacer Reserva</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="20" height="20">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Detalles del Plato -->
+    <div class="dish-modal-overlay" id="dishModal">
+        <div class="dish-modal-container">
+            <div class="dish-modal-close" onclick="closeDishModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </div>
+            
+            <div class="dish-modal-content">
+                <div class="dish-modal-image">
+                    <img id="modalDishImage" src="" alt="" onerror="this.src='images/placeholder.jpg'">
+                    <div class="image-overlay">
+                        <div class="dish-modal-tags" id="modalDishTags"></div>
+                    </div>
+                </div>
+                
+                <div class="dish-modal-info">
+                    <div class="dish-modal-header">
+                        <h2 id="modalDishName" class="dish-modal-title"></h2>
+                        <span id="modalDishPrice" class="dish-modal-price"></span>
+                    </div>
+                    
+                    <div class="dish-modal-description">
+                        <p id="modalDishDesc"></p>
+                    </div>
+                    
+                    <div class="dish-modal-details">
+                        <div class="detail-section">
+                            <h4>Características</h4>
+                            <div id="modalDishFeatures" class="features-list"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="dish-modal-actions">
+                        <button class="modal-btn secondary" onclick="closeDishModal()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            </svg>
+                            Cerrar
+                        </button>
+                        <button class="modal-btn primary">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M3 3h2l.4 2M7 13h10l4-8H5.4m1.6 8L5 3M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17M17 13v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6M15 1v6M9 1v6"/>
+                            </svg>
+                            Ordenar Plato
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="js/menu-data.js"></script>
+    <script src="js/script.js"></script>
+
+    <!-- Enhanced Navigation Script -->
+    <script>
+        // Premium smooth scroll to sections with elegant transitions
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.categories-section, .menu-section, .reservation-info-section, .contact-section');
+
+            // Fade out current sections quickly
+            sections.forEach(section => {
+                if (section.classList.contains('active')) {
+                    section.classList.remove('active');
+                }
+            });
+
+            const hero = document.querySelector('.hero');
+
+            // Update nav links with smooth transition
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            if (sectionId === 'hero') {
+                if (hero) {
+                    hero.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                document.querySelector('.nav-link[onclick*="hero"]')?.classList.add('active');
+            } else {
+                const targetSection = document.getElementById(sectionId + '-section') || document.querySelector('.' + sectionId + '-section');
+
+                if (targetSection) {
+                    targetSection.classList.add('active');
+
+                    // Smooth scroll with offset for header
+                    const headerHeight = document.getElementById('header')?.offsetHeight || 0;
+                    const targetPosition = targetSection.offsetTop - headerHeight - 20;
+
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+
+                    // Update active nav link
+                    const navLink = document.querySelector(`.nav-link[onclick*="${sectionId}"]`);
+                    if (navLink) {
+                        navLink.classList.add('active');
+                    }
+                }
+            }
+
+            // Close mobile menu if open with animation
+            const mobileToggle = document.getElementById('mobileToggle');
+            const nav = document.getElementById('nav');
+            if (mobileToggle && nav) {
+                mobileToggle.classList.remove('active');
+                nav.classList.remove('active');
+            }
+        }
+
+        // Add smooth parallax effect to hero
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            if (hero && scrolled < window.innerHeight) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+
+        // Function to show menu sections by category
+        function showMenuSection(category) {
+            // Hide categories and show menu
+            document.querySelector('.categories-section').classList.remove('active');
+            const menuSection = document.querySelector('.menu-section');
+            menuSection.classList.add('active');
+
+            // Scroll to menu section
+            const headerHeight = document.getElementById('header')?.offsetHeight || 0;
+            const targetPosition = menuSection.offsetTop - headerHeight - 20;
+
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+
+            // Filter items if needed (handled by menu app)
+            if (window.menuApp) {
+                window.menuApp.showCategory(category);
+            }
+        }
+
+        // Functions for Reservation Details Modal
+        function showReservationDetail(type) {
+            const modal = document.getElementById('detailModal');
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Set content based on type
+                const detailTitle = document.getElementById('detailTitle');
+                const detailDescription = document.getElementById('detailDescription');
+                const detailPrice = document.getElementById('detailPrice');
+
+                switch(type) {
+                    case 'normal':
+                        detailTitle.textContent = 'Reserva Normal';
+                        detailPrice.textContent = 'Sin Anticipo';
+                        detailDescription.innerHTML = '<p>Ideal para grupos pequeños. Mesa garantizada sin costo de anticipo.</p>';
+                        break;
+                    case 'regular':
+                        detailTitle.textContent = 'Reserva Regular';
+                        detailPrice.textContent = '$100.000 COP';
+                        detailDescription.innerHTML = '<p>Mesa garantizada con anticipo que se descuenta de la cuenta final.</p>';
+                        break;
+                    case 'gold':
+                        detailTitle.textContent = 'Salón Gold';
+                        detailPrice.textContent = '$100.000 COP';
+                        detailDescription.innerHTML = '<p>Acceso exclusivo al Salón Gold con atención VIP.</p>';
+                        break;
+                }
+            }
+        }
+
+        function showDecorationDetail(plan) {
+            const modal = document.getElementById('detailModal');
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+                // Set content based on plan
+                const detailTitle = document.getElementById('detailTitle');
+                const detailDescription = document.getElementById('detailDescription');
+                const detailPrice = document.getElementById('detailPrice');
+
+                switch(plan) {
+                    case 'plata':
+                        detailTitle.textContent = 'Plan Plata';
+                        detailPrice.textContent = '$80.000 COP';
+                        detailDescription.innerHTML = '<p>3 globos con helio y 1 porción de pastel.</p>';
+                        break;
+                    case 'oro':
+                        detailTitle.textContent = 'Plan Oro';
+                        detailPrice.textContent = '$120.000 COP';
+                        detailDescription.innerHTML = '<p>1 botella de vino, 3 globos con helio y 1 porción de pastel.</p>';
+                        break;
+                    case 'luxury':
+                        detailTitle.textContent = 'Plan Luxury';
+                        detailPrice.textContent = '$100.000 COP';
+                        detailDescription.innerHTML = '<p>Jarrón de rosas y pétalos decorativos.</p>';
+                        break;
+                }
+            }
+        }
+
+        function closeDetailModal() {
+            const modal = document.getElementById('detailModal');
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function openReservationModalFromDetail() {
+            closeDetailModal();
+            if (typeof openReservationModal === 'function') {
+                openReservationModal(null);
+            }
+        }
+    </script>
+</body>
+</html>

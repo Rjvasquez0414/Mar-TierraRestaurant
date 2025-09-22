@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python:*)",
+      "Bash(del \"C:\\Users\\Roberto\\Desktop\\MenuMarYtIERRA\\create_placeholder.py\")",
+      "Bash(del \"C:\\Users\\Roberto\\Desktop\\MenuMarYtIERRA\\test-modal.html\")",
+      "Read(//Users/rjvasquez/Documents/**)",
+      "Bash(tail:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
