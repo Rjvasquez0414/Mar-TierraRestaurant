@@ -1,0 +1,206 @@
+/* ===============================================
+   TIPOGRAFÍAS PERSONALIZADAS - MAR&TIERRA
+   =============================================== */
+
+/* Importar Causten desde Google Fonts (alternativa similar) */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+/* Si tienes los archivos de fuente locales, usa @font-face */
+@font-face {
+    font-family: 'Valerius';
+    src: url('../fonts/Valerius.otf') format('opentype'),
+         url('../fonts/Valerius.ttf') format('truetype'),
+         url('../fonts/Valerius.woff2') format('woff2'),
+         url('../fonts/Valerius.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Causten';
+    src: url('../fonts/causten-light.otf') format('opentype'),
+         url('../fonts/causten-light.woff2') format('woff2'),
+         url('../fonts/causten-light.woff') format('woff'),
+         url('../fonts/causten-light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Causten';
+    src: url('../fonts/Causten-Regular.woff2') format('woff2'),
+         url('../fonts/Causten-Regular.woff') format('woff'),
+         url('../fonts/Causten-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Fallbacks mientras se cargan las fuentes personalizadas */
+/* Usaremos Outfit como fallback para Causten ya que es similar */
+
+/* ===============================================
+   APLICACIÓN DE TIPOGRAFÍAS
+   =============================================== */
+
+/* Título principal Mar&Tierra - VALERIUS */
+.hero-title,
+.navbar-logo,
+h1 {
+    font-family: 'Valerius', 'Playfair Display', serif !important;
+    font-weight: normal !important;
+    letter-spacing: 2px;
+}
+
+/* Resto del contenido - CAUSTEN LIGHT */
+body,
+p,
+span,
+div,
+a,
+li,
+td,
+th,
+input,
+select,
+textarea,
+button {
+    font-family: 'Causten', 'Outfit', sans-serif !important;
+    font-weight: 300 !important; /* Light weight */
+}
+
+/* Títulos secundarios - CAUSTEN con peso medio */
+h2,
+h3,
+h4,
+h5,
+h6,
+.section-title,
+.category-name,
+.espacio-title,
+.menu-item-name {
+    font-family: 'Causten', 'Outfit', sans-serif !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.5px;
+}
+
+/* Navegación - CAUSTEN LIGHT */
+.nav-link {
+    font-family: 'Causten', 'Outfit', sans-serif !important;
+    font-weight: 300 !important;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Botones - CAUSTEN con peso medio */
+.reservation-btn,
+.hero-cta,
+.btn-submit,
+.btn-primary,
+.plan-cta-button,
+button {
+    font-family: 'Causten', 'Outfit', sans-serif !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.5px;
+}
+
+/* Descripciones - CAUSTEN LIGHT */
+.section-description,
+.espacio-description,
+.menu-item-desc,
+.category-desc,
+p {
+    font-family: 'Causten', 'Outfit', sans-serif !important;
+    font-weight: 300 !important;
+    line-height: 1.7;
+}
+
+/* Precios - CAUSTEN con peso medio */
+.menu-item-price,
+.service-price,
+.plan-price {
+    font-family: 'Causten', 'Outfit', sans-serif !important;
+    font-weight: 400 !important;
+}
+
+/* Etiquetas y badges - CAUSTEN */
+.espacio-tag,
+.section-overtitle,
+.card-badge {
+    font-family: 'Causten', 'Outfit', sans-serif !important;
+    font-weight: 400 !important;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+/* Modal de instalaciones */
+.espacio-modal-title {
+    font-family: 'Causten', 'Outfit', sans-serif !important;
+    font-weight: 400 !important;
+}
+
+.espacio-modal-description {
+    font-family: 'Causten', 'Outfit', sans-serif !important;
+    font-weight: 300 !important;
+}
+
+/* Formularios */
+label {
+    font-family: 'Causten', 'Outfit', sans-serif !important;
+    font-weight: 400 !important;
+}
+
+/* Features y características */
+.feature-item {
+    font-family: 'Causten', 'Outfit', sans-serif !important;
+    font-weight: 300 !important;
+}
+
+/* Ornamentos y detalles - mantener peso light */
+.ornament,
+.loader-subtitle {
+    font-family: 'Causten', 'Outfit', sans-serif !important;
+    font-weight: 300 !important;
+}
+
+/* Hero section específicos */
+.hero-subtitle,
+.hero-description {
+    font-family: 'Causten', 'Outfit', sans-serif !important;
+    font-weight: 300 !important;
+    letter-spacing: 0.5px;
+}
+
+/* Ajuste específico para el título Mar&Tierra */
+.hero-title {
+    font-size: 6rem !important;
+    font-family: 'Valerius', 'Playfair Display', serif !important;
+    text-transform: none !important;
+    font-weight: normal !important;
+    letter-spacing: 3px !important;
+}
+
+/* Responsive para el título */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 3.5rem !important;
+        letter-spacing: 2px !important;
+    }
+}
+
+/* Nota para el desarrollador:
+   Si no tienes los archivos de fuente locales, puedes usar estas alternativas:
+
+   Para Valerius:
+   - Alternativa 1: Usar una fuente serif elegante desde Google Fonts
+   - Alternativa 2: Comprar/descargar Valerius desde un proveedor de fuentes
+
+   Para Causten:
+   - Alternativa 1: Usar 'Outfit' de Google Fonts (muy similar)
+   - Alternativa 2: Comprar/descargar Causten desde un proveedor de fuentes
+
+   Mientras tanto, las fuentes de respaldo funcionarán bien.
+*/

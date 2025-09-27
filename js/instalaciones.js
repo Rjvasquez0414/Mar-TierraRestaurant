@@ -114,7 +114,7 @@ async function getImagesForSpace(espacioKey) {
         case 'almaterra':
             return ['_MG_8912.JPG'];
         case 'arca':
-            return ['_MG_8885.JPG', '_MG_8888.JPG', '_MG_8892.JPG', '_MG_8895.JPG', '_MG_8940.JPG'];
+            return ['_MG_8885.JPG', '_MG_8945.JPG', '_MG_8967.JPG', '_MG_8993.JPG'];
         case 'barco':
             return ['_MG_8908.JPG', '_MG_8910.JPG', '_MG_8914.JPG'];
         case 'chillout':
