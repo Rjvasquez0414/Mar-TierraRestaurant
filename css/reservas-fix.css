@@ -673,5 +673,700 @@ body > *:last-child {
     display: none !important;
 }
 
-/* Final del archivo */
+/* ==============================================
+   ESTILOS PARA SERVICIOS ESPECIALES EN FORMULARIO
+   ============================================== */
+
+/* Contenedor de servicios adicionales mejorado */
+.services-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px 0;
 }
+
+/* Cada opción de servicio como tarjeta individual */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    font-size: 15px;
+}
+
+.checkbox-label:hover {
+    background: #f0f0f0;
+    border-color: var(--dorado-premium, #D4AF37);
+    transform: translateX(5px);
+}
+
+/* Estilo del checkbox */
+.checkbox-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 15px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+/* Cuando el checkbox está seleccionado */
+.checkbox-label:has(input:checked) {
+    background: #fff8e7;
+    border-color: var(--dorado-premium, #D4AF37);
+    box-shadow: 0 2px 10px rgba(212, 175, 55, 0.2);
+}
+
+/* Texto del servicio */
+.checkbox-label span {
+    flex: 1;
+    color: #333;
+    font-weight: 500;
+}
+
+/* Mejorar espaciado del emoji */
+.checkbox-label span::before {
+    margin-right: 5px;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .checkbox-label {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        margin-right: 12px;
+    }
+}
+
+/* Animación suave al marcar */
+@keyframes checkAnimation {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.checkbox-label input[type="checkbox"]:checked {
+    animation: checkAnimation 0.3s ease;
+}
+
+/* ==============================================
+   ESTILOS PREMIUM PARA MODALES Y CARRUSEL
+   ============================================== */
+
+/* Modal Container Premium */
+.detail-modal-container.premium {
+    max-width: 1200px;
+    width: 95%;
+    border-radius: 24px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
+    animation: modalPremiumSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalPremiumSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Carrusel Premium */
+.modal-carousel-section {
+    width: 50%;
+    position: relative;
+    background: #000;
+    overflow: hidden;
+}
+
+.carousel-container {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+}
+
+.carousel-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.carousel-image.active {
+    opacity: 1;
+}
+
+/* Controles del Carrusel */
+.carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 2;
+    backdrop-filter: blur(10px);
+}
+
+.carousel-control:hover {
+    background: var(--dorado-premium, #D4AF37);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-control svg {
+    width: 24px;
+    height: 24px;
+    stroke: #333;
+    stroke-width: 2;
+}
+
+.carousel-control:hover svg {
+    stroke: white;
+}
+
+.carousel-prev {
+    left: 20px;
+}
+
+.carousel-next {
+    right: 20px;
+}
+
+/* Indicadores */
+.carousel-indicators {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 2;
+}
+
+.indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.indicator.active {
+    background: var(--dorado-premium, #D4AF37);
+    transform: scale(1.3);
+    border-color: white;
+}
+
+.indicator:hover {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+/* Información Modal Premium */
+.detail-modal-info.premium {
+    width: 50%;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
+}
+
+.detail-modal-header {
+    margin-bottom: 35px;
+}
+
+.detail-modal-badge.premium-badge {
+    display: inline-block;
+    padding: 8px 20px;
+    background: linear-gradient(135deg, var(--dorado-premium, #D4AF37), #b8941f);
+    color: white;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.detail-modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    color: #1a1a1a;
+    margin-bottom: 15px;
+    line-height: 1.1;
+    font-weight: 700;
+}
+
+.detail-modal-price.premium-price {
+    font-size: 32px;
+    color: var(--dorado-premium, #D4AF37);
+    font-weight: 700;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.detail-modal-description.elegant {
+    color: #555;
+    line-height: 1.9;
+    margin-bottom: 35px;
+    font-size: 17px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.detail-modal-features.premium-features {
+    margin-bottom: 35px;
+}
+
+.detail-modal-features.premium-features h3 {
+    font-size: 22px;
+    color: #1a1a1a;
+    margin-bottom: 25px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.detail-modal-features.premium-features h3::before {
+    content: '✨';
+    font-size: 20px;
+}
+
+.detail-features-list li {
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+    color: #444;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.3s ease;
+}
+
+.detail-features-list li:hover {
+    padding-left: 10px;
+    color: var(--dorado-premium, #D4AF37);
+}
+
+/* Botones Premium */
+.detail-modal-actions.premium {
+    display: flex;
+    gap: 20px;
+    margin-top: auto;
+    padding-top: 30px;
+}
+
+.modal-btn {
+    padding: 18px 35px;
+    border-radius: 30px;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.modal-btn.glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #333;
+}
+
+.modal-btn.glass:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.modal-btn.premium-cta {
+    background: linear-gradient(135deg, var(--dorado-premium, #D4AF37), #b8941f);
+    color: white;
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.35);
+}
+
+.modal-btn.premium-cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(212, 175, 55, 0.45);
+    background: linear-gradient(135deg, #b8941f, var(--dorado-premium, #D4AF37));
+}
+
+/* ==============================================
+   PLANES DE DECORACIÓN VERTICAL
+   ============================================== */
+
+.decoration-plans-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin: 50px 0;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.decoration-plan-card.vertical-card {
+    display: flex;
+    flex-direction: row;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+}
+
+.decoration-plan-card.vertical-card:hover {
+    transform: translateX(10px);
+    box-shadow: 0 15px 60px rgba(0, 0, 0, 0.15);
+}
+
+.plan-image-section {
+    width: 40%;
+    position: relative;
+    overflow: hidden;
+}
+
+.plan-image.premium {
+    width: 100%;
+    height: 100%;
+    min-height: 350px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.plan-image.premium img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.decoration-plan-card.vertical-card:hover .plan-image.premium img {
+    transform: scale(1.1);
+}
+
+.plan-overlay {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 2;
+}
+
+.plan-category {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--dorado-premium, #D4AF37);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.plan-details {
+    width: 60%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.plan-header.premium h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: #1a1a1a;
+    margin-bottom: 15px;
+}
+
+.plan-price {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.price-amount {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--dorado-premium, #D4AF37);
+}
+
+.price-currency {
+    font-size: 18px;
+    color: #999;
+    font-weight: 400;
+}
+
+.plan-description {
+    color: #666;
+    line-height: 1.8;
+    margin-bottom: 25px;
+    font-size: 15px;
+}
+
+.plan-features.premium {
+    margin-bottom: 25px;
+}
+
+.feature-item.elegant {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 15px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.feature-item.elegant:last-child {
+    border-bottom: none;
+}
+
+.feature-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.feature-item.elegant:hover .feature-icon-wrapper {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.1));
+    transform: scale(1.05);
+}
+
+.feature-icon {
+    font-size: 24px;
+}
+
+.feature-icon-svg {
+    width: 24px;
+    height: 24px;
+    color: var(--dorado-premium, #D4AF37);
+    stroke: var(--dorado-premium, #D4AF37);
+    fill: none;
+}
+
+.feature-text {
+    flex: 1;
+}
+
+.feature-text strong {
+    display: block;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.feature-text span {
+    color: #888;
+    font-size: 14px;
+}
+
+.plan-note.premium {
+    color: #999;
+    font-size: 13px;
+    font-style: italic;
+    margin-bottom: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.plan-cta-button {
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: white;
+    border: none;
+    padding: 15px 35px;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    align-self: flex-start;
+    position: relative;
+    overflow: hidden;
+}
+
+.plan-cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(212, 175, 55, 0));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.plan-cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(44, 62, 80, 0.3);
+}
+
+.plan-cta-button:hover::before {
+    opacity: 1;
+}
+
+.plan-cta-button.featured {
+    background: linear-gradient(135deg, var(--dorado-premium, #D4AF37), #b8941f);
+}
+
+.plan-cta-button.featured:hover {
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+}
+
+.plan-cta-button.luxury {
+    background: linear-gradient(135deg, #8B4513, #6b3410);
+}
+
+.plan-cta-button.luxury:hover {
+    box-shadow: 0 8px 25px rgba(139, 69, 19, 0.3);
+}
+
+/* Card Featured */
+.decoration-plan-card.vertical-card.featured {
+    border: 2px solid var(--dorado-premium, #D4AF37);
+    transform: scale(1.02);
+    position: relative;
+}
+
+.decoration-plan-card.vertical-card.featured::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, var(--dorado-premium, #D4AF37), transparent, var(--dorado-premium, #D4AF37));
+    border-radius: 20px;
+    opacity: 0.3;
+    z-index: -1;
+}
+
+.decoration-plan-card.vertical-card.featured:hover {
+    transform: translateX(10px) scale(1.02);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .detail-modal-container.premium {
+        max-width: 95%;
+    }
+
+    .modal-carousel-section,
+    .detail-modal-info.premium {
+        width: 100%;
+    }
+
+    .detail-modal-content {
+        flex-direction: column;
+    }
+
+    .carousel-container {
+        height: 400px;
+    }
+
+    .decoration-plan-card.vertical-card {
+        flex-direction: column;
+    }
+
+    .plan-image-section,
+    .plan-details {
+        width: 100%;
+    }
+
+    .plan-image.premium {
+        min-height: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .detail-modal-info.premium {
+        padding: 30px;
+    }
+
+    .detail-modal-title {
+        font-size: 32px;
+    }
+
+    .carousel-container {
+        height: 300px;
+    }
+
+    .carousel-control {
+        width: 40px;
+        height: 40px;
+    }
+
+    .plan-header.premium h4 {
+        font-size: 26px;
+    }
+
+    .price-amount {
+        font-size: 28px;
+    }
+
+    .plan-details {
+        padding: 25px;
+    }
+}
+
+/* Final del archivo */

@@ -1544,5 +1544,182 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// ============================================
+// FUNCIONALIDAD DEL CARRUSEL PREMIUM
+// ============================================
+
+let currentSlide = 0;
+const slides = [];
+
+// Función para inicializar el carrusel con imágenes específicas
+function initializeCarousel(images) {
+    const carousel = document.getElementById('detailCarousel');
+    if (!carousel) return;
+
+    // Limpiar carrusel actual
+    carousel.innerHTML = '';
+
+    // Agregar imágenes al carrusel
+    images.forEach((imgSrc, index) => {
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        img.alt = `Vista ${index + 1}`;
+        img.className = index === 0 ? 'carousel-image active' : 'carousel-image';
+        carousel.appendChild(img);
+    });
+
+    // Actualizar indicadores
+    const indicatorsContainer = document.querySelector('.carousel-indicators');
+    if (indicatorsContainer) {
+        indicatorsContainer.innerHTML = '';
+        images.forEach((_, index) => {
+            const indicator = document.createElement('span');
+            indicator.className = index === 0 ? 'indicator active' : 'indicator';
+            indicator.onclick = () => goToSlide(index);
+            indicatorsContainer.appendChild(indicator);
+        });
+    }
+
+    currentSlide = 0;
+}
+
+// Cambiar de slide
+function changeSlide(direction) {
+    const images = document.querySelectorAll('.carousel-image');
+    const indicators = document.querySelectorAll('.indicator');
+
+    if (images.length === 0) return;
+
+    // Ocultar slide actual
+    images[currentSlide].classList.remove('active');
+    indicators[currentSlide]?.classList.remove('active');
+
+    // Calcular siguiente slide
+    currentSlide += direction;
+    if (currentSlide >= images.length) currentSlide = 0;
+    if (currentSlide < 0) currentSlide = images.length - 1;
+
+    // Mostrar nuevo slide
+    images[currentSlide].classList.add('active');
+    indicators[currentSlide]?.classList.add('active');
+}
+
+// Ir a slide específico
+function goToSlide(index) {
+    const images = document.querySelectorAll('.carousel-image');
+    const indicators = document.querySelectorAll('.indicator');
+
+    if (index >= 0 && index < images.length) {
+        // Ocultar slide actual
+        images[currentSlide]?.classList.remove('active');
+        indicators[currentSlide]?.classList.remove('active');
+
+        // Mostrar slide solicitado
+        currentSlide = index;
+        images[currentSlide]?.classList.add('active');
+        indicators[currentSlide]?.classList.add('active');
+    }
+}
+
+// Auto-play del carrusel
+let carouselInterval;
+
+function startCarouselAutoplay() {
+    stopCarouselAutoplay();
+    carouselInterval = setInterval(() => {
+        changeSlide(1);
+    }, 4000); // Cambiar cada 4 segundos
+}
+
+function stopCarouselAutoplay() {
+    if (carouselInterval) {
+        clearInterval(carouselInterval);
+    }
+}
+
+// Imágenes para cada tipo de plan/reserva
+const carouselImages = {
+    plata: [
+        'https://source.unsplash.com/800x600/?balloons,party',
+        'https://source.unsplash.com/800x600/?cake,dessert',
+        'https://source.unsplash.com/800x600/?celebration,event',
+        'https://source.unsplash.com/800x600/?restaurant,dining'
+    ],
+    oro: [
+        'https://source.unsplash.com/800x600/?wine,glass',
+        'https://source.unsplash.com/800x600/?champagne,celebration',
+        'https://source.unsplash.com/800x600/?gourmet,cake',
+        'https://source.unsplash.com/800x600/?luxury,dining'
+    ],
+    luxury: [
+        'https://source.unsplash.com/800x600/?roses,flowers',
+        'https://source.unsplash.com/800x600/?romantic,dinner',
+        'https://source.unsplash.com/800x600/?luxury,decoration',
+        'https://source.unsplash.com/800x600/?candles,ambiance'
+    ],
+    normal: [
+        'https://source.unsplash.com/800x600/?restaurant,interior',
+        'https://source.unsplash.com/800x600/?dining,table',
+        'https://source.unsplash.com/800x600/?food,gourmet',
+        'https://source.unsplash.com/800x600/?chef,kitchen'
+    ],
+    regular: [
+        'https://source.unsplash.com/800x600/?restaurant,elegant',
+        'https://source.unsplash.com/800x600/?decoration,table',
+        'https://source.unsplash.com/800x600/?wine,dining',
+        'https://source.unsplash.com/800x600/?celebration,party'
+    ],
+    gold: [
+        'https://source.unsplash.com/800x600/?vip,lounge',
+        'https://source.unsplash.com/800x600/?luxury,restaurant',
+        'https://source.unsplash.com/800x600/?exclusive,dining',
+        'https://source.unsplash.com/800x600/?premium,service'
+    ]
+};
+
+// Actualizar función showDetailModal para incluir carrusel
+const originalShowDetailModal = window.showDetailModal || function() {};
+
+window.showDetailModal = function(detail) {
+    originalShowDetailModal(detail);
+
+    // Inicializar carrusel con imágenes según el tipo
+    const type = detail.type || 'normal';
+    const images = carouselImages[type] || carouselImages.normal;
+
+    setTimeout(() => {
+        initializeCarousel(images);
+        startCarouselAutoplay();
+    }, 100);
+};
+
+// Actualizar función showDecorationDetail
+const originalShowDecorationDetail = window.showDecorationDetail || function() {};
+
+window.showDecorationDetail = function(type) {
+    const detail = decorationDetails[type];
+    if (!detail) return;
+
+    showDetailModal({...detail, type: type});
+};
+
+// Actualizar función showReservationDetail
+const originalShowReservationDetail = window.showReservationDetail || function() {};
+
+window.showReservationDetail = function(type) {
+    const detail = reservationDetails[type];
+    if (!detail) return;
+
+    showDetailModal({...detail, type: type});
+};
+
+// Detener autoplay cuando se cierra el modal
+const originalCloseDetailModal = window.closeDetailModal || function() {};
+
+window.closeDetailModal = function() {
+    stopCarouselAutoplay();
+    originalCloseDetailModal();
+};
+
 // Initialize app
 window.menuApp = new MenuApp();
