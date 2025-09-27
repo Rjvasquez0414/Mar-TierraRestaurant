@@ -3,38 +3,67 @@ const espaciosData = {
     almaterra: {
         title: 'Almaterra - Coworking Elegante',
         description: 'Un espacio de coworking sofisticado donde los negocios se fusionan con la gastronomía de altura. Ambiente ejecutivo con tecnología de vanguardia.',
-        images: ['_MG_8912.JPG'],
         folder: 'almaterra'
     },
     arca: {
         title: 'Arca - Salón Principal',
         description: 'El corazón de Mar&Tierra. Nuestro salón principal combina la elegancia clásica con toques contemporáneos en el primer piso.',
-        images: [],
         folder: 'arca'
     },
     barco: {
         title: 'Barco - Experiencia Náutica',
         description: 'Una travesía gastronómica en nuestro salón temático del primer piso, inspirado en los grandes transatlánticos.',
-        images: [],
         folder: 'barco'
     },
     chillout: {
         title: 'Chillout - Pet Friendly',
         description: 'Un oasis de relajación al aire libre donde las mascotas son bienvenidas. Terraza con ambiente distendido.',
-        images: [],
         folder: 'Chillout'
     },
     rooftop: {
         title: 'Rooftop - Vista Panorámica',
         description: 'La cima de la experiencia Mar&Tierra. Nuestro exclusivo rooftop bar ofrece vistas panorámicas de Bucaramanga.',
-        images: [],
         folder: 'rooftop'
     },
     salonvip: {
-        title: 'Salón VIP - Ultra Exclusivo',
+        title: 'Salón VIP - Recomendado',
         description: 'El pináculo del lujo y la exclusividad. Nuestro salón VIP es un santuario de elegancia suprema.',
-        images: [],
         folder: 'SalonVIP'
+    }
+};
+
+// CONFIGURACIÓN DE IMÁGENES - SISTEMA HÍBRIDO (LOCAL + URLS EXTERNAS)
+const imageConfig = {
+    // Cambiar a true cuando tengas las URLs del hosting
+    useExternalURLs: false,
+
+    // URL base del hosting (actualizar cuando esté disponible)
+    externalBaseURL: '', // Ejemplo: 'https://tudominio.com/images/instalaciones'
+
+    // Imágenes locales (formato WebP optimizado)
+    localImages: {
+        almaterra: ['_MG_8912.webp', '_MG_8993.webp'],
+        arca: ['_MG_8885.webp', '_MG_8888.webp', '_MG_8945.webp', '_MG_8967.webp'],
+        barco: ['_MG_8908.webp', '_MG_8993.webp'],
+        chillout: ['_MG_9344.webp', '_MG_9346.webp'],
+        rooftop: ['_MG_9320.webp', '_MG_9326.webp', '_MG_9337.webp'],
+        salonvip: ['_MG_8865.webp', '_MG_8866.webp', '_MG_8871.webp', '_MG_8880.webp']
+    },
+
+    // URLs externas (actualizar cuando subas las imágenes al hosting)
+    externalImages: {
+        almaterra: [
+            // 'https://tudominio.com/images/almaterra/_MG_8912.webp',
+            // 'https://tudominio.com/images/almaterra/_MG_8993.webp'
+        ],
+        arca: [
+            // 'https://tudominio.com/images/arca/_MG_8885.webp',
+            // etc...
+        ],
+        barco: [],
+        chillout: [],
+        rooftop: [],
+        salonvip: []
     }
 };
 
@@ -75,10 +104,6 @@ function openEspacioModal(espacioKey) {
 
 // Función para cargar imágenes de cada espacio
 async function loadEspacioImages(espacioKey, folder, wrapper) {
-    const basePath = `images/EspaciosRestaurante/${folder}/`;
-
-    // Lista de posibles imágenes (necesitarías actualizar esto con los nombres reales)
-    // Por ahora usaremos placeholders y las imágenes conocidas
     const imageFiles = await getImagesForSpace(espacioKey);
 
     if (imageFiles.length === 0) {
@@ -86,46 +111,44 @@ async function loadEspacioImages(espacioKey, folder, wrapper) {
         const slide = document.createElement('div');
         slide.className = 'swiper-slide';
         slide.innerHTML = `
-            <img src="https://source.unsplash.com/1200x800/?restaurant,${espacioKey}"
+            <img src="https://via.placeholder.com/1200x800/D4C4AA/6B4C3B?text=Mar%26Tierra"
                  alt="${espacioKey}"
                  loading="lazy">
         `;
         wrapper.appendChild(slide);
     } else {
         // Cargar imágenes reales
-        imageFiles.forEach(fileName => {
+        imageFiles.forEach(imageSrc => {
             const slide = document.createElement('div');
             slide.className = 'swiper-slide';
+
+            // Si es una URL externa, usarla directamente
+            // Si es un archivo local, construir la ruta
+            const isExternal = imageSrc.startsWith('http');
+            const finalSrc = isExternal
+                ? imageSrc
+                : `images/EspaciosRestaurante/${folder}/${imageSrc}`;
+
             slide.innerHTML = `
-                <img src="${basePath}${fileName}"
+                <img src="${finalSrc}"
                      alt="${espacioKey}"
                      loading="lazy"
-                     onerror="this.src='https://source.unsplash.com/1200x800/?restaurant,luxury'">
+                     onerror="this.src='https://via.placeholder.com/1200x800/D4C4AA/6B4C3B?text=Imagen+No+Disponible'">
             `;
             wrapper.appendChild(slide);
         });
     }
 }
 
-// Función para obtener las imágenes de cada espacio
+// Función para obtener las imágenes de cada espacio (con soporte híbrido)
 async function getImagesForSpace(espacioKey) {
-    // Imágenes reales de cada espacio
-    switch(espacioKey) {
-        case 'almaterra':
-            return ['_MG_8912.JPG'];
-        case 'arca':
-            return ['_MG_8885.JPG', '_MG_8945.JPG', '_MG_8967.JPG', '_MG_8993.JPG'];
-        case 'barco':
-            return ['_MG_8908.JPG', '_MG_8910.JPG', '_MG_8914.JPG'];
-        case 'chillout':
-            return ['_MG_9343.JPG', '_MG_9344.JPG', '_MG_9346.JPG'];
-        case 'rooftop':
-            return ['_MG_9320.JPG', '_MG_9322.JPG', '_MG_9324.JPG', '_MG_9326.JPG', '_MG_9337.JPG'];
-        case 'salonvip':
-            return ['_MG_8865.JPG', '_MG_8866.JPG', '_MG_8871.JPG', '_MG_8880.JPG', '_MG_8882.JPG'];
-        default:
-            return [];
+    // Si está configurado para usar URLs externas y existen
+    if (imageConfig.useExternalURLs && imageConfig.externalImages[espacioKey]?.length > 0) {
+        return imageConfig.externalImages[espacioKey];
     }
+
+    // Si no, usar imágenes locales
+    return imageConfig.localImages[espacioKey] || [];
 }
 
 // Función para inicializar Swiper
@@ -207,15 +230,15 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Cargar imágenes de fondo para las tarjetas
+// Cargar imágenes de fondo para las tarjetas (ahora en WebP)
 document.addEventListener('DOMContentLoaded', () => {
     // Configurar imágenes de fondo reales para cada espacio
     const espacioImages = {
-        'arca-image': 'images/EspaciosRestaurante/arca/_MG_8885.JPG',
-        'barco-image': 'images/EspaciosRestaurante/barco/_MG_8908.JPG',
-        'chillout-image': 'images/EspaciosRestaurante/Chillout/_MG_9343.JPG',
-        'rooftop-image': 'images/EspaciosRestaurante/rooftop/_MG_9320.JPG',
-        'salonvip-image': 'images/EspaciosRestaurante/SalonVIP/_MG_8865.JPG'
+        'arca-image': 'images/EspaciosRestaurante/arca/_MG_8885.webp',
+        'barco-image': 'images/EspaciosRestaurante/barco/_MG_8908.webp',
+        'chillout-image': 'images/EspaciosRestaurante/Chillout/_MG_9344.webp',
+        'rooftop-image': 'images/EspaciosRestaurante/rooftop/_MG_9320.webp',
+        'salonvip-image': 'images/EspaciosRestaurante/SalonVIP/_MG_8865.webp'
     };
 
     // Aplicar imágenes de fondo
@@ -259,3 +282,26 @@ if ('IntersectionObserver' in window) {
         imageObserver.observe(img);
     });
 }
+
+// FUNCIÓN DE UTILIDAD: Cambiar entre imágenes locales y URLs externas
+// Puedes llamar esta función cuando tengas las URLs listas
+function switchToExternalImages(baseURL = '') {
+    imageConfig.useExternalURLs = true;
+    imageConfig.externalBaseURL = baseURL;
+    console.log('Cambiado a imágenes externas. Base URL:', baseURL);
+}
+
+// FUNCIÓN DE UTILIDAD: Actualizar URLs externas para un espacio específico
+function updateExternalImages(espacioKey, urls) {
+    if (imageConfig.externalImages[espacioKey]) {
+        imageConfig.externalImages[espacioKey] = urls;
+        console.log(`URLs actualizadas para ${espacioKey}:`, urls);
+    }
+}
+
+// Exportar funciones útiles para configuración
+window.MarTierraConfig = {
+    switchToExternalImages,
+    updateExternalImages,
+    imageConfig
+};

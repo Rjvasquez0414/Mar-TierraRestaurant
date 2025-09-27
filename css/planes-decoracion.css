@@ -1,0 +1,118 @@
+/* ===============================================
+   ESTILOS PARA PLANES DE DECORACIÓN CON IMÁGENES
+   =============================================== */
+
+/* Plan Image Section - Sin colores de fondo */
+.plan-image-section {
+    width: 100%;
+    height: 250px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px 15px 0 0;
+}
+
+.plan-image.premium {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: var(--beige-claro) !important; /* Fondo neutro si no hay imagen */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.plan-image.premium img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.decoration-plan-card:hover .plan-image.premium img {
+    transform: scale(1.05);
+}
+
+/* Overlay para el texto de categoría */
+.plan-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(0, 0, 0, 0.5) 100%
+    );
+    display: flex;
+    align-items: flex-end;
+    padding: 20px;
+    pointer-events: none;
+}
+
+.plan-category {
+    background: rgba(201, 169, 97, 0.9);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    backdrop-filter: blur(10px);
+}
+
+/* Modal de Detalles - Agregar espacio para imagen */
+#detailModal .detail-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* Imagen en el Modal de Detalles */
+.detail-image-container {
+    width: 100%;
+    height: 400px;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.detail-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Ajustes para el modal de detalles */
+.detail-header {
+    background: transparent;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+/* Remover cualquier gradiente de color de los planes */
+.decoration-plan-card.featured .plan-image.premium,
+.decoration-plan-card.luxury .plan-image.premium {
+    background: var(--beige-claro) !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .plan-image-section {
+        height: 200px;
+    }
+
+    .detail-image-container {
+        height: 250px;
+    }
+}
+
+/* Estructura de carpetas para las imágenes:
+   images/
+   └── PlanesDecoracion/
+       ├── plan-plata.webp
+       ├── plan-oro.webp
+       └── plan-luxury.webp
+*/

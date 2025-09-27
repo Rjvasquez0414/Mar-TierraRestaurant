@@ -39,6 +39,7 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/instalaciones.css">
     <link rel="stylesheet" href="css/modal-premium.css">
+    <link rel="stylesheet" href="css/planes-decoracion.css">
     <link rel="stylesheet" href="css/enhancements.css">
     <link rel="stylesheet" href="css/reservas-fix.css">
 
@@ -219,7 +220,7 @@
                 <!-- Almaterra -->
                 <div class="espacio-card" data-aos="fade-up" data-aos-delay="100" onclick="openEspacioModal('almaterra')">
                     <div class="espacio-image-wrapper">
-                        <div class="espacio-image" style="background-image: url('images/EspaciosRestaurante/almaterra/_MG_8912.JPG');">
+                        <div class="espacio-image" style="background-image: url('images/EspaciosRestaurante/almaterra/_MG_8912.webp');">
                             <div class="espacio-overlay">
                                 <i class="fas fa-expand-alt"></i>
                             </div>
@@ -244,7 +245,7 @@
                 <!-- Arca -->
                 <div class="espacio-card" data-aos="fade-up" data-aos-delay="200" onclick="openEspacioModal('arca')">
                     <div class="espacio-image-wrapper">
-                        <div class="espacio-image" id="arca-image" style="background-image: url('images/EspaciosRestaurante/arca/_MG_8885.JPG');">
+                        <div class="espacio-image" id="arca-image" style="background-image: url('images/EspaciosRestaurante/arca/_MG_8885.webp');">
                             <div class="espacio-overlay">
                                 <i class="fas fa-expand-alt"></i>
                             </div>
@@ -269,7 +270,7 @@
                 <!-- Barco -->
                 <div class="espacio-card" data-aos="fade-up" data-aos-delay="300" onclick="openEspacioModal('barco')">
                     <div class="espacio-image-wrapper">
-                        <div class="espacio-image" id="barco-image" style="background-image: url('images/EspaciosRestaurante/barco/_MG_8908.JPG');">
+                        <div class="espacio-image" id="barco-image" style="background-image: url('images/EspaciosRestaurante/barco/_MG_8908.webp');">
                             <div class="espacio-overlay">
                                 <i class="fas fa-expand-alt"></i>
                             </div>
@@ -294,7 +295,7 @@
                 <!-- Chillout -->
                 <div class="espacio-card" data-aos="fade-up" data-aos-delay="100" onclick="openEspacioModal('chillout')">
                     <div class="espacio-image-wrapper">
-                        <div class="espacio-image" id="chillout-image" style="background-image: url('images/EspaciosRestaurante/Chillout/_MG_9343.JPG');">
+                        <div class="espacio-image" id="chillout-image" style="background-image: url('images/EspaciosRestaurante/Chillout/_MG_9344.webp');">
                             <div class="espacio-overlay">
                                 <i class="fas fa-expand-alt"></i>
                             </div>
@@ -319,7 +320,7 @@
                 <!-- Rooftop -->
                 <div class="espacio-card" data-aos="fade-up" data-aos-delay="200" onclick="openEspacioModal('rooftop')">
                     <div class="espacio-image-wrapper">
-                        <div class="espacio-image" id="rooftop-image" style="background-image: url('images/EspaciosRestaurante/rooftop/_MG_9320.JPG');">
+                        <div class="espacio-image" id="rooftop-image" style="background-image: url('images/EspaciosRestaurante/rooftop/_MG_9320.webp');">
                             <div class="espacio-overlay">
                                 <i class="fas fa-expand-alt"></i>
                             </div>
@@ -342,26 +343,25 @@
                 </div>
 
                 <!-- Salon VIP -->
-                <div class="espacio-card vip-card" data-aos="fade-up" data-aos-delay="300" onclick="openEspacioModal('salonvip')">
+                <div class="espacio-card" data-aos="fade-up" data-aos-delay="300" onclick="openEspacioModal('salonvip')">
                     <div class="espacio-image-wrapper">
-                        <div class="espacio-image" id="salonvip-image" style="background-image: url('images/EspaciosRestaurante/SalonVIP/_MG_8865.JPG');">
+                        <div class="espacio-image" id="salonvip-image" style="background-image: url('images/EspaciosRestaurante/SalonVIP/_MG_8865.webp');">
                             <div class="espacio-overlay">
-                                <i class="fas fa-crown"></i>
+                                <i class="fas fa-star"></i>
                             </div>
                         </div>
                     </div>
                     <div class="espacio-content">
                         <h3 class="espacio-title">Salón VIP</h3>
-                        <span class="espacio-tag vip">Ultra Exclusivo</span>
+                        <span class="espacio-tag">Recomendado</span>
                         <p class="espacio-description">
                             El pináculo del lujo y la exclusividad. Nuestro salón VIP es un santuario de elegancia suprema,
-                            diseñado para los paladares más exigentes. Servicio personalizado, carta exclusiva y un ambiente
-                            donde cada detalle define la excelencia.
+                            diseñado para los paladares más exigentes. Un ambiente donde cada detalle define la excelencia.
                         </p>
                         <div class="espacio-features">
+                            <span class="feature-item"><i class="fas fa-star"></i> El Favorito</span>
                             <span class="feature-item"><i class="fas fa-crown"></i> Ultra Premium</span>
-                            <span class="feature-item"><i class="fas fa-user-tie"></i> Servicio Privado</span>
-                            <span class="feature-item"><i class="fas fa-gem"></i> Menú Exclusivo</span>
+                            <span class="feature-item"><i class="fas fa-users"></i> 15-25 personas</span>
                         </div>
                     </div>
                 </div>
@@ -501,8 +501,9 @@
                 <!-- Plan Plata -->
                 <div class="decoration-plan-card vertical-card" onclick="showDecorationDetail('plata')">
                     <div class="plan-image-section">
-                        <div class="plan-image premium" style="background: linear-gradient(135deg, #C0C0C0, #999999);">
-                            <img src="https://source.unsplash.com/600x400/?balloons,party" alt="Plan Plata" onerror="this.style.display='none'">
+                        <div class="plan-image premium">
+                            <img src="images/PlanesDecoracion/plan-plata.webp" alt="Plan Plata"
+                                 onerror="this.style.display='none'">
                             <div class="plan-overlay">
                                 <span class="plan-category">Clásico</span>
                             </div>
@@ -554,8 +555,9 @@
                 <!-- Plan Oro -->
                 <div class="decoration-plan-card vertical-card featured" onclick="showDecorationDetail('oro')">
                     <div class="plan-image-section">
-                        <div class="plan-image premium" style="background: linear-gradient(135deg, #FFD700, #e6c200);">
-                            <img src="https://source.unsplash.com/600x400/?wine,celebration" alt="Plan Oro" onerror="this.style.display='none'">
+                        <div class="plan-image premium">
+                            <img src="images/PlanesDecoracion/plan-oro.webp" alt="Plan Oro"
+                                 onerror="this.style.display='none'">
                             <div class="plan-overlay">
                                 <span class="plan-category">Preferido</span>
                             </div>
@@ -620,8 +622,9 @@
                 <!-- Plan Luxury -->
                 <div class="decoration-plan-card vertical-card luxury" onclick="showDecorationDetail('luxury')">
                     <div class="plan-image-section">
-                        <div class="plan-image premium" style="background: linear-gradient(135deg, #8B4513, #6b3410);">
-                            <img src="https://source.unsplash.com/600x400/?roses,luxury" alt="Plan Luxury" onerror="this.style.display='none'">
+                        <div class="plan-image premium">
+                            <img src="images/PlanesDecoracion/plan-luxury.webp" alt="Plan Luxury"
+                                 onerror="this.style.display='none'">
                             <div class="plan-overlay">
                                 <span class="plan-category">Exclusivo</span>
                             </div>
@@ -1547,21 +1550,38 @@
                 const detailDescription = document.getElementById('detailDescription');
                 const detailPrice = document.getElementById('detailPrice');
 
+                // Crear contenedor de imagen si no existe
+                let imageContainer = document.querySelector('.detail-image-container');
+                if (!imageContainer) {
+                    imageContainer = document.createElement('div');
+                    imageContainer.className = 'detail-image-container';
+                    const detailContent = document.querySelector('.detail-content');
+                    if (detailContent) {
+                        detailContent.insertBefore(imageContainer, detailContent.firstChild);
+                    }
+                }
+
                 switch(plan) {
                     case 'plata':
                         detailTitle.textContent = 'Plan Plata';
                         detailPrice.textContent = '$80.000 COP';
                         detailDescription.innerHTML = '<p>3 globos con helio y 1 porción de pastel.</p>';
+                        imageContainer.innerHTML = `<img src="images/PlanesDecoracion/plan-plata.webp" alt="Plan Plata"
+                                                     onerror="this.style.display='none'">`;
                         break;
                     case 'oro':
                         detailTitle.textContent = 'Plan Oro';
                         detailPrice.textContent = '$120.000 COP';
                         detailDescription.innerHTML = '<p>1 botella de vino, 3 globos con helio y 1 porción de pastel.</p>';
+                        imageContainer.innerHTML = `<img src="images/PlanesDecoracion/plan-oro.webp" alt="Plan Oro"
+                                                     onerror="this.style.display='none'">`;
                         break;
                     case 'luxury':
                         detailTitle.textContent = 'Plan Luxury';
                         detailPrice.textContent = '$100.000 COP';
                         detailDescription.innerHTML = '<p>Jarrón de rosas y pétalos decorativos.</p>';
+                        imageContainer.innerHTML = `<img src="images/PlanesDecoracion/plan-luxury.webp" alt="Plan Luxury"
+                                                     onerror="this.style.display='none'">`;
                         break;
                 }
             }
