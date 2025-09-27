@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Verificar Cambios - Mar&Tierra</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        h1 {
+            color: #333;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .instructions {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Verificación de Cambios - Mar&Tierra Restaurant</h1>
+
+    <div id="results"></div>
+
+    <div class="instructions">
+        <h2>📋 Instrucciones para Solucionar Problemas:</h2>
+
+        <h3>1. Limpia el Caché del Navegador:</h3>
+        <ul>
+            <li><strong>Windows:</strong> Presiona <code>Ctrl + F5</code></li>
+            <li><strong>Mac:</strong> Presiona <code>Cmd + Shift + R</code></li>
+            <li><strong>Alternativa:</strong> Abre DevTools (F12) → Click derecho en botón recargar → "Vaciar caché y volver a cargar"</li>
+        </ul>
+
+        <h3>2. Verifica la URL:</h3>
+        <p>Asegúrate de que estás abriendo: <code>file:///C:/Users/Roberto/Desktop/MenuMar-Tierra%20ACTUAL/Mar&amp;Tierra/MenuMar-Tierra/index.html</code></p>
+
+        <h3>3. Prueba en Modo Incógnito:</h3>
+        <ul>
+            <li><strong>Chrome:</strong> <code>Ctrl + Shift + N</code></li>
+            <li><strong>Edge:</strong> <code>Ctrl + Shift + N</code></li>
+            <li><strong>Firefox:</strong> <code>Ctrl + Shift + P</code></li>
+        </ul>
+
+        <h3>4. Si los Archivos CSS/JS No Cargan:</h3>
+        <p>Abre la consola del navegador (F12) y busca errores en rojo. Comparte cualquier error que veas.</p>
+    </div>
+
+    <script>
+        // Verificar archivos CSS
+        function checkCSS() {
+            const cssFiles = [
+                'css/styles.css',
+                'css/instalaciones.css',
+                'css/enhancements.css',
+                'css/reservas-fix.css'
+            ];
+
+            const results = document.getElementById('results');
+
+            cssFiles.forEach(file => {
+                fetch(file)
+                    .then(response => {
+                        const status = document.createElement('div');
+                        if (response.ok) {
+                            status.className = 'status success';
+                            status.innerHTML = `✅ <strong>${file}</strong> - Cargado correctamente`;
+                        } else {
+                            status.className = 'status error';
+                            status.innerHTML = `❌ <strong>${file}</strong> - Error al cargar (${response.status})`;
+                        }
+                        results.appendChild(status);
+                    })
+                    .catch(error => {
+                        const status = document.createElement('div');
+                        status.className = 'status error';
+                        status.innerHTML = `❌ <strong>${file}</strong> - No encontrado`;
+                        results.appendChild(status);
+                    });
+            });
+        }
+
+        // Verificar archivos JS
+        function checkJS() {
+            const jsFiles = [
+                'js/menu-data.js',
+                'js/script.js',
+                'js/instalaciones.js',
+                'js/enhancements.js'
+            ];
+
+            const results = document.getElementById('results');
+
+            jsFiles.forEach(file => {
+                fetch(file)
+                    .then(response => {
+                        const status = document.createElement('div');
+                        if (response.ok) {
+                            status.className = 'status success';
+                            status.innerHTML = `✅ <strong>${file}</strong> - Cargado correctamente`;
+                        } else {
+                            status.className = 'status error';
+                            status.innerHTML = `❌ <strong>${file}</strong> - Error al cargar (${response.status})`;
+                        }
+                        results.appendChild(status);
+                    })
+                    .catch(error => {
+                        const status = document.createElement('div');
+                        status.className = 'status error';
+                        status.innerHTML = `❌ <strong>${file}</strong> - No encontrado`;
+                        results.appendChild(status);
+                    });
+            });
+        }
+
+        // Verificar sección de Instalaciones
+        function checkInstalacionesSection() {
+            fetch('index.html')
+                .then(response => response.text())
+                .then(html => {
+                    const results = document.getElementById('results');
+                    const status = document.createElement('div');
+
+                    if (html.includes('instalaciones-section')) {
+                        status.className = 'status success';
+                        status.innerHTML = `✅ <strong>Sección Instalaciones</strong> - Encontrada en HTML`;
+                    } else {
+                        status.className = 'status error';
+                        status.innerHTML = `❌ <strong>Sección Instalaciones</strong> - NO encontrada en HTML`;
+                    }
+                    results.appendChild(status);
+
+                    // Verificar menú
+                    const menuStatus = document.createElement('div');
+                    if (html.includes('onclick="showSection(\'instalaciones\')"')) {
+                        menuStatus.className = 'status success';
+                        menuStatus.innerHTML = `✅ <strong>Enlace de Menú</strong> - "Instalaciones" encontrado en navegación`;
+                    } else {
+                        menuStatus.className = 'status error';
+                        menuStatus.innerHTML = `❌ <strong>Enlace de Menú</strong> - "Instalaciones" NO encontrado en navegación`;
+                    }
+                    results.appendChild(menuStatus);
+                });
+        }
+
+        // Ejecutar todas las verificaciones
+        window.onload = function() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<h2>📊 Resultados de la Verificación:</h2>';
+
+            checkCSS();
+            checkJS();
+            checkInstalacionesSection();
+
+            // Mensaje de caché
+            const cacheWarning = document.createElement('div');
+            cacheWarning.className = 'status warning';
+            cacheWarning.innerHTML = `⚠️ <strong>Importante:</strong> Si todo aparece como ✅ pero no ves los cambios, el problema es el caché del navegador.`;
+            setTimeout(() => results.appendChild(cacheWarning), 1000);
+        };
+    </script>
+</body>
+</html>

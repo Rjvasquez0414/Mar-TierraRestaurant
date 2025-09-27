@@ -14,6 +14,15 @@
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Bebas+Neue&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome para iconos profesionales -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- AOS - Animate On Scroll Library -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+
+    <!-- Swiper CSS para galería elegante -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     
     <!-- Meta tags para SEO -->
     <meta name="description" content="Mar&Tierra Restaurant - Un encuentro de culturas, texturas e historias. Menú exclusivo donde el mar y la tierra se complementan en perfecta armonía.">
@@ -28,6 +37,9 @@
     
     <!-- Estilos CSS -->
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/instalaciones.css">
+    <link rel="stylesheet" href="css/modal-premium.css">
+    <link rel="stylesheet" href="css/enhancements.css">
     <link rel="stylesheet" href="css/reservas-fix.css">
 </head>
 <body>
@@ -57,6 +69,7 @@
             <nav id="nav">
                 <a class="nav-link active" onclick="showSection('hero')">Inicio</a>
                 <a class="nav-link" onclick="showSection('categories')">Menú</a>
+                <a class="nav-link" onclick="showSection('instalaciones')">Instalaciones</a>
                 <a class="nav-link" onclick="showSection('reservation-info')">Reservas</a>
                 <a class="nav-link" onclick="showSection('contact')">Contacto</a>
                 <a href="#" class="reservation-btn" onclick="openReservationModal(event)"><span>Reservar Mesa</span></a>
@@ -95,7 +108,7 @@
                 <div class="ornament-line"></div>
             </div>
             <p class="section-description">
-                Cada plato es un viaje sensorial donde los ingredientes del mar y la tierra 
+                Cada prueba plato es un viaje sensorial donde los ingredientes del mar y la tierra 
                 se encuentran en perfecta armonía
             </p>
         </div>
@@ -180,6 +193,202 @@
             </div>
         </div>
     </section>
+
+    <!-- Nueva Sección de Instalaciones -->
+    <section class="instalaciones-section" id="instalaciones">
+        <div class="instalaciones-container">
+            <div class="section-header" data-aos="fade-up">
+                <p class="section-overtitle">Nuestros Espacios</p>
+                <h2 class="section-title">Instalaciones Exclusivas</h2>
+                <div class="ornament">
+                    <div class="ornament-line"></div>
+                    <div class="ornament-center"></div>
+                    <div class="ornament-line"></div>
+                </div>
+                <p class="section-description">
+                    Descubre los diferentes ambientes que Mar&Tierra ha diseñado para crear experiencias únicas.
+                    Cada espacio cuenta una historia diferente, desde la elegancia ejecutiva hasta la relajación al aire libre.
+                </p>
+            </div>
+
+            <!-- Grid de Espacios -->
+            <div class="espacios-grid">
+                <!-- Almaterra -->
+                <div class="espacio-card" data-aos="fade-up" data-aos-delay="100" onclick="openEspacioModal('almaterra')">
+                    <div class="espacio-image-wrapper">
+                        <div class="espacio-image" style="background-image: url('images/EspaciosRestaurante/almaterra/_MG_8912.JPG');">
+                            <div class="espacio-overlay">
+                                <i class="fas fa-expand-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="espacio-content">
+                        <h3 class="espacio-title">Almaterra</h3>
+                        <span class="espacio-tag">Coworking Elegante</span>
+                        <p class="espacio-description">
+                            Un espacio de coworking sofisticado donde los negocios se fusionan con la gastronomía de altura.
+                            Ambiente ejecutivo con tecnología de vanguardia, perfecto para reuniones de alto nivel mientras disfruta
+                            de nuestra cocina exclusiva.
+                        </p>
+                        <div class="espacio-features">
+                            <span class="feature-item"><i class="fas fa-wifi"></i> WiFi Premium</span>
+                            <span class="feature-item"><i class="fas fa-users"></i> 20-30 personas</span>
+                            <span class="feature-item"><i class="fas fa-laptop"></i> Business Center</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Arca -->
+                <div class="espacio-card" data-aos="fade-up" data-aos-delay="200" onclick="openEspacioModal('arca')">
+                    <div class="espacio-image-wrapper">
+                        <div class="espacio-image" id="arca-image" style="background-image: url('images/EspaciosRestaurante/arca/_MG_8885.JPG');">
+                            <div class="espacio-overlay">
+                                <i class="fas fa-expand-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="espacio-content">
+                        <h3 class="espacio-title">Arca</h3>
+                        <span class="espacio-tag">Salón Principal</span>
+                        <p class="espacio-description">
+                            El corazón de Mar&Tierra. Nuestro salón principal combina la elegancia clásica con toques contemporáneos.
+                            Un espacio majestuoso en el primer piso donde cada detalle ha sido cuidadosamente seleccionado para
+                            crear una atmósfera de distinción.
+                        </p>
+                        <div class="espacio-features">
+                            <span class="feature-item"><i class="fas fa-utensils"></i> Fine Dining</span>
+                            <span class="feature-item"><i class="fas fa-users"></i> 50-80 personas</span>
+                            <span class="feature-item"><i class="fas fa-music"></i> Música en vivo</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barco -->
+                <div class="espacio-card" data-aos="fade-up" data-aos-delay="300" onclick="openEspacioModal('barco')">
+                    <div class="espacio-image-wrapper">
+                        <div class="espacio-image" id="barco-image" style="background-image: url('images/EspaciosRestaurante/barco/_MG_8908.JPG');">
+                            <div class="espacio-overlay">
+                                <i class="fas fa-expand-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="espacio-content">
+                        <h3 class="espacio-title">Barco</h3>
+                        <span class="espacio-tag">Experiencia Náutica</span>
+                        <p class="espacio-description">
+                            Una travesía gastronómica en nuestro salón temático del primer piso. Decoración inspirada en
+                            los grandes transatlánticos, donde el mar cobra vida en cada rincón y la cocina marinera
+                            alcanza su máxima expresión.
+                        </p>
+                        <div class="espacio-features">
+                            <span class="feature-item"><i class="fas fa-anchor"></i> Temática Marina</span>
+                            <span class="feature-item"><i class="fas fa-users"></i> 30-40 personas</span>
+                            <span class="feature-item"><i class="fas fa-fish"></i> Especialidad Mar</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chillout -->
+                <div class="espacio-card" data-aos="fade-up" data-aos-delay="100" onclick="openEspacioModal('chillout')">
+                    <div class="espacio-image-wrapper">
+                        <div class="espacio-image" id="chillout-image" style="background-image: url('images/EspaciosRestaurante/Chillout/_MG_9343.JPG');">
+                            <div class="espacio-overlay">
+                                <i class="fas fa-expand-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="espacio-content">
+                        <h3 class="espacio-title">Chillout</h3>
+                        <span class="espacio-tag pet-friendly">Pet Friendly</span>
+                        <p class="espacio-description">
+                            Un oasis de relajación al aire libre donde las mascotas son bienvenidas. Terraza con ambiente
+                            distendido, perfecta para disfrutar de cócteles artesanales y tapas gourmet mientras tu mejor
+                            amigo te acompaña.
+                        </p>
+                        <div class="espacio-features">
+                            <span class="feature-item"><i class="fas fa-paw"></i> Pet Friendly</span>
+                            <span class="feature-item"><i class="fas fa-sun"></i> Terraza al aire</span>
+                            <span class="feature-item"><i class="fas fa-cocktail"></i> Cocktail Bar</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rooftop -->
+                <div class="espacio-card" data-aos="fade-up" data-aos-delay="200" onclick="openEspacioModal('rooftop')">
+                    <div class="espacio-image-wrapper">
+                        <div class="espacio-image" id="rooftop-image" style="background-image: url('images/EspaciosRestaurante/rooftop/_MG_9320.JPG');">
+                            <div class="espacio-overlay">
+                                <i class="fas fa-expand-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="espacio-content">
+                        <h3 class="espacio-title">Rooftop</h3>
+                        <span class="espacio-tag">Vista Panorámica</span>
+                        <p class="espacio-description">
+                            La cima de la experiencia Mar&Tierra. Nuestro exclusivo rooftop bar ofrece vistas panorámicas
+                            de Bucaramanga, coctelería de autor y una atmósfera vibrante donde el cielo es el límite para
+                            celebraciones inolvidables.
+                        </p>
+                        <div class="espacio-features">
+                            <span class="feature-item"><i class="fas fa-city"></i> Vista 360°</span>
+                            <span class="feature-item"><i class="fas fa-glass-martini-alt"></i> Premium Bar</span>
+                            <span class="feature-item"><i class="fas fa-moon"></i> Eventos nocturnos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Salon VIP -->
+                <div class="espacio-card vip-card" data-aos="fade-up" data-aos-delay="300" onclick="openEspacioModal('salonvip')">
+                    <div class="espacio-image-wrapper">
+                        <div class="espacio-image" id="salonvip-image" style="background-image: url('images/EspaciosRestaurante/SalonVIP/_MG_8865.JPG');">
+                            <div class="espacio-overlay">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="espacio-content">
+                        <h3 class="espacio-title">Salón VIP</h3>
+                        <span class="espacio-tag vip">Ultra Exclusivo</span>
+                        <p class="espacio-description">
+                            El pináculo del lujo y la exclusividad. Nuestro salón VIP es un santuario de elegancia suprema,
+                            diseñado para los paladares más exigentes. Servicio personalizado, carta exclusiva y un ambiente
+                            donde cada detalle define la excelencia.
+                        </p>
+                        <div class="espacio-features">
+                            <span class="feature-item"><i class="fas fa-crown"></i> Ultra Premium</span>
+                            <span class="feature-item"><i class="fas fa-user-tie"></i> Servicio Privado</span>
+                            <span class="feature-item"><i class="fas fa-gem"></i> Menú Exclusivo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal para Galería de Espacios -->
+    <div class="espacio-modal-overlay" id="espacioModal">
+        <div class="espacio-modal-container">
+            <div class="espacio-modal-close" onclick="closeEspacioModal()">
+                <i class="fas fa-times"></i>
+            </div>
+
+            <!-- Swiper Gallery -->
+            <div class="swiper espacioSwiper">
+                <div class="swiper-wrapper" id="espacioSwiperWrapper">
+                    <!-- Las imágenes se cargarán dinámicamente -->
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+
+            <div class="espacio-modal-info">
+                <h2 id="espacioModalTitle" class="espacio-modal-title"></h2>
+                <p id="espacioModalDescription" class="espacio-modal-description"></p>
+            </div>
+        </div>
+    </div>
 
     <!-- Sección de Información de Reservas (Vista Separada) -->
     <section class="reservation-info-section" id="reservation-info">
@@ -1208,7 +1417,7 @@
     <script>
         // Premium smooth scroll to sections with elegant transitions
         function showSection(sectionId) {
-            const sections = document.querySelectorAll('.categories-section, .menu-section, .reservation-info-section, .contact-section');
+            const sections = document.querySelectorAll('.categories-section, .menu-section, .instalaciones-section, .reservation-info-section, .contact-section');
 
             // Fade out current sections quickly
             sections.forEach(section => {
@@ -1370,5 +1579,28 @@
             }
         }
     </script>
+
+    <!-- AOS Script -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+    <!-- Swiper JS - DEBE CARGAR ANTES DE instalaciones.js -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- Initialize AOS -->
+    <script>
+        // Inicializar AOS con configuración premium
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100,
+            easing: 'ease-out-cubic'
+        });
+    </script>
+
+    <!-- Script de Instalaciones - DESPUÉS de Swiper -->
+    <script src="js/instalaciones.js"></script>
+
+    <!-- Script de Mejoras Profesionales -->
+    <script src="js/enhancements.js"></script>
 </body>
 </html>

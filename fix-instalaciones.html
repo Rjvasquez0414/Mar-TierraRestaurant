@@ -1,0 +1,62 @@
+<!-- INSTRUCCIONES PARA SOLUCIONAR EL PROBLEMA -->
+<!--
+1. LIMPIA EL CACHÉ DEL NAVEGADOR:
+   - Presiona Ctrl + F5 (Windows) o Cmd + Shift + R (Mac)
+   - O abre las herramientas de desarrollo (F12) -> Click derecho en el botón de recargar -> "Vaciar caché y volver a cargar"
+
+2. VERIFICA QUE ESTÁS ABRIENDO EL ARCHIVO CORRECTO:
+   - La ruta debe ser: C:\Users\Roberto\Desktop\MenuMar-Tierra ACTUAL\Mar&Tierra\MenuMar-Tierra\index.html
+
+3. SI AÚN NO FUNCIONA, COPIA EL SIGUIENTE CÓDIGO:
+-->
+
+<!-- AÑADE ESTO DESPUÉS DE LA LÍNEA 183 (después de </section> de categories) -->
+
+    <!-- Nueva Sección de Instalaciones -->
+    <section class="instalaciones-section" id="instalaciones">
+        <div class="instalaciones-container">
+            <div class="section-header" data-aos="fade-up">
+                <p class="section-overtitle">Nuestros Espacios</p>
+                <h2 class="section-title">Instalaciones Exclusivas</h2>
+                <div class="ornament">
+                    <div class="ornament-line"></div>
+                    <div class="ornament-center"></div>
+                    <div class="ornament-line"></div>
+                </div>
+                <p class="section-description">
+                    Descubre los diferentes ambientes que Mar&Tierra ha diseñado para crear experiencias únicas.
+                    Cada espacio cuenta una historia diferente, desde la elegancia ejecutiva hasta la relajación al aire libre.
+                </p>
+            </div>
+
+            <!-- Grid de Espacios -->
+            <div class="espacios-grid">
+                <!-- Almaterra -->
+                <div class="espacio-card" data-aos="fade-up" data-aos-delay="100" onclick="openEspacioModal('almaterra')">
+                    <div class="espacio-image-wrapper">
+                        <div class="espacio-image" style="background-image: url('images/EspaciosRestaurante/almaterra/_MG_8912.JPG');">
+                            <div class="espacio-overlay">
+                                <i class="fas fa-expand-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="espacio-content">
+                        <h3 class="espacio-title">Almaterra</h3>
+                        <span class="espacio-tag">Coworking Elegante</span>
+                        <p class="espacio-description">
+                            Un espacio de coworking sofisticado donde los negocios se fusionan con la gastronomía de altura.
+                            Ambiente ejecutivo con tecnología de vanguardia, perfecto para reuniones de alto nivel mientras disfruta
+                            de nuestra cocina exclusiva.
+                        </p>
+                        <div class="espacio-features">
+                            <span class="feature-item"><i class="fas fa-wifi"></i> WiFi Premium</span>
+                            <span class="feature-item"><i class="fas fa-users"></i> 20-30 personas</span>
+                            <span class="feature-item"><i class="fas fa-laptop"></i> Business Center</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MÁS TARJETAS DE ESPACIOS... -->
+            </div>
+        </div>
+    </section>
