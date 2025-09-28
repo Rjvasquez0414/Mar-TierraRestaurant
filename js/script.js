@@ -1278,14 +1278,14 @@ const reservationDetails = {
             asegurando el mejor servicio posible.</p>
         `,
         features: [
-            '✓ Anticipo de $100.000 totalmente consumibles',
-            '✓ Mesa 100% garantizada y confirmada',
-            '✓ NO reembolsable en caso de no asistencia',
-            '✓ Puede reprogramar en los próximos 10 días',
-            '✓ Perfecto para grupos de 1 a 14 personas',
-            '✓ Mesa en el salón principal del restaurante',
-            '✓ Acceso al menú completo',
-            '✓ El anticipo se descuenta de su cuenta final'
+            'Anticipo de $100.000 totalmente consumibles',
+            'Mesa 100% garantizada y confirmada',
+            'NO reembolsable en caso de no asistencia',
+            'Puede reprogramar en los próximos 10 días',
+            'Perfecto para grupos de 1 a 14 personas',
+            'Mesa en el salón principal del restaurante',
+            'Acceso al menú completo',
+            'El anticipo se descuenta de su cuenta final'
         ],
         extra: `
             <h4>Política de Cancelación:</h4>
@@ -1316,14 +1316,14 @@ const reservationDetails = {
             exclusivamente los servicios de decoración seleccionados.</p>
         `,
         features: [
-            '✓ El costo del plan reemplaza el anticipo estándar',
-            '✓ Dinero NO reembolsable bajo ninguna circunstancia',
-            '✓ Dinero NO consumible en alimentos o bebidas',
-            '✓ Mesa garantizada con decoración incluida',
-            '✓ Plan Plata: $80.000 (globos + pastel)',
-            '✓ Plan Oro: $120.000 (vino + globos + pastel)',
-            '✓ Plan Luxury: $100.000 (rosas + pétalos)',
-            '✓ Combos disponibles hasta $220.000'
+            'El costo del plan reemplaza el anticipo estándar',
+            'Dinero NO reembolsable bajo ninguna circunstancia',
+            'Dinero NO consumible en alimentos o bebidas',
+            'Mesa garantizada con decoración incluida',
+            'Plan Plata: $80.000 (globos + pastel)',
+            'Plan Oro: $120.000 (vino + globos + pastel)',
+            'Plan Luxury: $100.000 (rosas + pétalos)',
+            'Combos disponibles hasta $220.000'
         ],
         extra: `
             <h4>Condiciones Especiales:</h4>
@@ -1354,16 +1354,16 @@ const reservationDetails = {
             servicios especiales, estos se pagan completos adicionalmente.</p>
         `,
         features: [
-            '★ Exclusivo para grupos de 15+ personas',
-            '★ Anticipo: $150.000 por persona (consumible)',
-            '★ Opción de pagar solo 50% del anticipo',
-            '★ El anticipo ES consumible en su cuenta',
-            '★ Servicios especiales: pago 100% adicional',
-            '★ Servicios NO son reembolsables',
-            '★ Acceso al Salón Gold disponible',
-            '★ Atención VIP con personal dedicado',
-            '★ Coordinador de eventos asignado',
-            '★ Posibilidad de menú personalizado'
+            'Exclusivo para grupos de 15+ personas',
+            'Anticipo: $150.000 por persona (consumible)',
+            'Opción de pagar solo 50% del anticipo',
+            'El anticipo ES consumible en su cuenta',
+            'Servicios especiales: pago 100% adicional',
+            'Servicios NO son reembolsables',
+            'Acceso al Salón Gold disponible',
+            'Atención VIP con personal dedicado',
+            'Coordinador de eventos asignado',
+            'Posibilidad de menú personalizado'
         ],
         extra: `
             <h4>Cálculo del Anticipo:</h4>
@@ -1404,12 +1404,12 @@ const decorationDetails = {
             que harán de tu evento algo especial sin exceder tu presupuesto.</p>
         `,
         features: [
-            '🎈 3 globos de helio premium en colores a elección',
-            '🍰 Porción de pastel artesanal del día',
-            '🎨 Tarjeta personalizada con mensaje',
-            '✨ Confeti dorado en la mesa',
-            '🎁 Presentación especial del pastel',
-            '📸 Momento fotográfico con el equipo'
+            '3 globos de helio premium en colores a elección',
+            'Porción de pastel artesanal del día',
+            'Tarjeta personalizada con mensaje',
+            'Confeti dorado en la mesa',
+            'Presentación especial del pastel',
+            'Momento fotográfico con el equipo'
         ],
         extra: `
             <h4>Opciones de Personalización:</h4>
@@ -1437,13 +1437,13 @@ const decorationDetails = {
             que crean el ambiente perfecto para brindar por los momentos especiales.</p>
         `,
         features: [
-            '🍷 Botella de vino premium 375ml (Tinto o blanco)',
-            '🎈 3 globos de helio con diseño especial',
-            '🍰 Porción de pastel gourmet',
-            '🥂 Copas de cristal especiales',
-            '💫 Decoración dorada de mesa',
-            '🎵 Canción especial a elección',
-            '📸 Sesión fotográfica con el sommelier'
+            'Botella de vino premium 375ml (Tinto o blanco)',
+            '3 globos de helio con diseño especial',
+            'Porción de pastel gourmet',
+            'Copas de cristal especiales',
+            'Decoración dorada de mesa',
+            'Canción especial a elección',
+            'Sesión fotográfica con el sommelier'
         ],
         extra: `
             <h4>Selección de Vinos:</h4>
@@ -1477,13 +1477,13 @@ const decorationDetails = {
             los restaurantes más exclusivos del mundo.</p>
         `,
         features: [
-            '🌹 Jarrón con 12 rosas naturales premium',
-            '💐 Pétalos de rosa esparcidos en la mesa',
-            '🕯️ Velas aromáticas de soya',
-            '🎨 Camino de mesa en seda',
-            '💎 Servilletas de lino con anillo dorado',
-            '🌿 Follaje verde decorativo',
-            '✉️ Carta de amor/dedicatoria caligráfica'
+            'Jarrón con 12 rosas naturales premium',
+            'Pétalos de rosa esparcidos en la mesa',
+            'Velas aromáticas de soya',
+            'Camino de mesa en seda',
+            'Servilletas de lino con anillo dorado',
+            'Follaje verde decorativo',
+            'Carta de amor/dedicatoria caligráfica'
         ],
         extra: `
             <h4>Opciones de Flores:</h4>
