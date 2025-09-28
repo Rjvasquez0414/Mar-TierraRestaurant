@@ -377,53 +377,88 @@ class MenuApp {
 
     // Navigation functionality
     showSection(sectionId) {
-        // Hide all sections - incluye reservation-info
-        document.querySelectorAll('.hero, .categories-section, .menu-section, .contact-section, .reservation-info-section').forEach(section => {
+        // Get all sections
+        const allSections = document.querySelectorAll('.hero, .categories-section, .menu-section, .contact-section, .reservation-info-section, .instalaciones-section');
+
+        // Hide all sections first
+        allSections.forEach(section => {
             section.classList.remove('active');
-            if (section.id === sectionId) {
-                if (sectionId === 'hero') {
-                    section.style.display = 'flex';
-                } else {
-                    section.style.display = 'block';
-                    section.classList.add('active');
-                }
-            } else if (section.id === 'hero' && sectionId !== 'hero') {
-                section.style.display = 'none';
-            } else {
-                section.style.display = 'none';
-            }
+            section.style.display = 'none';
         });
-        
-        // Update active nav
+
+        // Special handling for hero section
+        if (sectionId === 'hero') {
+            const hero = document.querySelector('.hero');
+            if (hero) {
+                hero.style.display = 'flex';
+                hero.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        } else {
+            // Try to find section by ID first
+            let targetSection = document.getElementById(sectionId);
+
+            // If not found, try with '-section' suffix
+            if (!targetSection) {
+                targetSection = document.getElementById(sectionId + '-section');
+            }
+
+            // If still not found, try as class
+            if (!targetSection) {
+                targetSection = document.querySelector('.' + sectionId + '-section');
+            }
+
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                targetSection.classList.add('active');
+
+                // Smooth scroll with offset for header
+                const headerHeight = document.getElementById('header')?.offsetHeight || 0;
+                const targetPosition = targetSection.offsetTop - headerHeight - 20;
+
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // Update active nav link
         document.querySelectorAll('.nav-link').forEach(link => {
             link.classList.remove('active');
         });
-        
-        if (sectionId === 'hero') {
-            document.querySelectorAll('.nav-link')[0]?.classList.add('active');
-        } else if (sectionId === 'categories' || this.isMenuSection(sectionId)) {
-            document.querySelectorAll('.nav-link')[1]?.classList.add('active');
-        } else if (sectionId === 'reservation-info') {
-            document.querySelectorAll('.nav-link')[2]?.classList.add('active');
-        } else if (sectionId === 'contact') {
-            document.querySelectorAll('.nav-link')[3]?.classList.add('active');
+
+        // Set the correct nav link as active
+        const navLinkMap = {
+            'hero': 0,
+            'categories': 1,
+            'entradas': 1,
+            'mar': 1,
+            'tierra': 1,
+            'pasta': 1,
+            'arroces': 1,
+            'bebidas': 1,
+            'instalaciones': 2,
+            'reservation-info': 3,
+            'contact': 4
+        };
+
+        const navIndex = navLinkMap[sectionId];
+        if (navIndex !== undefined) {
+            document.querySelectorAll('.nav-link')[navIndex]?.classList.add('active');
         }
-        
+
         // Close mobile menu
         const mobileToggle = document.getElementById('mobileToggle');
         const nav = document.getElementById('nav');
-        
+
         if (mobileToggle && nav) {
             mobileToggle.classList.remove('active');
             nav.classList.remove('active');
         }
-        
+
         // Reset search and filters when changing sections
         this.resetFilters();
-        
-        // Scroll to top
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        
+
         // Store current section
         this.currentSection = sectionId;
     }
@@ -436,6 +471,13 @@ class MenuApp {
 
     // Show specific menu section
     showMenuSection(category) {
+        this.showSection(category);
+    }
+
+    // Show specific category (used when clicking category cards)
+    showCategory(category) {
+        // Simply delegate to showSection with the category ID
+        // This ensures consistent navigation handling
         this.showSection(category);
     }
 

@@ -143,7 +143,7 @@
                 <h3 class="category-name">Ritual de Mar</h3>
                 <p class="category-desc">Pescados y mariscos frescos con técnicas mediterráneas nikkei</p>
             </div>
-            
+
             <div class="category-card" onclick="showMenuSection('tierra')">
                 <div class="category-icon">
                     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -1421,61 +1421,6 @@
 
     <!-- Enhanced Navigation Script -->
     <script>
-        // Premium smooth scroll to sections with elegant transitions
-        function showSection(sectionId) {
-            const sections = document.querySelectorAll('.categories-section, .menu-section, .instalaciones-section, .reservation-info-section, .contact-section');
-
-            // Fade out current sections quickly
-            sections.forEach(section => {
-                if (section.classList.contains('active')) {
-                    section.classList.remove('active');
-                }
-            });
-
-            const hero = document.querySelector('.hero');
-
-            // Update nav links with smooth transition
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-
-            if (sectionId === 'hero') {
-                if (hero) {
-                    hero.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-                document.querySelector('.nav-link[onclick*="hero"]')?.classList.add('active');
-            } else {
-                const targetSection = document.getElementById(sectionId + '-section') || document.querySelector('.' + sectionId + '-section');
-
-                if (targetSection) {
-                    targetSection.classList.add('active');
-
-                    // Smooth scroll with offset for header
-                    const headerHeight = document.getElementById('header')?.offsetHeight || 0;
-                    const targetPosition = targetSection.offsetTop - headerHeight - 20;
-
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
-
-                    // Update active nav link
-                    const navLink = document.querySelector(`.nav-link[onclick*="${sectionId}"]`);
-                    if (navLink) {
-                        navLink.classList.add('active');
-                    }
-                }
-            }
-
-            // Close mobile menu if open with animation
-            const mobileToggle = document.getElementById('mobileToggle');
-            const nav = document.getElementById('nav');
-            if (mobileToggle && nav) {
-                mobileToggle.classList.remove('active');
-                nav.classList.remove('active');
-            }
-        }
-
         // Add smooth parallax effect to hero
         window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
@@ -1487,23 +1432,11 @@
 
         // Function to show menu sections by category
         function showMenuSection(category) {
-            // Hide categories and show menu
-            document.querySelector('.categories-section').classList.remove('active');
-            const menuSection = document.querySelector('.menu-section');
-            menuSection.classList.add('active');
-
-            // Scroll to menu section
-            const headerHeight = document.getElementById('header')?.offsetHeight || 0;
-            const targetPosition = menuSection.offsetTop - headerHeight - 20;
-
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
-
-            // Filter items if needed (handled by menu app)
-            if (window.menuApp) {
+            // Use the menuApp showCategory method directly
+            if (window.menuApp && window.menuApp.showCategory) {
                 window.menuApp.showCategory(category);
+            } else {
+                console.error('menuApp.showCategory not available');
             }
         }
 

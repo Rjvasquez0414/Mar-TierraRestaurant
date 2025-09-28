@@ -9,7 +9,7 @@ window.menuData = {
             name: "TRILOGÍA AMAZÓNICA",
             description: "Pesca fresca del Pacífico con pulpo, langostinos y corvina en leche de tigre",
             price: "$52.000",
-            image: "images/trilogia-amazonica.jpg", // Cambiar por imagen real
+            image: "images/placeholder.jpg", // TODO: Agregar imagen trilogia-amazonica.jpg
             tags: ["popular", "nuevo"],
             available: true,
             category: "entradas"
@@ -19,7 +19,7 @@ window.menuData = {
             name: "CARPACCIO MARE E OLIVA",
             description: "Carpaccio de pulpo con aceitunas negras trufadas, espuma de cilantro y masago",
             price: "$62.000",
-            image: "images/logoanclamarytierra.png", // Cambiar por imagen real
+            image: "images/placeholder.jpg", // TODO: Agregar imagen carpaccio
             tags: ["popular"],
             available: true,
             category: "entradas"
@@ -29,7 +29,7 @@ window.menuData = {
             name: "PERLA PACÍFICA",
             description: "Croquetas de jaiba ahumada con queso mozzarella y salsa pecorino romano",
             price: "$45.000",
-            image: "images/croquetas-jaiba.jpg", // Cambiar por imagen real
+            image: "images/placeholder.jpg", // TODO: Agregar imagen croquetas-jaiba.jpg
             tags: [],
             available: true,
             category: "entradas"
@@ -39,7 +39,7 @@ window.menuData = {
             name: "TUÉTANO IMPERIAL",
             description: "Piezas de tuétano coronadas con lomo fino madurado a la robata yaki",
             price: "$49.000",
-            image: "images/tuetano-imperial.jpg", // Cambiar por imagen real
+            image: "images/placeholder.jpg", // TODO: Agregar imagen tuetano-imperial.jpg
             tags: ["nuevo"],
             available: true,
             category: "entradas"
