@@ -251,7 +251,7 @@ class MenuApp {
         // This is now handled by setupSearchAndFilterForSection
     }
 
-    // Create menu item element
+    // Create menu item element - Diseño Premium
     createMenuItem(item) {
         const menuItemEl = document.createElement('div');
         menuItemEl.className = 'menu-item fade-in';
@@ -259,25 +259,35 @@ class MenuApp {
         menuItemEl.dataset.name = item.name.toLowerCase();
         menuItemEl.dataset.description = item.description.toLowerCase();
 
-        // Create tags HTML
-        const tagsHTML = item.tags ? item.tags.map(tag => 
-            `<span class="menu-tag ${tag}">${this.getTagLabel(tag)}</span>`
-        ).join('') : '';
+        // Create tags HTML - ahora se posicionan sobre la imagen
+        const tagsHTML = item.tags && item.tags.length > 0 ? `
+            <div class="menu-item-tags">
+                ${item.tags.map(tag => `<span class="menu-tag ${tag}">${this.getTagLabel(tag)}</span>`).join('')}
+            </div>
+        ` : '';
 
+        // Placeholder de Cloudinary
+        const placeholder = 'https://res.cloudinary.com/dxvl2i2fy/image/upload/v1764182679/Archivo-_2025-09-19T03_42_04_ie0gat.webp';
+        const imageUrl = item.image && item.image !== '' && !item.image.includes('placeholder')
+            ? item.image
+            : placeholder;
+
+        // Nueva estructura vertical premium
         menuItemEl.innerHTML = `
-            <div class="menu-item-image">
-                <img src="${item.image || 'images/placeholder.jpg'}" 
-                     alt="${item.name}" 
+            <div class="menu-item-image-wrapper">
+                <img src="${imageUrl}"
+                     alt="${item.name}"
                      loading="lazy"
-                     onerror="this.src='images/placeholder.jpg'">
+                     onerror="this.src='${placeholder}'">
+                ${tagsHTML}
             </div>
             <div class="menu-item-content">
-                <div class="menu-item-header">
-                    <h3 class="menu-item-name">${item.name}</h3>
+                <div class="menu-item-line"></div>
+                <h3 class="menu-item-name">${item.name}</h3>
+                <p class="menu-item-desc">${item.description}</p>
+                <div class="menu-item-footer">
                     <span class="menu-item-price">${item.price}</span>
                 </div>
-                <p class="menu-item-desc">${item.description}</p>
-                ${tagsHTML ? `<div class="menu-item-tags">${tagsHTML}</div>` : ''}
             </div>
         `;
 

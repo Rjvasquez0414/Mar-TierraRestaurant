@@ -118,82 +118,74 @@
         </div>
         
         <div class="categories-grid">
-            <div class="category-card" onclick="showMenuSection('entradas')">
-                <div class="category-icon">
-                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="30" cy="50" r="15" stroke-dasharray="3 2"/>
-                        <circle cx="50" cy="50" r="15" stroke-dasharray="3 2"/>
-                        <circle cx="70" cy="50" r="15" stroke-dasharray="3 2"/>
-                        <path d="M20 35 Q50 25 80 35" stroke-dasharray="5 3"/>
-                    </svg>
+            <!-- Para Compartir -->
+            <div class="category-card" style="background-image: url('https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?w=800&q=80')" onclick="showMenuSection('compartir')">
+                <div class="category-overlay"></div>
+                <div class="category-content">
+                    <div class="category-line"></div>
+                    <h3 class="category-name">Para Compartir</h3>
+                    <p class="category-desc">Ceviches, tartares y entradas para iniciar la experiencia</p>
                 </div>
-                <h3 class="category-name">Entradas</h3>
-                <p class="category-desc">Trilogía Amazónica y selección de ceviches que despiertan los sentidos</p>
-            </div>
-            
-            <div class="category-card" onclick="showMenuSection('mar')">
-                <div class="category-icon">
-                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M50 20 C30 20 20 35 30 50 S50 80 50 80 S70 65 70 50 S70 20 50 20"/>
-                        <path d="M30 45 Q50 35 70 45" stroke-dasharray="3 2"/>
-                        <circle cx="40" cy="40" r="2" fill="#0056D2"/>
-                        <circle cx="60" cy="40" r="2" fill="#0056D2"/>
-                    </svg>
-                </div>
-                <h3 class="category-name">Ritual de Mar</h3>
-                <p class="category-desc">Pescados y mariscos frescos con técnicas mediterráneas nikkei</p>
             </div>
 
-            <div class="category-card" onclick="showMenuSection('tierra')">
-                <div class="category-icon">
-                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M30 60 L30 40 Q30 30 40 30 L60 30 Q70 30 70 40 L70 60 Q70 70 60 70 L40 70 Q30 70 30 60"/>
-                        <path d="M35 50 L65 50" stroke-dasharray="5 2"/>
-                        <path d="M40 40 L40 60 M50 35 L50 65 M60 40 L60 60"/>
-                    </svg>
+            <!-- Ritual de Mar -->
+            <div class="category-card" style="background-image: url('https://images.unsplash.com/photo-1559737558-2f5a35f4523b?w=800&q=80')" onclick="showMenuSection('mar')">
+                <div class="category-overlay"></div>
+                <div class="category-content">
+                    <div class="category-line"></div>
+                    <h3 class="category-name">Ritual de Mar</h3>
+                    <p class="category-desc">Pescados y mariscos frescos con tecnicas de autor</p>
                 </div>
-                <h3 class="category-name">Ritual de Tierra</h3>
-                <p class="category-desc">Carnes seleccionadas con técnicas de cocción lenta al fuego</p>
             </div>
-            
-            <div class="category-card" onclick="showMenuSection('pasta')">
-                <div class="category-icon">
-                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20 40 Q30 30 40 40 T60 40 T80 40" stroke-dasharray="none"/>
-                        <path d="M20 50 Q30 40 40 50 T60 50 T80 50" stroke-dasharray="none"/>
-                        <path d="M20 60 Q30 50 40 60 T60 60 T80 60" stroke-dasharray="none"/>
-                    </svg>
+
+            <!-- Ritual de Tierra -->
+            <div class="category-card" style="background-image: url('https://images.unsplash.com/photo-1546833998-877b37c2e5c6?w=800&q=80')" onclick="showMenuSection('tierra')">
+                <div class="category-overlay"></div>
+                <div class="category-content">
+                    <div class="category-line"></div>
+                    <h3 class="category-name">Ritual de Tierra</h3>
+                    <p class="category-desc">Carnes selectas y platos de tradicion</p>
                 </div>
-                <h3 class="category-name">Pasta</h3>
-                <p class="category-desc">Herencia mediterránea con alma fusión</p>
             </div>
-            
-            <div class="category-card" onclick="showMenuSection('arroces')">
-                <div class="category-icon">
-                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="50" cy="50" r="30"/>
-                        <circle cx="50" cy="50" r="20" stroke-dasharray="2 2"/>
-                        <path d="M35 50 Q50 40 65 50 Q50 60 35 50" fill="none"/>
-                        <circle cx="45" cy="48" r="2" fill="#D4AF37"/>
-                        <circle cx="55" cy="48" r="2" fill="#D4AF37"/>
-                        <circle cx="50" cy="52" r="2" fill="#D4AF37"/>
-                    </svg>
+
+            <!-- Mar y Tierra -->
+            <div class="category-card featured" style="background-image: url('https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80')" onclick="showMenuSection('marytierra')">
+                <div class="category-overlay"></div>
+                <div class="category-content">
+                    <div class="category-line"></div>
+                    <h3 class="category-name">Mar y Tierra</h3>
+                    <p class="category-desc">Fusion perfecta de sabores del mar y la tierra</p>
                 </div>
-                <h3 class="category-name">Arroces</h3>
-                <p class="category-desc">Ritual de fuego lento y sazón profunda</p>
             </div>
-            
-            <div class="category-card" onclick="showMenuSection('bebidas')">
-                <div class="category-icon">
-                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M40 20 L40 70 Q40 80 50 80 Q60 80 60 70 L60 20"/>
-                        <path d="M35 25 L65 25"/>
-                        <ellipse cx="50" cy="45" rx="8" ry="15" fill="none" stroke-dasharray="3 2"/>
-                        <path d="M30 75 L70 75"/>
-                    </svg>
+
+            <!-- Grill -->
+            <div class="category-card" style="background-image: url('https://images.unsplash.com/photo-1558030006-450675393462?w=800&q=80')" onclick="showMenuSection('grill')">
+                <div class="category-overlay"></div>
+                <div class="category-content">
+                    <div class="category-line"></div>
+                    <h3 class="category-name">Grill</h3>
+                    <p class="category-desc">Cortes selectos a la parrilla con chimichurri de la casa</p>
                 </div>
-                <h3 class="category-name">Vinos y Bebidas</h3>
-                <p class="category-desc">Maridaje perfecto para cada momento</p>
+            </div>
+
+            <!-- Guarniciones -->
+            <div class="category-card" style="background-image: url('https://images.unsplash.com/photo-1534938665420-4193effeacc4?w=800&q=80')" onclick="showMenuSection('guarniciones')">
+                <div class="category-overlay"></div>
+                <div class="category-content">
+                    <div class="category-line"></div>
+                    <h3 class="category-name">Guarniciones</h3>
+                    <p class="category-desc">Acompañamientos para completar tu experiencia</p>
+                </div>
+            </div>
+
+            <!-- Menu Infantil -->
+            <div class="category-card" style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80')" onclick="showMenuSection('infantil')">
+                <div class="category-overlay"></div>
+                <div class="category-content">
+                    <div class="category-line"></div>
+                    <h3 class="category-name">Menu Infantil</h3>
+                    <p class="category-desc">Platos especiales para los mas jovenes</p>
+                </div>
             </div>
         </div>
     </section>
@@ -766,42 +758,43 @@
         </div>
     </section>
     
-    <!-- Menu Sections (Se renderizarán dinámicamente) -->
-    <section class="menu-section" id="entradas">
+    <!-- Menu Sections - Nuevo Menu Completo -->
+
+    <!-- Para Compartir -->
+    <section class="menu-section" id="compartir">
         <div class="menu-container">
             <button class="back-btn" onclick="showSection('categories')">
                 <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                Volver al Menú
+                Volver al Menu
             </button>
-            
+
             <div class="section-header">
-                <p class="section-overtitle">Para Comenzar</p>
-                <h2 class="section-title">Entradas</h2>
+                <p class="section-overtitle">Momentos que se disfrutan juntos</p>
+                <h2 class="section-title">Para Compartir</h2>
                 <div class="ornament">
                     <div class="ornament-line"></div>
                     <div class="ornament-center"></div>
                     <div class="ornament-line"></div>
                 </div>
                 <p class="section-description">
-                    Experiencia de degustación con ceviches suaves y delicados
+                    Ceviches, tartares y entradas para iniciar la experiencia gastronomica
                 </p>
             </div>
-            
-            <div class="menu-grid">
-                <!-- Los items se cargarán dinámicamente desde menu-data.js -->
-            </div>
+
+            <div class="menu-grid"></div>
         </div>
     </section>
-    
+
+    <!-- Ritual de Mar -->
     <section class="menu-section" id="mar">
         <div class="menu-container">
             <button class="back-btn" onclick="showSection('categories')">
                 <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                Volver al Menú
+                Volver al Menu
             </button>
-            
+
             <div class="section-header">
-                <p class="section-overtitle">Del Océano</p>
+                <p class="section-overtitle">Del oceano a tu mesa</p>
                 <h2 class="section-title">Ritual de Mar</h2>
                 <div class="ornament">
                     <div class="ornament-line"></div>
@@ -809,25 +802,24 @@
                     <div class="ornament-line"></div>
                 </div>
                 <p class="section-description">
-                    El mar es el protagonista. Pesca fresca y mariscos que honran la frescura del océano
+                    Pescados y mariscos frescos con tecnicas de autor
                 </p>
             </div>
-            
-            <div class="menu-grid">
-                <!-- Los items se cargarán dinámicamente desde menu-data.js -->
-            </div>
+
+            <div class="menu-grid"></div>
         </div>
     </section>
-    
+
+    <!-- Ritual de Tierra -->
     <section class="menu-section" id="tierra">
         <div class="menu-container">
             <button class="back-btn" onclick="showSection('categories')">
                 <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                Volver al Menú
+                Volver al Menu
             </button>
-            
+
             <div class="section-header">
-                <p class="section-overtitle">De la Tierra</p>
+                <p class="section-overtitle">Sabores de la tierra</p>
                 <h2 class="section-title">Ritual de Tierra</h2>
                 <div class="ornament">
                     <div class="ornament-line"></div>
@@ -835,94 +827,114 @@
                     <div class="ornament-line"></div>
                 </div>
                 <p class="section-description">
-                    Homenaje a la riqueza del suelo con carnes seleccionadas y técnicas ancestrales
+                    Carnes selectas y platos de tradicion
                 </p>
             </div>
-            
-            <div class="menu-grid">
-                <!-- Los items se cargarán dinámicamente desde menu-data.js -->
-            </div>
+
+            <div class="menu-grid"></div>
         </div>
     </section>
-    
-    <section class="menu-section" id="pasta">
+
+    <!-- Mar y Tierra -->
+    <section class="menu-section" id="marytierra">
         <div class="menu-container">
             <button class="back-btn" onclick="showSection('categories')">
                 <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                Volver al Menú
+                Volver al Menu
             </button>
-            
+
             <div class="section-header">
-                <p class="section-overtitle">Tradición Italiana</p>
-                <h2 class="section-title">Pasta</h2>
+                <p class="section-overtitle">Lo mejor de dos mundos</p>
+                <h2 class="section-title">Mar y Tierra</h2>
                 <div class="ornament">
                     <div class="ornament-line"></div>
                     <div class="ornament-center"></div>
                     <div class="ornament-line"></div>
                 </div>
                 <p class="section-description">
-                    Celebración de la herencia mediterránea con ingredientes del mar y la tierra
+                    Fusion perfecta de sabores del mar y la tierra
                 </p>
             </div>
-            
-            <div class="menu-grid">
-                <!-- Los items se cargarán dinámicamente desde menu-data.js -->
-            </div>
+
+            <div class="menu-grid"></div>
         </div>
     </section>
-    
-    <section class="menu-section" id="arroces">
+
+    <!-- Grill -->
+    <section class="menu-section" id="grill">
         <div class="menu-container">
             <button class="back-btn" onclick="showSection('categories')">
                 <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                Volver al Menú
+                Volver al Menu
             </button>
-            
+
             <div class="section-header">
-                <p class="section-overtitle">Fuego Lento</p>
-                <h2 class="section-title">Arroces</h2>
+                <p class="section-overtitle">El arte del fuego</p>
+                <h2 class="section-title">Grill</h2>
                 <div class="ornament">
                     <div class="ornament-line"></div>
                     <div class="ornament-center"></div>
                     <div class="ornament-line"></div>
                 </div>
                 <p class="section-description">
-                    Ritual de fuego lento donde cada grano construye memorias intensas
+                    Cortes selectos a la parrilla con chimichurri de la casa
                 </p>
             </div>
-            
-            <div class="menu-grid">
-                <!-- Los items se cargarán dinámicamente desde menu-data.js -->
-            </div>
+
+            <div class="menu-grid"></div>
         </div>
     </section>
-    
-    <section class="menu-section" id="bebidas">
+
+    <!-- Guarniciones -->
+    <section class="menu-section" id="guarniciones">
         <div class="menu-container">
             <button class="back-btn" onclick="showSection('categories')">
                 <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                Volver al Menú
+                Volver al Menu
             </button>
-            
+
             <div class="section-header">
-                <p class="section-overtitle">Maridaje Perfecto</p>
-                <h2 class="section-title">Vinos y Bebidas</h2>
+                <p class="section-overtitle">Complementos perfectos</p>
+                <h2 class="section-title">Guarniciones</h2>
                 <div class="ornament">
                     <div class="ornament-line"></div>
                     <div class="ornament-center"></div>
                     <div class="ornament-line"></div>
                 </div>
                 <p class="section-description">
-                    Viaje sensorial donde el vino es el puente entre culturas
+                    Acompañamientos para completar tu experiencia
                 </p>
             </div>
-            
-            <div class="menu-grid">
-                <!-- Los items se cargarán dinámicamente desde menu-data.js -->
-            </div>
+
+            <div class="menu-grid"></div>
         </div>
     </section>
-    
+
+    <!-- Menu Infantil -->
+    <section class="menu-section" id="infantil">
+        <div class="menu-container">
+            <button class="back-btn" onclick="showSection('categories')">
+                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Volver al Menu
+            </button>
+
+            <div class="section-header">
+                <p class="section-overtitle">Para los pequeños</p>
+                <h2 class="section-title">Menu Infantil</h2>
+                <div class="ornament">
+                    <div class="ornament-line"></div>
+                    <div class="ornament-center"></div>
+                    <div class="ornament-line"></div>
+                </div>
+                <p class="section-description">
+                    Platos especiales para nuestros invitados mas jovenes
+                </p>
+            </div>
+
+            <div class="menu-grid"></div>
+        </div>
+    </section>
+
     <!-- Contact Section -->
     <section class="contact-section" id="contact">
         <div class="section-header">
