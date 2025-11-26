@@ -308,6 +308,14 @@ button:focus-visible {
 }
 
 /* Fix para el scroll del modal */
+/* Clase para el body cuando el modal está abierto */
+body.modal-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
 /* Fix para el modal de detalles */
 .detail-modal-overlay {
     position: fixed !important;
@@ -321,15 +329,14 @@ button:focus-visible {
     backdrop-filter: blur(5px);
     display: none;
     z-index: 10000;
-    overflow: auto;
-    padding: 40px 20px;
+    overflow-y: scroll !important;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 
 .detail-modal-overlay.active {
-    display: flex !important;
+    display: block !important;
     visibility: visible !important;
-    align-items: center;
-    justify-content: center;
 }
 
 /* Asegurar que los modales se vean correctamente */
@@ -339,12 +346,17 @@ button:focus-visible {
     border-radius: 20px;
     max-width: 1000px;
     width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--dorado-premium, #D4AF37) #f1f1f1;
+    margin: 60px auto;
+    max-height: none;
+    overflow: visible;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     animation: modalSlideIn 0.3s ease;
+}
+
+/* Asegurar que el contenido del modal sea visible */
+.detail-modal-content {
+    display: block !important;
+    padding: 30px;
 }
 
 @keyframes modalSlideIn {
@@ -1368,6 +1380,437 @@ body > *:last-child {
     .plan-details {
         padding: 25px;
     }
+}
+
+/* ==============================================
+   SECCIONES CONDICIONALES - DECORACIÓN Y SERVICIOS
+   ============================================== */
+
+/* Contenedor de sección condicional */
+.conditional-section {
+    background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+    border: 2px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 25px;
+    margin: 20px 0;
+    animation: slideDown 0.4s ease-out;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 1000px;
+    }
+}
+
+.conditional-section.hiding {
+    animation: slideUp 0.3s ease-out forwards;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+/* Encabezado de sección */
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--dorado-premium, #D4AF37);
+}
+
+.section-icon {
+    font-size: 28px;
+    line-height: 1;
+}
+
+.section-header h4 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+/* Descripción de la sección */
+.section-description {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(212, 175, 55, 0.08);
+    border-radius: 10px;
+    border-left: 4px solid var(--dorado-premium, #D4AF37);
+}
+
+.section-description strong {
+    color: #6B4C3B;
+}
+
+/* Información del tipo de reserva */
+.reservation-type-info {
+    margin: 15px 0;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.info-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 18px 20px;
+    background: linear-gradient(135deg, #e8f4fd 0%, #d4e9f7 100%);
+    border-radius: 12px;
+    border-left: 4px solid #0056D2;
+}
+
+.info-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.info-card p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #2c3e50;
+    line-height: 1.6;
+}
+
+/* Opciones no disponibles - hint */
+.options-not-available {
+    margin: 15px 0;
+    animation: fadeIn 0.3s ease;
+}
+
+.info-hint {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border: 1px dashed #adb5bd;
+}
+
+.hint-icon {
+    font-size: 22px;
+}
+
+.info-hint p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #6c757d;
+    line-height: 1.5;
+}
+
+/* Servicios con diseño mejorado */
+.service-option {
+    display: flex;
+    align-items: center;
+    padding: 15px 18px !important;
+    margin-bottom: 12px;
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.service-option:hover {
+    border-color: var(--dorado-premium, #D4AF37);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+    transform: translateX(5px);
+}
+
+.service-option:has(input:checked) {
+    background: linear-gradient(135deg, #fff8e7 0%, #fff3d6 100%);
+    border-color: var(--dorado-premium, #D4AF37);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+}
+
+.service-option input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+    margin-right: 15px;
+    accent-color: var(--dorado-premium, #D4AF37);
+}
+
+.service-info {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    flex: 1;
+}
+
+.service-icon {
+    font-size: 28px;
+    margin-right: 5px;
+}
+
+.service-name {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 1rem;
+    min-width: 150px;
+}
+
+.service-details {
+    color: #6c757d;
+    font-size: 0.85rem;
+    flex: 1;
+}
+
+.service-price {
+    font-weight: 700;
+    color: var(--dorado-premium, #D4AF37);
+    font-size: 1.1rem;
+    background: rgba(212, 175, 55, 0.1);
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-left: auto;
+}
+
+/* Decoración section mejorada */
+#decorationSection select {
+    padding: 14px 18px;
+    font-size: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#decorationSection select:hover,
+#decorationSection select:focus {
+    border-color: var(--dorado-premium, #D4AF37);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+    outline: none;
+}
+
+#decorationSection select option {
+    padding: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .conditional-section {
+        padding: 18px;
+        margin: 15px 0;
+    }
+
+    .section-header h4 {
+        font-size: 1.1rem;
+    }
+
+    .service-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .service-name {
+        min-width: auto;
+    }
+
+    .service-price {
+        margin-left: 0;
+        margin-top: 5px;
+    }
+
+    .service-option {
+        padding: 12px 15px !important;
+    }
+
+    .info-card {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* ==============================================
+   ICONOS ELEGANTES SIN EMOJIS
+   ============================================== */
+
+/* Iconos de sección con diseño elegante */
+.section-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, #6B4C3B, #4A3429);
+    border-radius: 10px;
+    color: #C9A961;
+    font-size: 18px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(74, 52, 41, 0.2);
+}
+
+.section-icon-decoration::before {
+    content: "D";
+    font-family: 'Georgia', serif;
+    font-style: italic;
+}
+
+.section-icon-services::before {
+    content: "S";
+    font-family: 'Georgia', serif;
+    font-style: italic;
+}
+
+/* Iconos de servicios individuales */
+.service-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #F5EFE6, #D4C4AA);
+    border-radius: 8px;
+    color: #6B4C3B;
+    font-size: 14px;
+    font-weight: 700;
+    margin-right: 10px;
+    border: 1px solid #D4C4AA;
+}
+
+.service-icon-sax::before {
+    content: "Sax";
+    font-size: 11px;
+}
+
+.service-icon-violin::before {
+    content: "Vln";
+    font-size: 11px;
+}
+
+.service-icon-photo::before {
+    content: "Fot";
+    font-size: 11px;
+}
+
+.service-icon-dj::before {
+    content: "DJ";
+    font-size: 12px;
+}
+
+/* Info icon elegante */
+.info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: #6B4C3B;
+    border-radius: 50%;
+    color: #C9A961;
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.info-icon::before {
+    content: "i";
+    font-family: 'Georgia', serif;
+    font-style: italic;
+}
+
+/* Hint icon elegante */
+.hint-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: #C9A961;
+    border-radius: 50%;
+    color: #4A3429;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.hint-icon::before {
+    content: "?";
+    font-family: 'Georgia', serif;
+}
+
+/* Info card con colores de Mar y Tierra */
+.info-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 18px 20px;
+    background: linear-gradient(135deg, #F5EFE6 0%, #FDFBF7 100%);
+    border-radius: 12px;
+    border-left: 4px solid #C9A961;
+}
+
+.info-card p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #4A3429;
+    line-height: 1.6;
+}
+
+/* Info hint con colores de Mar y Tierra */
+.info-hint {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 20px;
+    background: #F5EFE6;
+    border-radius: 10px;
+    border: 1px dashed #D4C4AA;
+}
+
+.info-hint p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #6B4C3B;
+    line-height: 1.5;
+}
+
+/* Ajustes para los colores de resaltado */
+.conditional-section {
+    background: linear-gradient(135deg, #FDFBF7 0%, #F5EFE6 100%);
+    border: 2px solid #D4C4AA;
+}
+
+.section-header {
+    border-bottom: 2px solid #C9A961;
+}
+
+.section-header h4 {
+    color: #4A3429;
+}
+
+.section-description {
+    background: rgba(201, 169, 97, 0.1);
+    border-left: 4px solid #C9A961;
+    color: #4A3429;
 }
 
 /* Final del archivo */

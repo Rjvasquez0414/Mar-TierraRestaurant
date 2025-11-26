@@ -867,7 +867,7 @@ async function handleReservationSubmit(event) {
     
     try {
         // IMPORTANT: Replace with your Google Apps Script Web App URL
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzmcDhT8PX9LbJQJ92yTCVJBAyPNsu4RNoSuxhcT0blfm-v71xQGYC_vrDqgqIybhRe/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby82a2FsVV-kzhaGPt3RnwjCi29NL92DuhEttgU-Vrp_hzTvTKDxnI8lipnDUvT-58-/exec';
         
         if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
             throw new Error('Por favor configure la URL de Google Apps Script');
@@ -942,26 +942,43 @@ function updateReservationType() {
             alert.style.display = 'block';
         }
 
-        // Deshabilitar opción estándar para grupos grandes
+        // Deshabilitar opción Free para grupos grandes
         const estandarOption = typeSelect.querySelector('option[value="estandar"]');
         if (estandarOption) {
             estandarOption.disabled = true;
-            estandarOption.textContent = 'Reserva Estándar (no disponible para 15+ personas)';
+            estandarOption.textContent = 'Reserva Free (no disponible para 15+ personas)';
         }
+
+        // Deshabilitar opciones que no aplican para grupos grandes
+        const decoracionOption = typeSelect.querySelector('option[value="decoracion"]');
+        const serviciosOption = typeSelect.querySelector('option[value="servicios"]');
+        const comboOption = typeSelect.querySelector('option[value="decoracion-servicios"]');
+        if (decoracionOption) decoracionOption.disabled = true;
+        if (serviciosOption) serviciosOption.disabled = true;
+        if (comboOption) comboOption.disabled = true;
     } else {
         // Grupos pequeños pueden usar cualquier tipo de reserva
         const estandarOption = typeSelect.querySelector('option[value="estandar"]');
         if (estandarOption) {
             estandarOption.disabled = false;
-            estandarOption.textContent = 'Reserva Estándar ($100,000 consumibles)';
+            estandarOption.textContent = 'Reserva Free ($100,000 consumibles)';
         }
+
+        // Habilitar todas las opciones para grupos pequeños
+        const decoracionOption = typeSelect.querySelector('option[value="decoracion"]');
+        const serviciosOption = typeSelect.querySelector('option[value="servicios"]');
+        const comboOption = typeSelect.querySelector('option[value="decoracion-servicios"]');
+        if (decoracionOption) decoracionOption.disabled = false;
+        if (serviciosOption) serviciosOption.disabled = false;
+        if (comboOption) comboOption.disabled = false;
 
         if (alert) {
             alert.style.display = 'none';
         }
     }
 
-    calculateTotal();
+    // Actualizar opciones y visibilidad de secciones
+    updateReservationOptions();
 }
 
 function updateReservationOptions() {
@@ -971,29 +988,110 @@ function updateReservationOptions() {
     const alertText = alert?.querySelector('.alert-text');
     const costSummary = document.getElementById('costSummary');
 
+    // Nuevos elementos para secciones condicionales
+    const decorationSection = document.getElementById('decorationSection');
+    const servicesSection = document.getElementById('servicesSection');
+    const reservationTypeInfo = document.getElementById('reservationTypeInfo');
+    const reservationTypeDescription = document.getElementById('reservationTypeDescription');
+    const optionsNotAvailable = document.getElementById('optionsNotAvailable');
+    const optionsHintText = document.getElementById('optionsHintText');
+    const decorationSelect = document.getElementById('resDecoration');
+    const serviceCheckboxes = document.querySelectorAll('input[name="services"]');
+
     if (!typeSelect) return;
 
     const numPeople = parseInt(peopleSelect?.value) || 0;
+    const reservationType = typeSelect.value;
 
-    // Mostrar alertas y resumen según tipo de reserva con nuevas políticas
+    // Resetear secciones
+    if (decorationSection) decorationSection.style.display = 'none';
+    if (servicesSection) servicesSection.style.display = 'none';
+    if (reservationTypeInfo) reservationTypeInfo.style.display = 'none';
+    if (optionsNotAvailable) optionsNotAvailable.style.display = 'none';
+
+    // Limpiar selecciones previas cuando se cambia de tipo
+    if (decorationSelect && !['decoracion', 'decoracion-servicios', 'especial'].includes(reservationType)) {
+        decorationSelect.value = 'none';
+    }
+    if (!['servicios', 'decoracion-servicios', 'especial'].includes(reservationType)) {
+        serviceCheckboxes.forEach(cb => cb.checked = false);
+    }
+
+    // Mostrar alertas y secciones según tipo de reserva
     if (alert && alertText) {
-        switch(typeSelect.value) {
+        switch(reservationType) {
             case 'estandar':
                 alertText.textContent = 'Anticipo: $100,000 totalmente consumibles. NO reembolsable. Puede reprogramar en 10 días.';
                 alert.style.display = 'block';
+                // Mostrar hint sobre opciones adicionales
+                if (optionsNotAvailable && optionsHintText) {
+                    optionsHintText.innerHTML = '¿Desea agregar <strong>decoración</strong> o <strong>servicios especiales</strong>? Seleccione el tipo de reserva correspondiente arriba para ver las opciones disponibles.';
+                    optionsNotAvailable.style.display = 'block';
+                }
                 break;
+
             case 'decoracion':
-                alertText.textContent = 'El costo del plan de decoración reemplaza el anticipo. NO reembolsable NI consumible.';
+                alertText.textContent = 'El costo del plan de decoración reemplaza el anticipo estándar.';
                 alert.style.display = 'block';
+                // Mostrar sección de decoración
+                if (decorationSection) {
+                    decorationSection.style.display = 'block';
+                }
+                // Mostrar info
+                if (reservationTypeInfo && reservationTypeDescription) {
+                    reservationTypeDescription.innerHTML = 'Haga de su ocasión algo especial con nuestros planes de decoración. El valor del plan elegido <strong>reemplaza</strong> el anticipo de Reserva Free. Este monto <strong>NO es reembolsable ni consumible</strong>.';
+                    reservationTypeInfo.style.display = 'block';
+                }
                 break;
-            case 'especial':
-                alertText.textContent = `Grupos 15+ personas. Anticipo: $150,000 por persona (consumible). Puede pagar 50% del anticipo.`;
-                alert.style.display = 'block';
-                break;
+
             case 'servicios':
                 alertText.textContent = 'El costo COMPLETO del servicio reemplaza el anticipo. NO reembolsable.';
                 alert.style.display = 'block';
+                // Mostrar sección de servicios
+                if (servicesSection) {
+                    servicesSection.style.display = 'block';
+                }
+                // Mostrar info
+                if (reservationTypeInfo && reservationTypeDescription) {
+                    reservationTypeDescription.innerHTML = 'Añada artistas y profesionales para hacer su velada inolvidable. El valor de los servicios <strong>reemplaza</strong> el anticipo de Reserva Free y requiere <strong>pago del 100% por adelantado</strong>. No es reembolsable.';
+                    reservationTypeInfo.style.display = 'block';
+                }
                 break;
+
+            case 'decoracion-servicios':
+                alertText.textContent = 'Combine decoración y servicios especiales para una experiencia completa.';
+                alert.style.display = 'block';
+                // Mostrar ambas secciones
+                if (decorationSection) {
+                    decorationSection.style.display = 'block';
+                }
+                if (servicesSection) {
+                    servicesSection.style.display = 'block';
+                }
+                // Mostrar info
+                if (reservationTypeInfo && reservationTypeDescription) {
+                    reservationTypeDescription.innerHTML = 'La combinación perfecta para ocasiones muy especiales. Elija su plan de decoración y agregue los servicios que desee. El total de ambos <strong>reemplaza</strong> el anticipo estándar. Los montos <strong>NO son reembolsables</strong>.';
+                    reservationTypeInfo.style.display = 'block';
+                }
+                break;
+
+            case 'especial':
+                alertText.textContent = `Grupos 15+ personas. Anticipo: $150,000 por persona (consumible). Puede pagar 50% del anticipo.`;
+                alert.style.display = 'block';
+                // Mostrar ambas secciones como opcionales
+                if (decorationSection) {
+                    decorationSection.style.display = 'block';
+                }
+                if (servicesSection) {
+                    servicesSection.style.display = 'block';
+                }
+                // Mostrar info
+                if (reservationTypeInfo && reservationTypeDescription) {
+                    reservationTypeDescription.innerHTML = 'Para grupos de <strong>15 o más personas</strong>. El anticipo de $150,000 por persona es <strong>consumible</strong>. Opcionalmente puede agregar decoración y/o servicios especiales (estos sí requieren pago adicional no reembolsable).';
+                    reservationTypeInfo.style.display = 'block';
+                }
+                break;
+
             default:
                 alert.style.display = 'none';
         }
@@ -1050,33 +1148,28 @@ function calculateTotal() {
 
     switch(typeSelect?.value) {
         case 'estandar':
-            // Reserva estándar: $100,000 consumibles
-            if (decorationCost > 0) {
-                // Si hay decoración, esta reemplaza el anticipo
-                baseDeposit = 0;
-                total = decorationCost; // NO consumible
-            } else if (servicesCost > 0) {
-                // Si hay servicios, el costo completo reemplaza el anticipo
-                baseDeposit = 0;
-                total = servicesCost; // NO reembolsable
-            } else {
-                // Solo reserva estándar
-                baseDeposit = 100000;
-                isConsumiable = true;
-                total = baseDeposit;
-            }
+            // Reserva Free: $100,000 consumibles (sin decoración ni servicios)
+            baseDeposit = 100000;
+            isConsumiable = true;
+            total = baseDeposit;
             break;
 
         case 'decoracion':
             // El costo del plan reemplaza el anticipo - NO consumible
             baseDeposit = 0;
-            total = decorationCost + servicesCost;
+            total = decorationCost;
             break;
 
         case 'servicios':
             // El costo completo del servicio reemplaza el anticipo
             baseDeposit = 0;
-            total = servicesCost + decorationCost;
+            total = servicesCost;
+            break;
+
+        case 'decoracion-servicios':
+            // Combinación de decoración + servicios
+            baseDeposit = 0;
+            total = decorationCost + servicesCost;
             break;
 
         case 'especial':
@@ -1087,7 +1180,7 @@ function calculateTotal() {
             if (numberOfPeople >= 15) {
                 baseDeposit = anticipoPorPersona * numberOfPeople * porcentajeAnticipo;
                 isConsumiable = true;
-                // Servicios se pagan completos aparte
+                // Servicios y decoración se pagan completos aparte
                 total = baseDeposit + servicesCost + decorationCost;
                 showServicesApart = true;
             }
@@ -1095,7 +1188,7 @@ function calculateTotal() {
 
         default:
             baseDeposit = 100000;
-            total = baseDeposit + decorationCost + servicesCost;
+            total = baseDeposit;
     }
 
     // Update display
@@ -1108,58 +1201,80 @@ function calculateTotal() {
     const totalDepositSpan = document.getElementById('totalDeposit');
 
     // Actualizar texto según tipo de reserva
+    const currentType = typeSelect?.value;
+
     if (baseDepositItem) {
         const label = baseDepositItem.querySelector('span:first-child');
         if (label) {
-            if (typeSelect?.value === 'especial') {
+            if (currentType === 'especial') {
                 label.textContent = `Anticipo 50% (${numberOfPeople} personas - consumible):`;
-            } else if (typeSelect?.value === 'estandar' && baseDeposit > 0) {
+            } else if (currentType === 'estandar') {
                 label.textContent = 'Anticipo consumible:';
-            } else if (decorationCost > 0 && baseDeposit === 0) {
+            } else if (currentType === 'decoracion') {
                 label.textContent = 'Plan de decoración (no consumible):';
-            } else if (servicesCost > 0 && baseDeposit === 0) {
+            } else if (currentType === 'servicios') {
                 label.textContent = 'Servicios especiales (no reembolsable):';
+            } else if (currentType === 'decoracion-servicios') {
+                label.textContent = 'Decoración + Servicios (no reembolsable):';
             } else {
                 label.textContent = 'Anticipo de reserva:';
             }
         }
-        baseDepositItem.style.display = (baseDeposit > 0 || (baseDeposit === 0 && (decorationCost > 0 || servicesCost > 0))) ? 'flex' : 'none';
+        // Mostrar siempre que haya algún costo
+        baseDepositItem.style.display = (baseDeposit > 0 || total > 0) ? 'flex' : 'none';
     }
 
     if (baseDepositSpan) {
-        if (baseDeposit > 0) {
+        if (currentType === 'estandar') {
             baseDepositSpan.textContent = formatCurrency(baseDeposit);
-        } else if (decorationCost > 0 && servicesCost === 0) {
+        } else if (currentType === 'decoracion') {
             baseDepositSpan.textContent = formatCurrency(decorationCost);
-        } else if (servicesCost > 0 && decorationCost === 0) {
+        } else if (currentType === 'servicios') {
             baseDepositSpan.textContent = formatCurrency(servicesCost);
+        } else if (currentType === 'decoracion-servicios') {
+            // Mostrar el total combinado en el principal
+            baseDepositSpan.textContent = formatCurrency(total);
+        } else if (currentType === 'especial') {
+            baseDepositSpan.textContent = formatCurrency(baseDeposit);
         } else {
-            baseDepositSpan.textContent = formatCurrency(0);
+            baseDepositSpan.textContent = formatCurrency(baseDeposit);
         }
     }
 
-    // Mostrar decoración y servicios por separado solo cuando aplique
+    // Mostrar decoración y servicios por separado en decoracion-servicios y especial
     if (decorationCostSpan && decorationCostItem) {
-        if (showServicesApart && decorationCost > 0) {
+        if ((currentType === 'decoracion-servicios' || currentType === 'especial') && decorationCost > 0) {
             decorationCostSpan.textContent = formatCurrency(decorationCost);
             decorationCostItem.style.display = 'flex';
-        } else if (typeSelect?.value !== 'decoracion' && baseDeposit > 0 && decorationCost > 0) {
-            decorationCostSpan.textContent = formatCurrency(decorationCost);
-            decorationCostItem.style.display = 'flex';
+            // Actualizar label
+            const decLabel = decorationCostItem.querySelector('span:first-child');
+            if (decLabel) decLabel.textContent = 'Plan de decoración:';
         } else {
             decorationCostItem.style.display = 'none';
         }
     }
 
     if (servicesCostSpan && servicesCostItem) {
-        if (showServicesApart && servicesCost > 0) {
+        if ((currentType === 'decoracion-servicios' || currentType === 'especial') && servicesCost > 0) {
             servicesCostSpan.textContent = formatCurrency(servicesCost);
             servicesCostItem.style.display = 'flex';
-        } else if (typeSelect?.value !== 'servicios' && baseDeposit > 0 && servicesCost > 0) {
-            servicesCostSpan.textContent = formatCurrency(servicesCost);
-            servicesCostItem.style.display = 'flex';
+            // Actualizar label
+            const svcLabel = servicesCostItem.querySelector('span:first-child');
+            if (svcLabel) svcLabel.textContent = 'Servicios especiales:';
         } else {
             servicesCostItem.style.display = 'none';
+        }
+    }
+
+    // Para decoracion-servicios, mostrar el desglose pero el total en el principal
+    if (currentType === 'decoracion-servicios' && baseDepositItem) {
+        const label = baseDepositItem.querySelector('span:first-child');
+        if (label && decorationCost > 0 && servicesCost > 0) {
+            label.textContent = 'Total Decoración + Servicios:';
+        } else if (label && decorationCost > 0) {
+            label.textContent = 'Plan de decoración (no consumible):';
+        } else if (label && servicesCost > 0) {
+            label.textContent = 'Servicios especiales (no reembolsable):';
         }
     }
 
@@ -1267,12 +1382,12 @@ function formatCurrency(amount) {
 // Reservation Detail Modal Functions
 const reservationDetails = {
     normal: {
-        title: 'Reserva Estándar',
+        title: 'Reserva Free',
         badge: 'Anticipo Consumible',
         price: '$100.000 COP',
         image: 'images/placeholder.jpg',
         description: `
-            <p>La nueva reserva estándar de Mar&Tierra garantiza tu mesa con un anticipo totalmente consumible.
+            <p>La nueva Reserva Free de Mar&Tierra garantiza tu mesa con un anticipo totalmente consumible.
             Ideal para quienes buscan asegurar su experiencia gastronómica con la tranquilidad de una reserva confirmada.</p>
             <p>Este tipo de reserva está diseñada para brindar seguridad tanto al cliente como al restaurante,
             asegurando el mejor servicio posible.</p>
@@ -1311,12 +1426,12 @@ const reservationDetails = {
         image: 'images/placeholder.jpg',
         description: `
             <p>Transforma tu experiencia con nuestros planes de decoración especial. El costo del plan elegido
-            reemplaza completamente el anticipo de reserva estándar.</p>
+            reemplaza completamente el anticipo de Reserva Free.</p>
             <p>IMPORTANTE: El pago del plan de decoración NO es reembolsable NI consumible. Este monto cubre
             exclusivamente los servicios de decoración seleccionados.</p>
         `,
         features: [
-            'El costo del plan reemplaza el anticipo estándar',
+            'El costo del plan reemplaza el anticipo de Reserva Free',
             'Dinero NO reembolsable bajo ninguna circunstancia',
             'Dinero NO consumible en alimentos o bebidas',
             'Mesa garantizada con decoración incluida',
@@ -1387,6 +1502,81 @@ const reservationDetails = {
                 <li>Eventos corporativos</li>
                 <li>Quinceañeras y graduaciones</li>
                 <li>Reuniones familiares extensas</li>
+            </ul>
+        `
+    },
+    servicios: {
+        title: 'Reserva con Servicios Especiales',
+        badge: 'Experiencia VIP',
+        price: 'Según servicios elegidos',
+        image: 'images/placeholder.jpg',
+        description: `
+            <p>Haga de su velada una experiencia única e inolvidable con nuestros servicios especiales.
+            Artistas profesionales y servicios premium para crear momentos mágicos.</p>
+            <p>IMPORTANTE: El costo de los servicios reemplaza el anticipo estándar y NO es reembolsable.
+            Requiere pago del 100% por adelantado.</p>
+        `,
+        features: [
+            'Saxofonista profesional: $400.000 (1 hora)',
+            'Violinista profesional: $400.000 (1 hora)',
+            'Fotógrafo profesional: $480.000 (2 horas)',
+            'DJ profesional: $600.000 (3 horas)',
+            'El costo reemplaza el anticipo de Reserva Free',
+            'Pago 100% por adelantado requerido',
+            'NO es reembolsable bajo ninguna circunstancia',
+            'Coordinación directa con el artista'
+        ],
+        extra: `
+            <h4>Nuestros Artistas:</h4>
+            <ul>
+                <li>Músicos profesionales con repertorio personalizable</li>
+                <li>Fotógrafos con equipo profesional</li>
+                <li>DJs con sistema de sonido incluido</li>
+            </ul>
+            <h4>Condiciones:</h4>
+            <ul>
+                <li>Reservar con mínimo 1 semana de anticipación</li>
+                <li>Sujeto a disponibilidad del artista</li>
+                <li>Puede combinar múltiples servicios</li>
+                <li>El artista llega 30 minutos antes</li>
+            </ul>
+        `
+    },
+    'decoracion-servicios': {
+        title: 'Decoración + Servicios Especiales',
+        badge: 'Experiencia Completa',
+        price: 'Según selección',
+        image: 'images/placeholder.jpg',
+        description: `
+            <p>La combinación perfecta para ocasiones verdaderamente especiales. Una la elegancia de
+            nuestros planes de decoración con la magia de nuestros artistas profesionales.</p>
+            <p>IMPORTANTE: El total combinado de decoración y servicios reemplaza el anticipo estándar.
+            Ninguno de los montos es reembolsable.</p>
+        `,
+        features: [
+            'Acceso a todos los planes de decoración',
+            'Acceso a todos los servicios especiales',
+            'Combine según su presupuesto y deseos',
+            'Decoración + Servicios = Total del anticipo',
+            'NO reembolsable bajo ninguna circunstancia',
+            'Pago completo por adelantado',
+            'Coordinación integral del evento',
+            'Experiencia personalizada garantizada'
+        ],
+        extra: `
+            <h4>Ejemplos de Combinación:</h4>
+            <ul>
+                <li>Plan Plata + Saxofonista: $480.000</li>
+                <li>Plan Oro + Violinista: $520.000</li>
+                <li>Plan Luxury + Fotógrafo: $580.000</li>
+                <li>Plan Oro + Saxofonista + Fotógrafo: $1.000.000</li>
+            </ul>
+            <h4>Beneficios:</h4>
+            <ul>
+                <li>Coordinación única para todo el evento</li>
+                <li>Ambientación perfectamente sincronizada</li>
+                <li>Un solo punto de contacto</li>
+                <li>Experiencia completamente personalizada</li>
             </ul>
         `
     }
@@ -1549,14 +1739,15 @@ function showDetailModal(detail) {
     
     // Show modal
     modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    // No bloquear el scroll del body para permitir scroll en el modal
+    document.body.classList.add('modal-open');
 }
 
 function closeDetailModal() {
     const modal = document.getElementById('detailModal');
     if (modal) {
         modal.classList.remove('active');
-        document.body.style.overflow = '';
+        document.body.classList.remove('modal-open');
     }
 }
 

@@ -254,6 +254,22 @@ header.scrolled .navbar-logo {
 }
 
 /* ===============================================
+   CORRECCIÓN SCROLL PARA NAVBAR FIJO
+   =============================================== */
+
+/* Todas las secciones necesitan espacio para el navbar fijo */
+section[id] {
+    scroll-margin-top: 180px;
+}
+
+/* Ajuste cuando el header está scrolleado (más pequeño) */
+@media (max-width: 768px) {
+    section[id] {
+        scroll-margin-top: 120px;
+    }
+}
+
+/* ===============================================
    NAVEGACIÓN ELEGANTE
    =============================================== */
 
@@ -386,9 +402,7 @@ nav {
             rgba(107, 76, 59, 0.7) 0%,
             rgba(212, 196, 170, 0.4) 50%,
             rgba(201, 169, 97, 0.5) 100%),
-        /* CAMBIAR IMAGEN AQUÍ: Reemplaza la URL de abajo con tu imagen */
-        url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2070') center/cover;
-        /* Para imagen local usa: url('../images/tu-imagen.jpg') center/cover; */
+        url('https://res.cloudinary.com/dxvl2i2fy/image/upload/v1764181801/_MG_8945_pjgoxy.webp') center/cover;
     overflow: hidden;
 }
 
@@ -522,7 +536,7 @@ nav {
    =============================================== */
 
 .categories-section {
-    padding: 120px 0;
+    padding: 200px 0 120px 0;
     background: var(--blanco-perla);
     position: relative;
     display: none;
@@ -556,6 +570,10 @@ nav {
     text-align: center;
     margin-bottom: 80px;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
 }
 
 .section-overtitle {
@@ -590,7 +608,7 @@ nav {
     color: var(--marron-elegante);
     margin-bottom: 25px;
     position: relative;
-    display: inline-block;
+    text-align: center;
 }
 
 .section-description {
@@ -599,7 +617,7 @@ nav {
     font-weight: 300;
     color: var(--gris-elegante);
     max-width: 700px;
-    margin: 0 auto;
+    text-align: center;
     line-height: 1.8;
 }
 
@@ -724,7 +742,7 @@ nav {
 
 .menu-section {
     min-height: 100vh;
-    padding: 180px 0 120px 0;
+    padding: 200px 0 120px 0;
     background: linear-gradient(180deg, var(--beige-claro), var(--blanco-perla));
     display: none;
     position: relative;
@@ -889,7 +907,7 @@ nav {
    =============================================== */
 
 .contact-section {
-    padding: 120px 0;
+    padding: 200px 0 120px 0;
     background: linear-gradient(135deg, var(--beige-claro) 0%, var(--blanco-perla) 100%);
     display: none;
     position: relative;
@@ -1044,7 +1062,7 @@ nav {
    =============================================== */
 
 .reservation-info-section {
-    padding: 100px 20px;
+    padding: 200px 20px 120px 20px;
     background: linear-gradient(135deg, var(--beige-claro) 0%, var(--blanco-perla) 100%);
     position: relative;
     display: none;

@@ -411,13 +411,13 @@
 
             <!-- Tipos de Reserva -->
             <div class="reservation-types-grid">
-                <!-- Reserva Estándar (Anticipo Consumible) -->
+                <!-- Reserva Free (Anticipo Consumible) -->
                 <div class="reservation-type-card" onclick="showReservationDetail('normal')" style="cursor: pointer;">
                     <div class="card-image" style="background: linear-gradient(135deg, #2c3e50, #34495e);">
-                        <img src="images/placeholder.jpg" alt="Reserva Estándar" onerror="this.style.display='none'">
+                        <img src="images/placeholder.jpg" alt="Reserva Free" onerror="this.style.display='none'">
                     </div>
                     <div class="card-header">
-                        <h3>Reserva Estándar</h3>
+                        <h3>Reserva Free</h3>
                         <span class="card-badge">Anticipo Consumible</span>
                     </div>
                     <div class="card-content">
@@ -754,7 +754,7 @@
                     <div class="policy-card">
                         <h4>Política de Cancelación y Reagendamiento</h4>
                         <ul>
-                            <li>Reserva Estándar: NO reembolsable, puede reprogramar en 10 días</li>
+                            <li>Reserva Free: NO reembolsable, puede reprogramar en 10 días</li>
                             <li>Decoración y servicios: NO reembolsables NI consumibles</li>
                             <li>Grupos 15+: Anticipo consumible, servicios no reembolsables</li>
                             <li>Cancelar con al menos 48 horas de anticipación</li>
@@ -1146,10 +1146,11 @@
                         <div class="form-group full-width">
                             <label for="resType">Tipo de Reserva *</label>
                             <select id="resType" name="reservationType" required onchange="updateReservationOptions()">
-                                <option value="estandar">Reserva Estándar ($100,000 consumibles)</option>
-                                <option value="decoracion">Reserva con Decoración (costo según plan)</option>
-                                <option value="especial">Reserva Especial (15+ personas)</option>
+                                <option value="estandar">Reserva Free ($100,000 consumibles)</option>
+                                <option value="decoracion">Reserva con Decoración</option>
                                 <option value="servicios">Reserva con Servicios Especiales</option>
+                                <option value="decoracion-servicios">Reserva con Decoración + Servicios</option>
+                                <option value="especial">Reserva Especial (15+ personas)</option>
                             </select>
                             <span class="error-message"></span>
                             <div id="reservationTypeAlert" class="alert-message" style="display: none;">
@@ -1158,42 +1159,91 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Plan de Decoración -->
-                    <div class="form-row">
-                        <div class="form-group full-width">
-                            <label for="resDecoration">Plan de Decoración (Opcional)</label>
-                            <select id="resDecoration" name="decorationPlan" onchange="calculateTotal()">
-                                <option value="none">Sin decoración</option>
-                                <option value="plata">Plan Plata - $80.000 (3 globos + pastel)</option>
-                                <option value="oro">Plan Oro - $120.000 (vino + 3 globos + pastel)</option>
-                                <option value="luxury">Plan Luxury - $100.000 (rosas + pétalos)</option>
-                                <option value="combo-plata-luxury">Combo Plata + Luxury - $180.000</option>
-                                <option value="combo-oro-luxury">Combo Oro + Luxury - $220.000</option>
-                            </select>
+
+                    <!-- Información del Tipo de Reserva Seleccionado -->
+                    <div id="reservationTypeInfo" class="reservation-type-info" style="display: none;">
+                        <div class="info-card">
+                            <span class="info-icon"></span>
+                            <p id="reservationTypeDescription"></p>
                         </div>
                     </div>
-                    
-                    <!-- Servicios Adicionales -->
-                    <div class="form-group full-width">
-                        <label>Servicios Adicionales (Opcional)</label>
-                        <div class="services-checkboxes">
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="services" value="saxofonista" onchange="calculateTotal()">
-                                <span>Saxofonista (1 hora) - $400.000</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="services" value="violinista" onchange="calculateTotal()">
-                                <span>Violinista (1 hora) - $400.000</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="services" value="fotografo" onchange="calculateTotal()">
-                                <span>Fotógrafo (2 horas) - $480.000</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="services" value="dj" onchange="calculateTotal()">
-                                <span>DJ (3 horas) - $600.000</span>
-                            </label>
+
+                    <!-- Plan de Decoración (Oculto por defecto) -->
+                    <div id="decorationSection" class="conditional-section" style="display: none;">
+                        <div class="section-header">
+                            <span class="section-icon section-icon-decoration"></span>
+                            <h4>Seleccione su Plan de Decoración</h4>
+                        </div>
+                        <p class="section-description">Transforme su experiencia con nuestros planes de decoración especial. El costo del plan <strong>reemplaza</strong> el anticipo estándar y <strong>no es reembolsable ni consumible</strong>.</p>
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label for="resDecoration">Plan de Decoración *</label>
+                                <select id="resDecoration" name="decorationPlan" onchange="calculateTotal()">
+                                    <option value="none">-- Seleccione un plan --</option>
+                                    <option value="plata">Plan Plata - $80.000 (3 globos + pastel)</option>
+                                    <option value="oro">Plan Oro - $120.000 (vino + 3 globos + pastel)</option>
+                                    <option value="luxury">Plan Luxury - $100.000 (rosas + pétalos)</option>
+                                    <option value="combo-plata-luxury">Combo Plata + Luxury - $180.000</option>
+                                    <option value="combo-oro-luxury">Combo Oro + Luxury - $220.000</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Servicios Especiales (Oculto por defecto) -->
+                    <div id="servicesSection" class="conditional-section" style="display: none;">
+                        <div class="section-header">
+                            <span class="section-icon section-icon-services"></span>
+                            <h4>Seleccione sus Servicios Especiales</h4>
+                        </div>
+                        <p class="section-description">Haga de su velada un momento inolvidable. El costo de los servicios <strong>reemplaza</strong> el anticipo estándar y <strong>no es reembolsable</strong>. Requiere pago del 100% por adelantado.</p>
+                        <div class="form-group full-width">
+                            <div class="services-checkboxes">
+                                <label class="checkbox-label service-option">
+                                    <input type="checkbox" name="services" value="saxofonista" onchange="calculateTotal()">
+                                    <span class="service-info">
+                                        <span class="service-icon service-icon-sax"></span>
+                                        <span class="service-name">Saxofonista</span>
+                                        <span class="service-details">1 hora de show en vivo</span>
+                                        <span class="service-price">$400.000</span>
+                                    </span>
+                                </label>
+                                <label class="checkbox-label service-option">
+                                    <input type="checkbox" name="services" value="violinista" onchange="calculateTotal()">
+                                    <span class="service-info">
+                                        <span class="service-icon service-icon-violin"></span>
+                                        <span class="service-name">Violinista</span>
+                                        <span class="service-details">1 hora de presentación musical</span>
+                                        <span class="service-price">$400.000</span>
+                                    </span>
+                                </label>
+                                <label class="checkbox-label service-option">
+                                    <input type="checkbox" name="services" value="fotografo" onchange="calculateTotal()">
+                                    <span class="service-info">
+                                        <span class="service-icon service-icon-photo"></span>
+                                        <span class="service-name">Fotógrafo Profesional</span>
+                                        <span class="service-details">2 horas de servicio fotográfico</span>
+                                        <span class="service-price">$480.000</span>
+                                    </span>
+                                </label>
+                                <label class="checkbox-label service-option">
+                                    <input type="checkbox" name="services" value="dj" onchange="calculateTotal()">
+                                    <span class="service-info">
+                                        <span class="service-icon service-icon-dj"></span>
+                                        <span class="service-name">DJ Profesional</span>
+                                        <span class="service-details">3 horas de música y ambiente</span>
+                                        <span class="service-price">$600.000</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mensaje cuando servicios/decoración no están disponibles -->
+                    <div id="optionsNotAvailable" class="options-not-available" style="display: none;">
+                        <div class="info-hint">
+                            <span class="hint-icon"></span>
+                            <p id="optionsHintText"></p>
                         </div>
                     </div>
                     
@@ -1221,12 +1271,21 @@
                         <div class="payment-info">
                             <p><strong>Información de Pago:</strong></p>
                             <p class="payment-details">
-                                [INFORMACIÓN DE PAGO PENDIENTE]
-                                <br>Cuenta: XXXX-XXXX-XXXX
-                                <br>Banco: [Por confirmar]
+                                <strong>Bancolombia</strong> - Cuenta Corriente
+                                <br>No. Cuenta: <strong>30200003995</strong>
+                                <br>NIT: 901857854
+                                <br>Titular: MYT RESTAURANT SAS
                             </p>
-                            <p class="payment-note">
-                                ⚠️ Su reserva será confirmada únicamente después de verificar el pago del anticipo.
+                            <p class="payment-note" style="margin-top: 10px;">
+                                Envíe comprobante de pago al WhatsApp:
+                                <a href="https://wa.me/573008263403?text=Hola%2C%20adjunto%20comprobante%20de%20pago%20para%20mi%20reserva"
+                                   style="color: #25D366; font-weight: bold;" target="_blank">+57 300 826 3403</a>
+                            </p>
+                            <p class="payment-warning" style="font-size: 0.85em; color: #6B4C3B; margin-top: 5px;">
+                                Este número es ÚNICAMENTE para comprobantes. NO se realizan reservas por este medio.
+                            </p>
+                            <p class="payment-note" style="margin-top: 10px;">
+                                Su reserva será confirmada únicamente después de verificar el pago del anticipo.
                             </p>
                         </div>
                     </div>

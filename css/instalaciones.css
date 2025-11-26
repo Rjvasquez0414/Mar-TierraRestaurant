@@ -4,7 +4,7 @@
 
 .instalaciones-section {
     display: none;
-    padding: 100px 0;
+    padding: 200px 0 120px 0;
     background: linear-gradient(135deg, var(--blanco-perla) 0%, var(--beige-claro) 100%);
     position: relative;
     overflow: hidden;
