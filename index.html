@@ -47,6 +47,17 @@
     <link rel="stylesheet" href="css/custom-fonts.css">
 </head>
 <body>
+    <!-- ========================================
+         MODO MANTENIMIENTO
+         Cambiar a false cuando la página esté lista
+    ======================================== -->
+    <script>
+        const MAINTENANCE_MODE = true;
+        if (MAINTENANCE_MODE) {
+            window.location.replace('maintenance.html');
+        }
+    </script>
+
     <!-- Preloader -->
     <div class="preloader" id="preloader">
         <div class="loader-content">

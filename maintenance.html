@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mar & Tierra Restaurant - Próximamente una nueva experiencia gastronómica">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Mar & Tierra | Próximamente</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/logos/logo-sin-fondo.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Fuente Valerius local -->
+    <style>
+        @font-face {
+            font-family: 'Valerius';
+            src: url('fonts/Valerius.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+    </style>
+
+    <style>
+        /* Variables de color del sitio */
+        :root {
+            --crema-premium: #D4C4AA;
+            --marron-elegante: #6B4C3B;
+            --marron-oscuro: #4A3429;
+            --dorado-sutil: #C9A961;
+            --dorado-brillante: #E4D4A8;
+            --blanco-perla: #FDFBF7;
+            --beige-claro: #F5EFE6;
+            --negro-carbon: #1A1A1A;
+        }
+
+        /* Reset y base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--negro-carbon);
+            color: var(--blanco-perla);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Fondo con imagen */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        .background img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /* Overlay oscuro elegante */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                rgba(26, 26, 26, 0.85) 0%,
+                rgba(74, 52, 41, 0.75) 50%,
+                rgba(26, 26, 26, 0.9) 100%
+            );
+            z-index: -1;
+        }
+
+        /* Container principal con glassmorphism */
+        .maintenance-container {
+            text-align: center;
+            padding: 60px 50px;
+            max-width: 650px;
+            width: 90%;
+            background: rgba(253, 251, 247, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 30px;
+            border: 1px solid rgba(201, 169, 97, 0.25);
+            box-shadow:
+                0 25px 50px rgba(0, 0, 0, 0.4),
+                0 0 100px rgba(201, 169, 97, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: fadeInScale 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        /* Logo */
+        .logo {
+            font-family: 'Valerius', 'Playfair Display', serif;
+            font-size: clamp(3.5rem, 12vw, 5.5rem);
+            color: #FFFFFF;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 4px;
+            text-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo-subtitle {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 300;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            color: var(--crema-premium);
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        /* Línea decorativa dorada */
+        .golden-line {
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                var(--dorado-sutil),
+                var(--dorado-brillante),
+                var(--dorado-sutil),
+                transparent
+            );
+            margin: 0 auto 40px;
+            position: relative;
+            border-radius: 2px;
+            box-shadow: 0 0 20px rgba(201, 169, 97, 0.5);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        .golden-line::before {
+            content: '◆';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--dorado-sutil);
+            font-size: 10px;
+            background: rgba(26, 26, 26, 0.8);
+            padding: 5px 10px;
+        }
+
+        /* Mensaje principal */
+        .main-message {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-weight: 400;
+            color: var(--blanco-perla);
+            margin-bottom: 20px;
+            line-height: 1.4;
+            animation: fadeInUp 1s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        /* Mensaje secundario */
+        .secondary-message {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            font-weight: 300;
+            color: var(--crema-premium);
+            margin-bottom: 50px;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+        }
+
+        /* Sección de contacto */
+        .contact-section {
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.7s forwards;
+        }
+
+        .contact-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--dorado-sutil);
+            margin-bottom: 25px;
+        }
+
+        .contact-items {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--blanco-perla);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 300;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 12px 25px;
+            border-radius: 50px;
+            background: rgba(201, 169, 97, 0.08);
+            border: 1px solid rgba(201, 169, 97, 0.15);
+        }
+
+        .contact-item:hover {
+            background: rgba(201, 169, 97, 0.2);
+            border-color: var(--dorado-sutil);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(201, 169, 97, 0.2);
+        }
+
+        .contact-item i {
+            color: var(--dorado-sutil);
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .contact-item span {
+            color: var(--crema-premium);
+        }
+
+        /* Animaciones */
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes floatSmooth {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        @keyframes shimmer {
+            0%, 100% {
+                opacity: 0.7;
+                box-shadow: 0 0 20px rgba(201, 169, 97, 0.3);
+            }
+            50% {
+                opacity: 1;
+                box-shadow: 0 0 40px rgba(201, 169, 97, 0.6);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .maintenance-container {
+                padding: 45px 30px;
+                border-radius: 25px;
+            }
+
+            .logo {
+                font-size: 3rem;
+            }
+
+            .logo-subtitle {
+                font-size: 0.65rem;
+                letter-spacing: 5px;
+            }
+
+            .main-message {
+                font-size: 1.3rem;
+            }
+
+            .secondary-message {
+                font-size: 0.95rem;
+                margin-bottom: 40px;
+            }
+
+            .contact-item {
+                font-size: 0.9rem;
+                padding: 10px 20px;
+            }
+
+            .golden-line {
+                width: 80px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .maintenance-container {
+                padding: 35px 25px;
+            }
+
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .contact-item {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+                padding: 15px 20px;
+            }
+        }
+
+        /* Preloader simple */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--negro-carbon);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        .preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .preloader-logo {
+            font-family: 'Valerius', 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--dorado-sutil);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.4;
+                transform: scale(0.98);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-logo">Mar&Tierra</div>
+    </div>
+
+    <!-- Fondo con imagen -->
+    <div class="background">
+        <img src="https://res.cloudinary.com/dxvl2i2fy/image/upload/v1764181801/_MG_8945_pjgoxy.webp" alt="Mar & Tierra Restaurant" loading="eager">
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay"></div>
+
+    <!-- Contenido principal -->
+    <main class="maintenance-container">
+        <!-- Logo -->
+        <h1 class="logo">Mar&Tierra</h1>
+        <p class="logo-subtitle">Restaurant</p>
+
+        <!-- Línea decorativa -->
+        <div class="golden-line"></div>
+
+        <!-- Mensaje principal -->
+        <h2 class="main-message">Una nueva experiencia gastronómica está por llegar</h2>
+
+        <!-- Mensaje secundario -->
+        <p class="secondary-message">Estamos preparando algo especial para ti</p>
+
+        <!-- Información de contacto -->
+        <div class="contact-section">
+            <p class="contact-title">Mientras tanto, visítanos</p>
+
+            <div class="contact-items">
+                <!-- Dirección -->
+                <a href="https://www.google.com/maps/search/?api=1&query=Carrera+35A+46-102+Cabecera+del+Llano+Bucaramanga"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Cra 35a #46-102, Cabecera del Llano, Bucaramanga</span>
+                </a>
+
+                <!-- Teléfono -->
+                <a href="tel:+573008263403" class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span>300 826 3403</span>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Ocultar preloader cuando la página cargue
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('preloader').classList.add('hidden');
+            }, 800);
+        });
+    </script>
+</body>
+</html>
