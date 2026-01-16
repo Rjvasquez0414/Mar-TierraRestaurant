@@ -802,6 +802,90 @@ const RESTAURANT_HOURS = {
     6: { open: '11:30', close: '23:59', name: 'Sábado' }        // Sábado: 11:30 AM - 12:00 AM
 };
 
+// Función para formatear hora en formato 12h AM/PM
+function formatTimeToAMPM(hour, minutes) {
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
+    return `${displayHour}:${minutes.toString().padStart(2, '0')} ${period}`;
+}
+
+// Función para poblar las opciones de hora según el día seleccionado
+function populateTimeOptions(selectedDate) {
+    const timeSelect = document.getElementById('resTime');
+    if (!timeSelect) return;
+
+    // Limpiar opciones existentes
+    timeSelect.innerHTML = '';
+
+    if (!selectedDate) {
+        timeSelect.innerHTML = '<option value="">Primero seleccione una fecha</option>';
+        timeSelect.disabled = true;
+        return;
+    }
+
+    const date = new Date(selectedDate + 'T00:00:00');
+    const dayOfWeek = date.getDay();
+    const hours = RESTAURANT_HOURS[dayOfWeek];
+
+    if (!hours) {
+        timeSelect.innerHTML = '<option value="">No disponible este día</option>';
+        timeSelect.disabled = true;
+        return;
+    }
+
+    // Parsear horarios
+    const [openHour, openMin] = hours.open.split(':').map(Number);
+    const [closeHour, closeMin] = hours.close.split(':').map(Number);
+
+    // Última reserva 1 hora antes del cierre
+    let lastResHour = closeHour - 1;
+    let lastResMin = closeMin;
+    if (lastResHour < 0) {
+        lastResHour = 23;
+    }
+
+    // Generar opciones cada 30 minutos
+    timeSelect.innerHTML = '<option value="">Seleccione hora</option>';
+
+    let currentHour = openHour;
+    let currentMin = openMin;
+
+    while (currentHour < lastResHour || (currentHour === lastResHour && currentMin <= lastResMin)) {
+        const value = `${currentHour.toString().padStart(2, '0')}:${currentMin.toString().padStart(2, '0')}`;
+        const label = formatTimeToAMPM(currentHour, currentMin);
+
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = label;
+        timeSelect.appendChild(option);
+
+        // Incrementar 30 minutos
+        currentMin += 30;
+        if (currentMin >= 60) {
+            currentMin = 0;
+            currentHour++;
+        }
+    }
+
+    timeSelect.disabled = false;
+}
+
+// Inicializar el listener del campo de fecha cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    const dateField = document.getElementById('resDate');
+    if (dateField) {
+        // Establecer fecha mínima como hoy
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0];
+        dateField.setAttribute('min', todayStr);
+
+        // Escuchar cambios en la fecha
+        dateField.addEventListener('change', function() {
+            populateTimeOptions(this.value);
+        });
+    }
+});
+
 function validateReservationForm() {
     let isValid = true;
     const requiredFields = ['resName', 'resPhone', 'resEmail', 'resPeople', 'resDate', 'resTime', 'resType'];
