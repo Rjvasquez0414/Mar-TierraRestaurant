@@ -254,10 +254,15 @@ class MenuApp {
     // Create menu item element - Diseño Premium
     createMenuItem(item) {
         const menuItemEl = document.createElement('div');
-        menuItemEl.className = 'menu-item fade-in';
         menuItemEl.dataset.tags = item.tags ? item.tags.join(',') : '';
         menuItemEl.dataset.name = item.name.toLowerCase();
         menuItemEl.dataset.description = item.description.toLowerCase();
+
+        // Detectar si el plato tiene imagen válida
+        const hasImage = item.image && item.image !== '' && item.image !== null;
+
+        // Agregar clase según si tiene imagen o no
+        menuItemEl.className = hasImage ? 'menu-item fade-in' : 'menu-item fade-in no-image';
 
         // Create tags HTML - ahora se posicionan sobre la imagen
         const tagsHTML = item.tags && item.tags.length > 0 ? `
@@ -266,30 +271,49 @@ class MenuApp {
             </div>
         ` : '';
 
-        // Placeholder de Cloudinary
-        const placeholder = 'https://res.cloudinary.com/dxvl2i2fy/image/upload/v1764182679/Archivo-_2025-09-19T03_42_04_ie0gat.webp';
-        const imageUrl = item.image && item.image !== '' && !item.image.includes('placeholder')
-            ? item.image
-            : placeholder;
-
-        // Nueva estructura vertical premium
-        menuItemEl.innerHTML = `
-            <div class="menu-item-image-wrapper">
-                <img src="${imageUrl}"
-                     alt="${item.name}"
-                     loading="lazy"
-                     onerror="this.src='${placeholder}'">
-                ${tagsHTML}
-            </div>
-            <div class="menu-item-content">
-                <div class="menu-item-line"></div>
-                <h3 class="menu-item-name">${item.name}</h3>
-                <p class="menu-item-desc">${item.description}</p>
-                <div class="menu-item-footer">
-                    <span class="menu-item-price">${item.price}</span>
-                </div>
-            </div>
+        // Icono SVG elegante para platos sin imagen
+        const noImageIcon = `
+            <svg class="no-image-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+                <path d="M12 6v6l4 2"/>
+            </svg>
         `;
+
+        // Estructura diferente según si tiene imagen o no
+        if (hasImage) {
+            menuItemEl.innerHTML = `
+                <div class="menu-item-image-wrapper">
+                    <img src="${item.image}"
+                         alt="${item.name}"
+                         loading="lazy">
+                    ${tagsHTML}
+                </div>
+                <div class="menu-item-content">
+                    <div class="menu-item-line"></div>
+                    <h3 class="menu-item-name">${item.name}</h3>
+                    <p class="menu-item-desc">${item.description}</p>
+                    <div class="menu-item-footer">
+                        <span class="menu-item-price">${item.price}</span>
+                    </div>
+                </div>
+            `;
+        } else {
+            // Diseño elegante sin imagen
+            menuItemEl.innerHTML = `
+                <div class="menu-item-image-wrapper">
+                    ${noImageIcon}
+                    ${tagsHTML}
+                </div>
+                <div class="menu-item-content">
+                    <div class="menu-item-line"></div>
+                    <h3 class="menu-item-name">${item.name}</h3>
+                    <p class="menu-item-desc">${item.description}</p>
+                    <div class="menu-item-footer">
+                        <span class="menu-item-price">${item.price}</span>
+                    </div>
+                </div>
+            `;
+        }
 
         // Add click event listener for modal
         menuItemEl.addEventListener('click', () => {
@@ -766,15 +790,27 @@ function setupReservationEventListeners() {
     }
 }
 
+// Horarios de operación del restaurante por día de la semana
+// 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
+const RESTAURANT_HOURS = {
+    0: { open: '11:30', close: '21:00', name: 'Domingo' },      // Domingo: 11:30 AM - 9:00 PM
+    1: { open: '11:30', close: '22:00', name: 'Lunes' },        // Lunes: 11:30 AM - 10:00 PM
+    2: { open: '11:30', close: '23:00', name: 'Martes' },       // Martes: 11:30 AM - 11:00 PM
+    3: { open: '11:30', close: '23:00', name: 'Miércoles' },    // Miércoles: 11:30 AM - 11:00 PM
+    4: { open: '11:30', close: '23:00', name: 'Jueves' },       // Jueves: 11:30 AM - 11:00 PM
+    5: { open: '11:30', close: '23:59', name: 'Viernes' },      // Viernes: 11:30 AM - 12:00 AM
+    6: { open: '11:30', close: '23:59', name: 'Sábado' }        // Sábado: 11:30 AM - 12:00 AM
+};
+
 function validateReservationForm() {
     let isValid = true;
     const requiredFields = ['resName', 'resPhone', 'resEmail', 'resPeople', 'resDate', 'resTime', 'resType'];
-    
+
     requiredFields.forEach(fieldId => {
         const field = document.getElementById(fieldId);
         const formGroup = field?.closest('.form-group');
         const errorMsg = formGroup?.querySelector('.error-message');
-        
+
         if (!field || !field.value.trim()) {
             if (formGroup) formGroup.classList.add('error');
             if (errorMsg) {
@@ -787,7 +823,7 @@ function validateReservationForm() {
             if (errorMsg) errorMsg.classList.remove('show');
         }
     });
-    
+
     // Validate email format
     const emailField = document.getElementById('resEmail');
     if (emailField && emailField.value) {
@@ -803,7 +839,7 @@ function validateReservationForm() {
             isValid = false;
         }
     }
-    
+
     // Validate phone format
     const phoneField = document.getElementById('resPhone');
     if (phoneField && phoneField.value) {
@@ -819,7 +855,86 @@ function validateReservationForm() {
             isValid = false;
         }
     }
-    
+
+    // Get date and time fields for validation
+    const dateField = document.getElementById('resDate');
+    const timeField = document.getElementById('resTime');
+
+    // Validate date is in the future
+    if (dateField && dateField.value) {
+        const selectedDate = new Date(dateField.value + 'T00:00:00');
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (selectedDate < today) {
+            const formGroup = dateField.closest('.form-group');
+            const errorMsg = formGroup?.querySelector('.error-message');
+            if (formGroup) formGroup.classList.add('error');
+            if (errorMsg) {
+                errorMsg.textContent = 'La fecha debe ser hoy o en el futuro';
+                errorMsg.classList.add('show');
+            }
+            isValid = false;
+        }
+
+        // Validate reservation is at least 2 hours in advance if it's today
+        if (timeField && timeField.value && selectedDate.getTime() === today.getTime()) {
+            const [hours, minutes] = timeField.value.split(':').map(Number);
+            const reservationTime = new Date();
+            reservationTime.setHours(hours, minutes, 0, 0);
+
+            const now = new Date();
+            const twoHoursFromNow = new Date(now.getTime() + 2 * 60 * 60 * 1000);
+
+            if (reservationTime < twoHoursFromNow) {
+                const formGroup = timeField.closest('.form-group');
+                const errorMsg = formGroup?.querySelector('.error-message');
+                if (formGroup) formGroup.classList.add('error');
+                if (errorMsg) {
+                    errorMsg.textContent = 'Las reservas para hoy deben hacerse con al menos 2 horas de anticipación';
+                    errorMsg.classList.add('show');
+                }
+                isValid = false;
+            }
+        }
+    }
+
+    // Validate time is within restaurant operating hours
+    if (dateField && dateField.value && timeField && timeField.value) {
+        const selectedDate = new Date(dateField.value + 'T00:00:00');
+        const dayOfWeek = selectedDate.getDay();
+        const hours = RESTAURANT_HOURS[dayOfWeek];
+
+        if (hours) {
+            const [selectedHour, selectedMin] = timeField.value.split(':').map(Number);
+            const [openHour, openMin] = hours.open.split(':').map(Number);
+            const [closeHour, closeMin] = hours.close.split(':').map(Number);
+
+            const selectedTimeMinutes = selectedHour * 60 + selectedMin;
+            const openTimeMinutes = openHour * 60 + openMin;
+            const closeTimeMinutes = closeHour * 60 + closeMin;
+
+            // La última reserva debe ser al menos 1 hora antes del cierre
+            const lastReservationMinutes = closeTimeMinutes - 60;
+
+            if (selectedTimeMinutes < openTimeMinutes || selectedTimeMinutes > lastReservationMinutes) {
+                const formGroup = timeField.closest('.form-group');
+                const errorMsg = formGroup?.querySelector('.error-message');
+                if (formGroup) formGroup.classList.add('error');
+                if (errorMsg) {
+                    const lastResHour = Math.floor(lastReservationMinutes / 60);
+                    const lastResMin = lastReservationMinutes % 60;
+                    const lastResFormatted = lastResHour > 12 ? lastResHour - 12 : lastResHour;
+                    const lastResAmPm = lastResHour >= 12 ? 'PM' : 'AM';
+
+                    errorMsg.textContent = `${hours.name}: Reservas de 11:30 AM a ${lastResFormatted}:${lastResMin.toString().padStart(2, '0')} ${lastResAmPm}`;
+                    errorMsg.classList.add('show');
+                }
+                isValid = false;
+            }
+        }
+    }
+
     return isValid;
 }
 
@@ -1097,7 +1212,7 @@ function updateReservationOptions() {
                 }
                 // Mostrar info
                 if (reservationTypeInfo && reservationTypeDescription) {
-                    reservationTypeDescription.innerHTML = 'Para grupos de <strong>15 o más personas</strong>. El anticipo de $150,000 por persona es <strong>consumible</strong>. Opcionalmente puede agregar decoración y/o servicios especiales (estos sí requieren pago adicional no reembolsable).';
+                    reservationTypeDescription.innerHTML = 'Para grupos de <strong>15 o más personas</strong>. El anticipo de $150,000 por persona es <strong>consumible</strong>. Adicionalmente puede agregar decoración y/o servicios especiales (estos sí requieren pago adicional no reembolsable).';
                     reservationTypeInfo.style.display = 'block';
                 }
                 break;

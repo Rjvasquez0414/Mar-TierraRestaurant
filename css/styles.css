@@ -964,6 +964,93 @@ nav {
 }
 
 /* ===============================================
+   PLATOS SIN IMAGEN - DISEÑO ELEGANTE
+   =============================================== */
+
+.menu-item.no-image {
+    background: linear-gradient(145deg, var(--blanco-perla) 0%, var(--beige-claro) 100%);
+    border: 1px solid rgba(201, 169, 97, 0.2);
+}
+
+.menu-item.no-image .menu-item-image-wrapper {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg,
+        rgba(201, 169, 97, 0.08) 0%,
+        rgba(107, 76, 59, 0.05) 50%,
+        rgba(201, 169, 97, 0.08) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-item.no-image .menu-item-image-wrapper::before {
+    content: '';
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border: 2px solid rgba(201, 169, 97, 0.3);
+    border-radius: 50%;
+    animation: pulse-elegant 3s ease-in-out infinite;
+}
+
+.menu-item.no-image .menu-item-image-wrapper::after {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border: 1px solid rgba(107, 76, 59, 0.2);
+    border-radius: 50%;
+    animation: pulse-elegant 3s ease-in-out infinite 0.5s;
+}
+
+@keyframes pulse-elegant {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+.menu-item.no-image .no-image-icon {
+    width: 40px;
+    height: 40px;
+    color: var(--dorado-sutil);
+    opacity: 0.6;
+    z-index: 1;
+}
+
+.menu-item.no-image:hover .menu-item-image-wrapper {
+    background: linear-gradient(135deg,
+        rgba(201, 169, 97, 0.12) 0%,
+        rgba(107, 76, 59, 0.08) 50%,
+        rgba(201, 169, 97, 0.12) 100%);
+}
+
+.menu-item.no-image:hover .no-image-icon {
+    opacity: 0.8;
+    transform: scale(1.1);
+    transition: all 0.3s ease;
+}
+
+.menu-item.no-image .menu-item-content {
+    padding-top: 24px;
+}
+
+.menu-item.no-image .menu-item-name {
+    font-size: 1.25rem;
+}
+
+.menu-item.no-image .menu-item-line {
+    width: 60px;
+    background: linear-gradient(90deg, transparent, var(--dorado-sutil), var(--marron-elegante), var(--dorado-sutil), transparent);
+}
+
+/* ===============================================
    SECCIÓN DE CONTACTO LUXURY
    =============================================== */
 
