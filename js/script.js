@@ -837,20 +837,22 @@ function populateTimeOptions(selectedDate) {
     const [openHour, openMin] = hours.open.split(':').map(Number);
     const [closeHour, closeMin] = hours.close.split(':').map(Number);
 
+    // Convertir a minutos totales para comparación más precisa
+    const openTimeMinutes = openHour * 60 + openMin;
+    const closeTimeMinutes = closeHour * 60 + closeMin;
+
     // Última reserva 1 hora antes del cierre
-    let lastResHour = closeHour - 1;
-    let lastResMin = closeMin;
-    if (lastResHour < 0) {
-        lastResHour = 23;
-    }
+    const lastReservationMinutes = closeTimeMinutes - 60;
 
     // Generar opciones cada 30 minutos
     timeSelect.innerHTML = '<option value="">Seleccione hora</option>';
 
-    let currentHour = openHour;
-    let currentMin = openMin;
+    let currentMinutes = openTimeMinutes;
 
-    while (currentHour < lastResHour || (currentHour === lastResHour && currentMin <= lastResMin)) {
+    while (currentMinutes <= lastReservationMinutes) {
+        const currentHour = Math.floor(currentMinutes / 60);
+        const currentMin = currentMinutes % 60;
+
         const value = `${currentHour.toString().padStart(2, '0')}:${currentMin.toString().padStart(2, '0')}`;
         const label = formatTimeToAMPM(currentHour, currentMin);
 
@@ -860,11 +862,7 @@ function populateTimeOptions(selectedDate) {
         timeSelect.appendChild(option);
 
         // Incrementar 30 minutos
-        currentMin += 30;
-        if (currentMin >= 60) {
-            currentMin = 0;
-            currentHour++;
-        }
+        currentMinutes += 30;
     }
 
     timeSelect.disabled = false;
@@ -874,9 +872,12 @@ function populateTimeOptions(selectedDate) {
 document.addEventListener('DOMContentLoaded', function() {
     const dateField = document.getElementById('resDate');
     if (dateField) {
-        // Establecer fecha mínima como hoy
+        // Establecer fecha mínima como hoy (usando fecha local, no UTC)
         const today = new Date();
-        const todayStr = today.toISOString().split('T')[0];
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const todayStr = `${year}-${month}-${day}`;
         dateField.setAttribute('min', todayStr);
 
         // Escuchar cambios en la fecha
