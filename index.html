@@ -1108,23 +1108,54 @@
                             <span class="error-message"></span>
                         </div>
                     </div>
-                    
+
+                    <!-- Selector de Salón -->
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="resSalon">Salón / Área *</label>
+                            <select id="resSalon" name="salon" required onchange="updateSalonInfo()">
+                                <option value="">Seleccione un salón</option>
+                                <option value="moon-terraza" data-capacity="30">Moon Terraza (hasta 30 personas)</option>
+                                <option value="golden" data-capacity="44">Salón Golden (hasta 44 personas)</option>
+                                <option value="arca" data-capacity="60">Arca (hasta 60 personas)</option>
+                                <option value="barco" data-capacity="16">Barco (hasta 16 personas)</option>
+                                <option value="chill-out" data-capacity="8">Chill Out (hasta 8 personas)</option>
+                            </select>
+                            <span class="error-message"></span>
+                            <div id="salonInfo" class="salon-info-hint" style="display: none;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Mensaje especial Golden -->
+                    <div id="goldenExclusiveMsg" class="golden-exclusive-message" style="display: none;">
+                        <div class="info-hint golden-hint">
+                            <i class="fas fa-crown"></i>
+                            <div>
+                                <strong>¿Desea reservar el Salón Golden de forma exclusiva?</strong>
+                                <p>Para reservas privadas del salón completo, contáctenos directamente:</p>
+                                <p><strong>WhatsApp: +57 300 826 3403</strong></p>
+                                <p style="font-size: 0.85rem; color: #888;">⚠️ Por este medio NO se aceptan reservas.</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-row">
                         <div class="form-group">
                             <label for="resDate">Fecha de Reserva *</label>
                             <input type="date" id="resDate" name="date" required>
                             <span class="error-message"></span>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="resTime">Hora de Reserva *</label>
                             <select id="resTime" name="time" required disabled>
                                 <option value="">Primero seleccione una fecha</option>
                             </select>
                             <span class="error-message"></span>
+                            <div id="availabilityStatus" class="availability-status" style="display: none;"></div>
                         </div>
                     </div>
-                    
+
                     <!-- Tipo de Reserva -->
                     <div class="form-row">
                         <div class="form-group full-width">

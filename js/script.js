@@ -802,6 +802,15 @@ const RESTAURANT_HOURS = {
     6: { open: '11:30', close: '23:59', name: 'Sábado' }        // Sábado: 11:30 AM - 12:00 AM
 };
 
+// Capacidades de salones
+const SALON_CAPACITIES = {
+    'moon-terraza': { name: 'Moon Terraza', capacity: 30, description: 'Terraza al aire libre con vista panorámica' },
+    'golden': { name: 'Salón Golden', capacity: 44, description: 'Salón elegante para eventos especiales', allowsShared: true },
+    'arca': { name: 'Arca', capacity: 60, description: 'Espacio amplio para grupos grandes' },
+    'barco': { name: 'Barco', capacity: 16, description: 'Área íntima con decoración náutica' },
+    'chill-out': { name: 'Chill Out', capacity: 8, description: 'Zona relajada para pequeños grupos' }
+};
+
 // Función para formatear hora en formato 12h AM/PM
 function formatTimeToAMPM(hour, minutes) {
     const period = hour >= 12 ? 'PM' : 'AM';
@@ -868,6 +877,88 @@ function populateTimeOptions(selectedDate) {
     timeSelect.disabled = false;
 }
 
+// Función para actualizar información del salón seleccionado
+function updateSalonInfo() {
+    const salonSelect = document.getElementById('resSalon');
+    const peopleSelect = document.getElementById('resPeople');
+    const salonInfoDiv = document.getElementById('salonInfo');
+    const goldenMsg = document.getElementById('goldenExclusiveMsg');
+    const formGroup = salonSelect?.closest('.form-group');
+    const errorMsg = formGroup?.querySelector('.error-message');
+
+    if (!salonSelect || !salonInfoDiv) return;
+
+    const selectedSalon = salonSelect.value;
+    const selectedPeople = parseInt(peopleSelect?.value) || 0;
+
+    // Limpiar errores previos
+    if (formGroup) formGroup.classList.remove('error');
+    if (errorMsg) errorMsg.classList.remove('show');
+
+    // Ocultar mensaje Golden por defecto
+    if (goldenMsg) goldenMsg.style.display = 'none';
+
+    if (!selectedSalon) {
+        salonInfoDiv.style.display = 'none';
+        return;
+    }
+
+    const salonData = SALON_CAPACITIES[selectedSalon];
+    if (!salonData) {
+        salonInfoDiv.style.display = 'none';
+        return;
+    }
+
+    // Mostrar información del salón
+    salonInfoDiv.innerHTML = `
+        <i class="fas fa-info-circle"></i>
+        <span>${salonData.description} - Capacidad máxima: ${salonData.capacity} personas</span>
+    `;
+    salonInfoDiv.style.display = 'flex';
+
+    // Mostrar mensaje especial para Golden
+    if (selectedSalon === 'golden' && goldenMsg) {
+        goldenMsg.style.display = 'block';
+    }
+
+    // Validar capacidad si hay personas seleccionadas
+    if (selectedPeople > 0 && selectedPeople > salonData.capacity) {
+        if (formGroup) formGroup.classList.add('error');
+        if (errorMsg) {
+            errorMsg.textContent = `El ${salonData.name} tiene capacidad máxima de ${salonData.capacity} personas`;
+            errorMsg.classList.add('show');
+        }
+    }
+}
+
+// Función para validar capacidad cuando cambia el número de personas
+function validateSalonCapacity() {
+    const salonSelect = document.getElementById('resSalon');
+    const peopleSelect = document.getElementById('resPeople');
+
+    if (!salonSelect || !salonSelect.value) return;
+
+    const selectedSalon = salonSelect.value;
+    const selectedPeople = parseInt(peopleSelect?.value) || 0;
+    const salonData = SALON_CAPACITIES[selectedSalon];
+
+    if (!salonData) return;
+
+    const formGroup = salonSelect.closest('.form-group');
+    const errorMsg = formGroup?.querySelector('.error-message');
+
+    if (selectedPeople > salonData.capacity) {
+        if (formGroup) formGroup.classList.add('error');
+        if (errorMsg) {
+            errorMsg.textContent = `El ${salonData.name} tiene capacidad máxima de ${salonData.capacity} personas`;
+            errorMsg.classList.add('show');
+        }
+    } else {
+        if (formGroup) formGroup.classList.remove('error');
+        if (errorMsg) errorMsg.classList.remove('show');
+    }
+}
+
 // Inicializar el listener del campo de fecha cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
     const dateField = document.getElementById('resDate');
@@ -885,11 +976,17 @@ document.addEventListener('DOMContentLoaded', function() {
             populateTimeOptions(this.value);
         });
     }
+
+    // Escuchar cambios en el número de personas para validar capacidad
+    const peopleField = document.getElementById('resPeople');
+    if (peopleField) {
+        peopleField.addEventListener('change', validateSalonCapacity);
+    }
 });
 
 function validateReservationForm() {
     let isValid = true;
-    const requiredFields = ['resName', 'resPhone', 'resEmail', 'resPeople', 'resDate', 'resTime', 'resType'];
+    const requiredFields = ['resName', 'resPhone', 'resEmail', 'resPeople', 'resSalon', 'resDate', 'resTime', 'resType'];
 
     requiredFields.forEach(fieldId => {
         const field = document.getElementById(fieldId);
@@ -1020,6 +1117,25 @@ function validateReservationForm() {
         }
     }
 
+    // Validar capacidad del salón
+    const salonSelect = document.getElementById('resSalon');
+    const peopleSelect = document.getElementById('resPeople');
+    if (salonSelect && salonSelect.value && peopleSelect && peopleSelect.value) {
+        const salonData = SALON_CAPACITIES[salonSelect.value];
+        const selectedPeople = parseInt(peopleSelect.value);
+
+        if (salonData && selectedPeople > salonData.capacity) {
+            const formGroup = salonSelect.closest('.form-group');
+            const errorMsg = formGroup?.querySelector('.error-message');
+            if (formGroup) formGroup.classList.add('error');
+            if (errorMsg) {
+                errorMsg.textContent = `El ${salonData.name} tiene capacidad máxima de ${salonData.capacity} personas`;
+                errorMsg.classList.add('show');
+            }
+            isValid = false;
+        }
+    }
+
     return isValid;
 }
 
@@ -1058,12 +1174,17 @@ async function handleReservationSubmit(event) {
     const totalDeposit = calculateTotalDeposit();
     
     // Prepare form data
+    const salonValue = document.getElementById('resSalon').value;
+    const salonName = SALON_CAPACITIES[salonValue]?.name || salonValue;
+
     const formData = {
         timestamp: new Date().toISOString(),
         name: document.getElementById('resName').value,
         phone: document.getElementById('resPhone').value,
         email: document.getElementById('resEmail').value,
         people: document.getElementById('resPeople').value,
+        salon: salonName,
+        salonId: salonValue,
         date: document.getElementById('resDate').value,
         time: document.getElementById('resTime').value,
         reservationType: document.getElementById('resType').value,

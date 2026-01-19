@@ -2542,3 +2542,142 @@ nav {
         height: 300px;
     }
 }
+
+/* ============================================
+   SISTEMA DE RESERVAS - SALONES Y DISPONIBILIDAD
+   ============================================ */
+
+/* Info hint general */
+.info-hint {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.info-hint i {
+    font-size: 1.2rem;
+    margin-top: 2px;
+}
+
+.info-hint p {
+    margin: 5px 0;
+}
+
+/* Golden exclusive message */
+.golden-exclusive-message {
+    margin: 15px 0;
+}
+
+.golden-hint {
+    background: linear-gradient(135deg, rgba(201, 169, 97, 0.15), rgba(228, 212, 168, 0.1));
+    border: 1px solid rgba(201, 169, 97, 0.3);
+    color: var(--marron-elegante);
+}
+
+.golden-hint i {
+    color: var(--dorado-sutil);
+}
+
+.golden-hint strong {
+    color: var(--marron-oscuro);
+}
+
+/* Salon info hint */
+.salon-info-hint {
+    padding: 10px 15px;
+    margin-top: 8px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    background: rgba(212, 196, 170, 0.1);
+    border: 1px solid rgba(212, 196, 170, 0.2);
+    color: var(--gris-elegante);
+}
+
+.salon-info-hint.capacity-warning {
+    background: rgba(255, 193, 7, 0.1);
+    border-color: rgba(255, 193, 7, 0.3);
+    color: #856404;
+}
+
+.salon-info-hint.capacity-error {
+    background: rgba(220, 53, 69, 0.1);
+    border-color: rgba(220, 53, 69, 0.3);
+    color: #721c24;
+}
+
+/* Availability status */
+.availability-status {
+    padding: 10px 15px;
+    margin-top: 8px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.availability-status.checking {
+    background: rgba(212, 196, 170, 0.1);
+    border: 1px solid rgba(212, 196, 170, 0.2);
+    color: var(--gris-elegante);
+}
+
+.availability-status.available {
+    background: rgba(40, 167, 69, 0.1);
+    border: 1px solid rgba(40, 167, 69, 0.3);
+    color: #155724;
+}
+
+.availability-status.limited {
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    color: #856404;
+}
+
+.availability-status.unavailable {
+    background: rgba(220, 53, 69, 0.1);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    color: #721c24;
+}
+
+.availability-status .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(107, 76, 59, 0.2);
+    border-top-color: var(--marron-elegante);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Error message styles */
+.error-message {
+    display: none;
+    font-size: 0.8rem;
+    color: #dc3545;
+    margin-top: 5px;
+    padding-left: 2px;
+}
+
+.error-message.show {
+    display: block;
+}
+
+.form-group.error input,
+.form-group.error select,
+.form-group.error textarea {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.form-group.error label {
+    color: #dc3545;
+}

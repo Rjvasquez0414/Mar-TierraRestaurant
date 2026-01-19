@@ -261,6 +261,7 @@ function saveReservation(data) {
       'Nombre',
       'Teléfono',
       'Email',
+      'Salón',
       'Fecha',
       'Hora',
       'Personas',
@@ -294,16 +295,16 @@ function saveReservation(data) {
     newSheet.setColumnWidth(5, 200); // Email
     newSheet.setColumnWidth(12, 120); // Anticipo
     
-    // Crear validación de datos para Estado y Estado Pago
+    // Crear validación de datos para Estado y Estado Pago (ajustado por columna Salón)
     const estadoRule = SpreadsheetApp.newDataValidation()
       .requireValueInList(['Pendiente de pago', 'Confirmada', 'Cancelada', 'Completada'])
       .build();
-    newSheet.getRange(2, 14, 1000, 1).setDataValidation(estadoRule);
-    
+    newSheet.getRange(2, 15, 1000, 1).setDataValidation(estadoRule);
+
     const pagoRule = SpreadsheetApp.newDataValidation()
       .requireValueInList(['Por verificar', 'Confirmado', 'Rechazado'])
       .build();
-    newSheet.getRange(2, 15, 1000, 1).setDataValidation(pagoRule);
+    newSheet.getRange(2, 16, 1000, 1).setDataValidation(pagoRule);
     
     sheet = newSheet;
   }
@@ -322,6 +323,7 @@ function saveReservation(data) {
     data.name,
     data.phone,
     data.email,
+    data.salon || 'Sin asignar',
     formattedDate,
     formattedTime,
     data.people,
@@ -518,6 +520,10 @@ function sendInitialConfirmationEmail(data) {
               <div class="detail-row">
                 <span class="detail-label">Hora</span>
                 <span class="detail-value">${formatTime(data.time)}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Salón</span>
+                <span class="detail-value">${data.salon || 'Por asignar'}</span>
               </div>
               <div class="detail-row">
                 <span class="detail-label">Personas</span>
@@ -726,6 +732,7 @@ function sendPaymentConfirmationEmail(data) {
               <h3>Detalles de su Reserva</h3>
               <p><strong>Fecha:</strong> ${formatDate(data.date)}</p>
               <p><strong>Hora:</strong> ${formatTime(data.time)}</p>
+              <p><strong>Salón:</strong> ${data.salon || 'Por asignar'}</p>
               <p><strong>Personas:</strong> ${data.people}</p>
               <p><strong>Estado:</strong> CONFIRMADA</p>
             </div>
@@ -1170,6 +1177,10 @@ function sendFinalConfirmationEmail(data) {
                   <div class="detail-value">${formatTime(data.time)}</div>
                 </div>
                 <div class="detail-item">
+                  <div class="detail-label">Salón</div>
+                  <div class="detail-value">${data.salon || 'Por asignar'}</div>
+                </div>
+                <div class="detail-item">
                   <div class="detail-label">Número de Personas</div>
                   <div class="detail-value">${data.people} personas</div>
                 </div>
@@ -1293,6 +1304,9 @@ function sendRestaurantNotification(data) {
             </div>
             <div class="detail-row">
               <span class="label">Hora:</span> ${formatTime(data.time)}
+            </div>
+            <div class="detail-row">
+              <span class="label">Salón:</span> ${data.salon || 'Por asignar'}
             </div>
             <div class="detail-row">
               <span class="label">Personas:</span> ${data.people}
@@ -1820,6 +1834,7 @@ function sendReservationReminderEmail(data) {
               <p style="font-size: 18px; margin: 10px 0;">
                 📅 ${formatDate(data.date)} a las 🕐 ${formatTime(data.time)}
               </p>
+              <p>📍 <strong>${data.salon || 'Salón por confirmar'}</strong></p>
               <p>👥 Mesa para <strong>${data.people} personas</strong></p>
             </div>
 
