@@ -811,6 +811,130 @@ const SALON_CAPACITIES = {
     'chill-out': { name: 'Chill Out', capacity: 8, description: 'Zona relajada para pequeños grupos' }
 };
 
+// Estado de disponibilidad (se actualiza en tiempo real)
+let currentAvailability = null;
+let isCheckingAvailability = false;
+
+// URL del Google Apps Script (usar la misma que para POST)
+const AVAILABILITY_API_URL = 'https://script.google.com/macros/s/AKfycby82a2FsVV-kzhaGPt3RnwjCi29NL92DuhEttgU-Vrp_hzTvTKDxnI8lipnDUvT-58-/exec';
+
+/**
+ * Verifica la disponibilidad en tiempo real
+ * Se llama cuando cambia salón, fecha, hora o número de personas
+ */
+async function checkAvailabilityRealTime() {
+    const salon = document.getElementById('resSalon')?.value;
+    const date = document.getElementById('resDate')?.value;
+    const time = document.getElementById('resTime')?.value;
+    const people = document.getElementById('resPeople')?.value;
+    const availabilityStatus = document.getElementById('availabilityStatus');
+    const submitBtn = document.querySelector('.btn-submit');
+
+    // Si no hay todos los datos, limpiar estado
+    if (!salon || !date || !time || !people) {
+        if (availabilityStatus) {
+            availabilityStatus.style.display = 'none';
+        }
+        currentAvailability = null;
+        return;
+    }
+
+    // Evitar múltiples llamadas simultáneas
+    if (isCheckingAvailability) return;
+    isCheckingAvailability = true;
+
+    // Mostrar estado de carga
+    if (availabilityStatus) {
+        availabilityStatus.innerHTML = `
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Verificando disponibilidad...</span>
+        `;
+        availabilityStatus.className = 'availability-status checking';
+        availabilityStatus.style.display = 'flex';
+    }
+
+    try {
+        const url = `${AVAILABILITY_API_URL}?action=check-availability&salon=${encodeURIComponent(salon)}&date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}&people=${encodeURIComponent(people)}`;
+
+        const response = await fetch(url, {
+            method: 'GET',
+            mode: 'cors'
+        });
+
+        const data = await response.json();
+        currentAvailability = data;
+
+        if (availabilityStatus) {
+            if (data.available) {
+                // Disponible
+                let message = `<i class="fas fa-check-circle"></i><div><strong>¡Disponible!</strong>`;
+
+                if (data.remainingCapacity !== undefined && data.remainingCapacity > 0) {
+                    message += `<br><small>Quedan ${data.remainingCapacity} lugares después de su reserva</small>`;
+                }
+
+                if (data.currentReservations > 0) {
+                    message += `<br><small>${data.currentReservations} reserva(s) existente(s) en este horario</small>`;
+                }
+
+                message += `</div>`;
+                availabilityStatus.innerHTML = message;
+                availabilityStatus.className = 'availability-status available';
+
+                if (submitBtn) submitBtn.disabled = false;
+            } else {
+                // No disponible
+                let message = `<i class="fas fa-times-circle"></i><div><strong>No disponible</strong>`;
+                message += `<br><small>${data.message || 'No hay disponibilidad para esta combinación'}</small>`;
+
+                // Dar sugerencias según la razón
+                if (data.reason === 'CAPACITY_EXCEEDED') {
+                    message += `<br><small class="suggestion">Sugerencia: Seleccione un salón más grande o reduzca el número de personas</small>`;
+                } else if (data.reason === 'INSUFFICIENT_CAPACITY') {
+                    message += `<br><small class="suggestion">Sugerencia: Pruebe con otro horario o un salón más grande</small>`;
+                } else if (data.reason === 'MAX_RESERVATIONS_REACHED' || data.reason === 'NO_SHARED_BOOKING') {
+                    message += `<br><small class="suggestion">Sugerencia: Seleccione otro horario o salón</small>`;
+                } else if (data.reason === 'EXCLUSIVE_BOOKING') {
+                    message += `<br><small class="suggestion">Este salón está reservado de forma privada. Pruebe otro horario.</small>`;
+                }
+
+                message += `</div>`;
+                availabilityStatus.innerHTML = message;
+                availabilityStatus.className = 'availability-status unavailable';
+
+                // No deshabilitar el botón, pero la validación lo bloqueará
+            }
+            availabilityStatus.style.display = 'flex';
+        }
+
+    } catch (error) {
+        console.warn('Error verificando disponibilidad:', error);
+        // En caso de error de red, permitir continuar (el backend validará)
+        if (availabilityStatus) {
+            availabilityStatus.innerHTML = `
+                <i class="fas fa-exclamation-triangle"></i>
+                <div><small>No se pudo verificar disponibilidad. Se validará al enviar.</small></div>
+            `;
+            availabilityStatus.className = 'availability-status warning';
+            availabilityStatus.style.display = 'flex';
+        }
+        currentAvailability = null;
+    } finally {
+        isCheckingAvailability = false;
+    }
+}
+
+/**
+ * Debounce para evitar demasiadas llamadas a la API
+ */
+let availabilityTimeout = null;
+function debouncedCheckAvailability() {
+    if (availabilityTimeout) {
+        clearTimeout(availabilityTimeout);
+    }
+    availabilityTimeout = setTimeout(checkAvailabilityRealTime, 500);
+}
+
 // Función para formatear hora en formato 12h AM/PM
 function formatTimeToAMPM(hour, minutes) {
     const period = hour >= 12 ? 'PM' : 'AM';
@@ -974,13 +1098,32 @@ document.addEventListener('DOMContentLoaded', function() {
         // Escuchar cambios en la fecha
         dateField.addEventListener('change', function() {
             populateTimeOptions(this.value);
+            debouncedCheckAvailability();
         });
     }
 
-    // Escuchar cambios en el número de personas para validar capacidad
+    // Escuchar cambios en el número de personas para validar capacidad y disponibilidad
     const peopleField = document.getElementById('resPeople');
     if (peopleField) {
-        peopleField.addEventListener('change', validateSalonCapacity);
+        peopleField.addEventListener('change', function() {
+            validateSalonCapacity();
+            debouncedCheckAvailability();
+        });
+    }
+
+    // Escuchar cambios en la hora
+    const timeField = document.getElementById('resTime');
+    if (timeField) {
+        timeField.addEventListener('change', debouncedCheckAvailability);
+    }
+
+    // Escuchar cambios en el salón (agregar verificación de disponibilidad)
+    const salonField = document.getElementById('resSalon');
+    if (salonField) {
+        salonField.addEventListener('change', function() {
+            updateSalonInfo();
+            debouncedCheckAvailability();
+        });
     }
 });
 
@@ -1134,6 +1277,18 @@ function validateReservationForm() {
             }
             isValid = false;
         }
+    }
+
+    // Validar disponibilidad (si ya se verificó)
+    if (currentAvailability && currentAvailability.available === false) {
+        const availabilityStatus = document.getElementById('availabilityStatus');
+        if (availabilityStatus) {
+            availabilityStatus.classList.add('shake');
+            setTimeout(() => availabilityStatus.classList.remove('shake'), 500);
+        }
+
+        alert(`No hay disponibilidad:\n\n${currentAvailability.message || 'El horario seleccionado no está disponible.'}\n\nPor favor seleccione otro horario o salón.`);
+        isValid = false;
     }
 
     return isValid;

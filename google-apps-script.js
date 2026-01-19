@@ -33,6 +33,52 @@ const SEND_CONFIRMATION_EMAIL = true;
 const SEND_RESTAURANT_NOTIFICATION = true;
 
 // ============================================
+// CONFIGURACIÓN DE SALONES Y DISPONIBILIDAD
+// ============================================
+
+const SALON_CONFIG = {
+  'moon-terraza': {
+    name: 'Moon Terraza',
+    capacity: 30,
+    maxReservationsPerSlot: 3,  // Máximo 3 reservas simultáneas
+    minPeoplePerReservation: 1,
+    allowsSharedBooking: true
+  },
+  'golden': {
+    name: 'Salón Golden',
+    capacity: 44,
+    maxReservationsPerSlot: 4,  // Puede compartirse
+    minPeoplePerReservation: 1,
+    allowsSharedBooking: true,
+    exclusiveThreshold: 30  // Si reservan 30+ personas, es exclusivo
+  },
+  'arca': {
+    name: 'Arca',
+    capacity: 60,
+    maxReservationsPerSlot: 5,
+    minPeoplePerReservation: 1,
+    allowsSharedBooking: true
+  },
+  'barco': {
+    name: 'Barco',
+    capacity: 16,
+    maxReservationsPerSlot: 2,
+    minPeoplePerReservation: 1,
+    allowsSharedBooking: true
+  },
+  'chill-out': {
+    name: 'Chill Out',
+    capacity: 8,
+    maxReservationsPerSlot: 1,  // Solo 1 reserva a la vez (espacio pequeño)
+    minPeoplePerReservation: 1,
+    allowsSharedBooking: false
+  }
+};
+
+// Duración estimada de una reserva en horas (para calcular conflictos)
+const RESERVATION_DURATION_HOURS = 2;
+
+// ============================================
 // MENÚ PERSONALIZADO EN GOOGLE SHEETS
 // ============================================
 
@@ -200,19 +246,36 @@ function sendFinalConfirmation() {
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
-    
-    // Guardar en Google Sheet
+
+    // PASO 1: Verificar disponibilidad antes de guardar
+    const salonId = data.salonId || getSalonIdFromName(data.salon);
+    const people = parseInt(data.people) || 1;
+
+    if (salonId && data.date && data.time) {
+      const availability = checkAvailability(salonId, data.date, data.time, people);
+
+      if (!availability.available) {
+        return ContentService.createTextOutput(JSON.stringify({
+          success: false,
+          message: availability.message || 'No hay disponibilidad para esta reserva',
+          reason: availability.reason,
+          availabilityDetails: availability
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+    }
+
+    // PASO 2: Guardar en Google Sheet (solo si hay disponibilidad)
     const result = saveReservation(data);
-    
-    // Enviar emails si está configurado
+
+    // PASO 3: Enviar emails si está configurado
     if (SEND_CONFIRMATION_EMAIL && data.email) {
       sendInitialConfirmationEmail(data);
     }
-    
+
     if (SEND_RESTAURANT_NOTIFICATION && RESTAURANT_EMAIL !== 'restaurant@example.com') {
       sendRestaurantNotification(data);
     }
-    
+
     return ContentService.createTextOutput(JSON.stringify({
       success: true,
       message: 'Reserva guardada exitosamente',
@@ -220,7 +283,7 @@ function doPost(e) {
       requiresPayment: true,
       depositAmount: data.totalDeposit
     })).setMimeType(ContentService.MimeType.JSON);
-    
+
   } catch (error) {
     console.error('Error processing reservation:', error);
     return ContentService.createTextOutput(JSON.stringify({
@@ -232,15 +295,470 @@ function doPost(e) {
 }
 
 /**
- * Función GET para verificar el estado del script
+ * Convierte el nombre del salón a su ID
  */
-function doGet() {
-  return ContentService.createTextOutput(JSON.stringify({
-    status: 'active',
-    message: 'Mar&Tierra Advanced Reservation System API v2.0',
-    version: '2.0.0',
-    features: ['payment-tracking', 'advanced-notifications', 'custom-menu']
-  })).setMimeType(ContentService.MimeType.JSON);
+function getSalonIdFromName(salonName) {
+  if (!salonName) return null;
+
+  const nameLower = salonName.toLowerCase();
+
+  for (const [id, config] of Object.entries(SALON_CONFIG)) {
+    if (id === nameLower || config.name.toLowerCase() === nameLower) {
+      return id;
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Función GET para verificar disponibilidad y estado del script
+ * Parámetros opcionales: action, salon, date, time, people
+ */
+function doGet(e) {
+  try {
+    const params = e ? e.parameter : {};
+    const action = params.action || 'status';
+
+    // Acción: Verificar estado del sistema
+    if (action === 'status') {
+      return ContentService.createTextOutput(JSON.stringify({
+        status: 'active',
+        message: 'Mar&Tierra Advanced Reservation System API v3.0',
+        version: '3.0.0',
+        features: ['payment-tracking', 'advanced-notifications', 'availability-check', 'salon-management']
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // Acción: Verificar disponibilidad
+    if (action === 'check-availability') {
+      const salon = params.salon;
+      const date = params.date;
+      const time = params.time;
+      const people = parseInt(params.people) || 1;
+
+      if (!salon || !date || !time) {
+        return ContentService.createTextOutput(JSON.stringify({
+          success: false,
+          error: 'Parámetros requeridos: salon, date, time, people'
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+
+      const availability = checkAvailability(salon, date, time, people);
+      return ContentService.createTextOutput(JSON.stringify(availability))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // Acción: Obtener disponibilidad de todos los salones para una fecha/hora
+    if (action === 'get-all-availability') {
+      const date = params.date;
+      const time = params.time;
+      const people = parseInt(params.people) || 1;
+
+      if (!date || !time) {
+        return ContentService.createTextOutput(JSON.stringify({
+          success: false,
+          error: 'Parámetros requeridos: date, time'
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+
+      const allAvailability = getAllSalonsAvailability(date, time, people);
+      return ContentService.createTextOutput(JSON.stringify(allAvailability))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // Acción: Obtener horarios disponibles para un salón y fecha
+    if (action === 'get-available-times') {
+      const salon = params.salon;
+      const date = params.date;
+      const people = parseInt(params.people) || 1;
+
+      if (!salon || !date) {
+        return ContentService.createTextOutput(JSON.stringify({
+          success: false,
+          error: 'Parámetros requeridos: salon, date'
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+
+      const availableTimes = getAvailableTimesForSalon(salon, date, people);
+      return ContentService.createTextOutput(JSON.stringify(availableTimes))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // Acción: Obtener configuración de salones
+    if (action === 'get-salon-config') {
+      return ContentService.createTextOutput(JSON.stringify({
+        success: true,
+        salons: SALON_CONFIG
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // Acción no reconocida
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      error: 'Acción no reconocida. Acciones disponibles: status, check-availability, get-all-availability, get-available-times, get-salon-config'
+    })).setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    console.error('Error in doGet:', error);
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false,
+      error: error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// ============================================
+// FUNCIONES DE DISPONIBILIDAD
+// ============================================
+
+/**
+ * Verifica la disponibilidad de un salón para una fecha, hora y número de personas
+ * @param {string} salonId - ID del salón (ej: 'golden', 'moon-terraza')
+ * @param {string} date - Fecha en formato YYYY-MM-DD
+ * @param {string} time - Hora en formato HH:MM
+ * @param {number} people - Número de personas
+ * @returns {Object} Información de disponibilidad
+ */
+function checkAvailability(salonId, date, time, people) {
+  try {
+    const salonConfig = SALON_CONFIG[salonId];
+
+    if (!salonConfig) {
+      return {
+        success: false,
+        available: false,
+        error: 'Salón no encontrado',
+        salonId: salonId
+      };
+    }
+
+    // Verificar capacidad básica
+    if (people > salonConfig.capacity) {
+      return {
+        success: true,
+        available: false,
+        reason: 'CAPACITY_EXCEEDED',
+        message: `El ${salonConfig.name} tiene capacidad máxima de ${salonConfig.capacity} personas`,
+        salonCapacity: salonConfig.capacity,
+        requestedPeople: people
+      };
+    }
+
+    // Obtener reservas existentes para ese salón, fecha y rango de tiempo
+    const existingReservations = getReservationsForSlot(salonId, date, time);
+
+    // Calcular personas ya reservadas
+    let totalPeopleReserved = 0;
+    existingReservations.forEach(res => {
+      totalPeopleReserved += parseInt(res.people) || 0;
+    });
+
+    // Verificar si hay una reserva exclusiva (30+ personas en Golden)
+    if (salonConfig.exclusiveThreshold) {
+      const hasExclusiveReservation = existingReservations.some(res =>
+        parseInt(res.people) >= salonConfig.exclusiveThreshold
+      );
+
+      if (hasExclusiveReservation) {
+        return {
+          success: true,
+          available: false,
+          reason: 'EXCLUSIVE_BOOKING',
+          message: `El ${salonConfig.name} está reservado de forma exclusiva para este horario`,
+          existingReservations: existingReservations.length
+        };
+      }
+
+      // Si la nueva reserva es exclusiva (30+), verificar que no haya nadie
+      if (people >= salonConfig.exclusiveThreshold && existingReservations.length > 0) {
+        return {
+          success: true,
+          available: false,
+          reason: 'CANNOT_BOOK_EXCLUSIVE',
+          message: `No se puede reservar el ${salonConfig.name} de forma exclusiva porque ya hay reservas existentes`,
+          existingReservations: existingReservations.length,
+          totalPeopleReserved: totalPeopleReserved
+        };
+      }
+    }
+
+    // Verificar número máximo de reservas por slot
+    if (existingReservations.length >= salonConfig.maxReservationsPerSlot) {
+      return {
+        success: true,
+        available: false,
+        reason: 'MAX_RESERVATIONS_REACHED',
+        message: `El ${salonConfig.name} ya tiene el máximo de reservas para este horario`,
+        maxReservations: salonConfig.maxReservationsPerSlot,
+        currentReservations: existingReservations.length
+      };
+    }
+
+    // Verificar si se permite reserva compartida
+    if (!salonConfig.allowsSharedBooking && existingReservations.length > 0) {
+      return {
+        success: true,
+        available: false,
+        reason: 'NO_SHARED_BOOKING',
+        message: `El ${salonConfig.name} no permite reservas compartidas y ya está ocupado`,
+        existingReservations: existingReservations.length
+      };
+    }
+
+    // Verificar capacidad restante
+    const remainingCapacity = salonConfig.capacity - totalPeopleReserved;
+    if (people > remainingCapacity) {
+      return {
+        success: true,
+        available: false,
+        reason: 'INSUFFICIENT_CAPACITY',
+        message: `Solo quedan ${remainingCapacity} lugares disponibles en el ${salonConfig.name} para este horario`,
+        remainingCapacity: remainingCapacity,
+        requestedPeople: people,
+        totalPeopleReserved: totalPeopleReserved
+      };
+    }
+
+    // ¡Disponible!
+    return {
+      success: true,
+      available: true,
+      salonId: salonId,
+      salonName: salonConfig.name,
+      date: date,
+      time: time,
+      requestedPeople: people,
+      remainingCapacity: remainingCapacity - people,
+      currentReservations: existingReservations.length,
+      totalPeopleReserved: totalPeopleReserved,
+      message: `Disponible en ${salonConfig.name}`
+    };
+
+  } catch (error) {
+    console.error('Error checking availability:', error);
+    return {
+      success: false,
+      available: false,
+      error: error.toString()
+    };
+  }
+}
+
+/**
+ * Obtiene las reservas existentes para un salón en un rango de tiempo
+ * Considera la duración de las reservas para detectar conflictos
+ */
+function getReservationsForSlot(salonId, date, time) {
+  try {
+    const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
+    if (!sheet) return [];
+
+    const data = sheet.getDataRange().getValues();
+    if (data.length <= 1) return [];
+
+    const reservations = [];
+    const requestedTimeMinutes = timeToMinutes(time);
+    const reservationDurationMinutes = RESERVATION_DURATION_HOURS * 60;
+
+    // Mapear nombres de salón a IDs
+    const salonNameToId = {};
+    Object.keys(SALON_CONFIG).forEach(id => {
+      salonNameToId[SALON_CONFIG[id].name.toLowerCase()] = id;
+      salonNameToId[id.toLowerCase()] = id;
+    });
+
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      const rowSalon = row[5]; // Columna Salón
+      const rowDate = row[6]; // Columna Fecha
+      const rowTime = row[7]; // Columna Hora
+      const rowPeople = row[8]; // Columna Personas
+      const rowStatus = row[14]; // Columna Estado
+
+      // Ignorar reservas canceladas o completadas
+      if (rowStatus === 'Cancelada' || rowStatus === 'Completada') {
+        continue;
+      }
+
+      // Verificar salón (comparar tanto ID como nombre)
+      const rowSalonLower = rowSalon ? rowSalon.toString().toLowerCase() : '';
+      const rowSalonId = salonNameToId[rowSalonLower] || rowSalonLower;
+
+      if (rowSalonId !== salonId && rowSalonLower !== SALON_CONFIG[salonId]?.name.toLowerCase()) {
+        continue;
+      }
+
+      // Verificar fecha
+      let rowDateStr = '';
+      if (rowDate instanceof Date) {
+        rowDateStr = Utilities.formatDate(rowDate, 'America/Bogota', 'yyyy-MM-dd');
+      } else if (typeof rowDate === 'string') {
+        rowDateStr = rowDate.split('T')[0];
+      }
+
+      if (rowDateStr !== date) {
+        continue;
+      }
+
+      // Verificar conflicto de horario
+      const rowTimeMinutes = timeToMinutes(rowTime);
+
+      // Hay conflicto si los rangos de tiempo se superponen
+      // Rango existente: [rowTimeMinutes, rowTimeMinutes + duration]
+      // Rango solicitado: [requestedTimeMinutes, requestedTimeMinutes + duration]
+      const existingStart = rowTimeMinutes;
+      const existingEnd = rowTimeMinutes + reservationDurationMinutes;
+      const requestedStart = requestedTimeMinutes;
+      const requestedEnd = requestedTimeMinutes + reservationDurationMinutes;
+
+      // Verificar superposición
+      if (requestedStart < existingEnd && requestedEnd > existingStart) {
+        reservations.push({
+          id: row[0],
+          name: row[2],
+          salon: rowSalon,
+          date: rowDateStr,
+          time: rowTime,
+          people: rowPeople,
+          status: rowStatus
+        });
+      }
+    }
+
+    return reservations;
+  } catch (error) {
+    console.error('Error getting reservations for slot:', error);
+    return [];
+  }
+}
+
+/**
+ * Convierte una hora (string o Date) a minutos desde medianoche
+ */
+function timeToMinutes(time) {
+  if (!time) return 0;
+
+  let hours, minutes;
+
+  if (time instanceof Date) {
+    hours = time.getHours();
+    minutes = time.getMinutes();
+  } else if (typeof time === 'string') {
+    const match = time.match(/(\d{1,2}):(\d{2})/);
+    if (match) {
+      hours = parseInt(match[1]);
+      minutes = parseInt(match[2]);
+    } else {
+      return 0;
+    }
+  } else {
+    return 0;
+  }
+
+  return hours * 60 + minutes;
+}
+
+/**
+ * Obtiene la disponibilidad de todos los salones para una fecha y hora
+ */
+function getAllSalonsAvailability(date, time, people) {
+  const result = {
+    success: true,
+    date: date,
+    time: time,
+    people: people,
+    salons: {}
+  };
+
+  Object.keys(SALON_CONFIG).forEach(salonId => {
+    const availability = checkAvailability(salonId, date, time, people);
+    result.salons[salonId] = {
+      ...availability,
+      config: SALON_CONFIG[salonId]
+    };
+  });
+
+  return result;
+}
+
+/**
+ * Obtiene los horarios disponibles para un salón en una fecha específica
+ */
+function getAvailableTimesForSalon(salonId, date, people) {
+  const salonConfig = SALON_CONFIG[salonId];
+
+  if (!salonConfig) {
+    return {
+      success: false,
+      error: 'Salón no encontrado'
+    };
+  }
+
+  // Horarios de operación (simplificado - idealmente debería venir de configuración)
+  const operatingHours = {
+    0: { open: '11:30', close: '21:00' }, // Domingo
+    1: { open: '11:30', close: '22:00' }, // Lunes
+    2: { open: '11:30', close: '23:00' }, // Martes
+    3: { open: '11:30', close: '23:00' }, // Miércoles
+    4: { open: '11:30', close: '23:00' }, // Jueves
+    5: { open: '11:30', close: '23:59' }, // Viernes
+    6: { open: '11:30', close: '23:59' }  // Sábado
+  };
+
+  // Obtener día de la semana
+  const dateObj = new Date(date + 'T12:00:00');
+  const dayOfWeek = dateObj.getDay();
+  const hours = operatingHours[dayOfWeek];
+
+  if (!hours) {
+    return {
+      success: false,
+      error: 'Horario no disponible para este día'
+    };
+  }
+
+  const openMinutes = timeToMinutes(hours.open);
+  const closeMinutes = timeToMinutes(hours.close);
+  const lastReservationMinutes = closeMinutes - 60; // Última reserva 1 hora antes del cierre
+
+  const availableTimes = [];
+  const unavailableTimes = [];
+
+  // Generar slots cada 30 minutos
+  for (let minutes = openMinutes; minutes <= lastReservationMinutes; minutes += 30) {
+    const hour = Math.floor(minutes / 60);
+    const min = minutes % 60;
+    const timeStr = `${hour.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')}`;
+
+    const availability = checkAvailability(salonId, date, timeStr, people);
+
+    if (availability.available) {
+      availableTimes.push({
+        time: timeStr,
+        remainingCapacity: availability.remainingCapacity,
+        currentReservations: availability.currentReservations
+      });
+    } else {
+      unavailableTimes.push({
+        time: timeStr,
+        reason: availability.reason,
+        message: availability.message
+      });
+    }
+  }
+
+  return {
+    success: true,
+    salonId: salonId,
+    salonName: salonConfig.name,
+    date: date,
+    people: people,
+    availableTimes: availableTimes,
+    unavailableTimes: unavailableTimes,
+    totalSlots: availableTimes.length + unavailableTimes.length,
+    availableSlots: availableTimes.length
+  };
 }
 
 /**

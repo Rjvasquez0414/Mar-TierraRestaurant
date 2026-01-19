@@ -2645,6 +2645,60 @@ nav {
     color: #721c24;
 }
 
+.availability-status.warning {
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    color: #856404;
+}
+
+.availability-status i {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.availability-status.available i {
+    color: #28a745;
+}
+
+.availability-status.unavailable i {
+    color: #dc3545;
+}
+
+.availability-status.checking i {
+    color: var(--dorado-oscuro);
+}
+
+.availability-status.warning i {
+    color: #ffc107;
+}
+
+.availability-status div {
+    flex: 1;
+}
+
+.availability-status small {
+    display: block;
+    opacity: 0.9;
+    margin-top: 2px;
+}
+
+.availability-status small.suggestion {
+    color: var(--dorado-oscuro);
+    font-style: italic;
+    margin-top: 5px;
+}
+
+/* Shake animation for unavailable */
+.availability-status.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
 .availability-status .spinner {
     width: 16px;
     height: 16px;
