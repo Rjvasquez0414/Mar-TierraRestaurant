@@ -1081,7 +1081,7 @@
                         
                         <div class="form-group">
                             <label for="resPeople">Número de Personas *</label>
-                            <select id="resPeople" name="people" required onchange="updateReservationType()">
+                            <select id="resPeople" name="people" required onchange="handlePeopleChange()">
                                 <option value="">Seleccione</option>
                                 <option value="1">1 persona</option>
                                 <option value="2">2 personas</option>
@@ -1103,9 +1103,15 @@
                                 <option value="18">18 personas</option>
                                 <option value="19">19 personas</option>
                                 <option value="20">20 personas</option>
-                                <option value="20+">Más de 20 personas</option>
+                                <option value="custom">Más de 20 personas</option>
                             </select>
                             <span class="error-message"></span>
+                            <!-- Input para número personalizado -->
+                            <div id="customPeopleContainer" class="custom-people-input" style="display: none;">
+                                <label for="customPeopleCount">Especifique el número exacto de personas *</label>
+                                <input type="number" id="customPeopleCount" min="21" max="100" placeholder="Ej: 25, 30, 45...">
+                                <small class="input-hint">Capacidad máxima: 60 personas (Salón Arca)</small>
+                            </div>
                         </div>
                     </div>
 

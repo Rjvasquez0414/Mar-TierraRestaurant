@@ -816,7 +816,7 @@ let currentAvailability = null;
 let isCheckingAvailability = false;
 
 // URL del Google Apps Script (usar la misma que para POST)
-const AVAILABILITY_API_URL = 'https://script.google.com/macros/s/AKfycby82a2FsVV-kzhaGPt3RnwjCi29NL92DuhEttgU-Vrp_hzTvTKDxnI8lipnDUvT-58-/exec';
+const AVAILABILITY_API_URL = 'https://script.google.com/macros/s/AKfycbz3ZG--co9k3ihaNRMHgUMZbzYvZKHMiK5ptzwm8TFTxKSXqiVY3gJTjHeVbTqhJLU/exec';
 
 /**
  * Verifica la disponibilidad en tiempo real
@@ -826,12 +826,16 @@ async function checkAvailabilityRealTime() {
     const salon = document.getElementById('resSalon')?.value;
     const date = document.getElementById('resDate')?.value;
     const time = document.getElementById('resTime')?.value;
-    const people = document.getElementById('resPeople')?.value;
+    const peopleSelect = document.getElementById('resPeople')?.value;
     const availabilityStatus = document.getElementById('availabilityStatus');
     const submitBtn = document.querySelector('.btn-submit');
 
+    // Obtener el número real de personas (considerando input personalizado)
+    const people = getActualPeopleCount();
+
     // Si no hay todos los datos, limpiar estado
-    if (!salon || !date || !time || !people) {
+    // Para "custom", verificar que también haya un valor en el input personalizado
+    if (!salon || !date || !time || !peopleSelect || (peopleSelect === 'custom' && !people)) {
         if (availabilityStatus) {
             availabilityStatus.style.display = 'none';
         }
@@ -866,19 +870,8 @@ async function checkAvailabilityRealTime() {
 
         if (availabilityStatus) {
             if (data.available) {
-                // Disponible
-                let message = `<i class="fas fa-check-circle"></i><div><strong>¡Disponible!</strong>`;
-
-                if (data.remainingCapacity !== undefined && data.remainingCapacity > 0) {
-                    message += `<br><small>Quedan ${data.remainingCapacity} lugares después de su reserva</small>`;
-                }
-
-                if (data.currentReservations > 0) {
-                    message += `<br><small>${data.currentReservations} reserva(s) existente(s) en este horario</small>`;
-                }
-
-                message += `</div>`;
-                availabilityStatus.innerHTML = message;
+                // Disponible - mensaje simple
+                availabilityStatus.innerHTML = `<i class="fas fa-check-circle"></i><div><strong>¡Disponible!</strong></div>`;
                 availabilityStatus.className = 'availability-status available';
 
                 if (submitBtn) submitBtn.disabled = false;
@@ -1149,6 +1142,26 @@ function validateReservationForm() {
         }
     });
 
+    // Validar input personalizado de personas si está seleccionado "custom"
+    const peopleField = document.getElementById('resPeople');
+    const customPeopleInput = document.getElementById('customPeopleCount');
+    const customPeopleContainer = document.getElementById('customPeopleContainer');
+
+    if (peopleField && peopleField.value === 'custom') {
+        if (!customPeopleInput || !customPeopleInput.value) {
+            if (customPeopleContainer) customPeopleContainer.classList.add('error');
+            isValid = false;
+        } else {
+            const customValue = parseInt(customPeopleInput.value);
+            if (customValue < 21 || customValue > 60) {
+                if (customPeopleContainer) customPeopleContainer.classList.add('error');
+                isValid = false;
+            } else {
+                if (customPeopleContainer) customPeopleContainer.classList.remove('error');
+            }
+        }
+    }
+
     // Validate email format
     const emailField = document.getElementById('resEmail');
     if (emailField && emailField.value) {
@@ -1337,7 +1350,7 @@ async function handleReservationSubmit(event) {
         name: document.getElementById('resName').value,
         phone: document.getElementById('resPhone').value,
         email: document.getElementById('resEmail').value,
-        people: document.getElementById('resPeople').value,
+        people: getActualPeopleCount().toString(),
         salon: salonName,
         salonId: salonValue,
         date: document.getElementById('resDate').value,
@@ -1353,7 +1366,7 @@ async function handleReservationSubmit(event) {
     
     try {
         // IMPORTANT: Replace with your Google Apps Script Web App URL
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby82a2FsVV-kzhaGPt3RnwjCi29NL92DuhEttgU-Vrp_hzTvTKDxnI8lipnDUvT-58-/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz3ZG--co9k3ihaNRMHgUMZbzYvZKHMiK5ptzwm8TFTxKSXqiVY3gJTjHeVbTqhJLU/exec';
         
         if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
             throw new Error('Por favor configure la URL de Google Apps Script');
@@ -1409,6 +1422,98 @@ function showReservationError(message) {
 }
 
 // New Reservation Calculation Functions
+
+/**
+ * Maneja el cambio en el selector de número de personas
+ * Muestra/oculta el input personalizado para más de 20 personas
+ */
+function handlePeopleChange() {
+    const peopleSelect = document.getElementById('resPeople');
+    const customContainer = document.getElementById('customPeopleContainer');
+    const customInput = document.getElementById('customPeopleCount');
+
+    if (!peopleSelect) return;
+
+    const selectedValue = peopleSelect.value;
+
+    // Mostrar u ocultar el input personalizado
+    if (selectedValue === 'custom') {
+        if (customContainer) {
+            customContainer.style.display = 'block';
+            if (customInput) {
+                customInput.focus();
+                customInput.required = true;
+                // Añadir listener para validar y actualizar disponibilidad
+                customInput.onchange = function() {
+                    validateCustomPeopleCount();
+                    updateReservationType();
+                    debouncedCheckAvailability();
+                };
+                customInput.oninput = function() {
+                    validateCustomPeopleCount();
+                };
+            }
+        }
+    } else {
+        if (customContainer) {
+            customContainer.style.display = 'none';
+            if (customInput) {
+                customInput.required = false;
+                customInput.value = '';
+            }
+        }
+    }
+
+    // Actualizar tipo de reserva y verificar disponibilidad
+    updateReservationType();
+    debouncedCheckAvailability();
+}
+
+/**
+ * Valida el número personalizado de personas
+ */
+function validateCustomPeopleCount() {
+    const customInput = document.getElementById('customPeopleCount');
+    const customContainer = document.getElementById('customPeopleContainer');
+
+    if (!customInput || !customContainer) return true;
+
+    const value = parseInt(customInput.value);
+    const maxCapacity = 60; // Capacidad máxima (Salón Arca)
+
+    // Remover estados de error previos
+    customContainer.classList.remove('error');
+
+    if (customInput.value && (value < 21 || value > maxCapacity)) {
+        customContainer.classList.add('error');
+        if (value < 21) {
+            customInput.setCustomValidity('Para menos de 21 personas, use el selector desplegable.');
+        } else {
+            customInput.setCustomValidity(`La capacidad máxima es de ${maxCapacity} personas (Salón Arca).`);
+        }
+        return false;
+    }
+
+    customInput.setCustomValidity('');
+    return true;
+}
+
+/**
+ * Obtiene el número real de personas (considerando el input personalizado)
+ */
+function getActualPeopleCount() {
+    const peopleSelect = document.getElementById('resPeople');
+    const customInput = document.getElementById('customPeopleCount');
+
+    if (!peopleSelect) return 0;
+
+    if (peopleSelect.value === 'custom' && customInput && customInput.value) {
+        return parseInt(customInput.value) || 0;
+    }
+
+    return parseInt(peopleSelect.value) || 0;
+}
+
 function updateReservationType() {
     const peopleSelect = document.getElementById('resPeople');
     const typeSelect = document.getElementById('resType');
@@ -1417,11 +1522,12 @@ function updateReservationType() {
 
     if (!peopleSelect || !typeSelect) return;
 
-    const numPeople = parseInt(peopleSelect.value) || 0;
-    const isPeople20Plus = peopleSelect.value === '20+';
+    // Usar la función que considera el input personalizado
+    const numPeople = getActualPeopleCount();
+    const isPeopleCustom = peopleSelect.value === 'custom';
 
     // Auto-select tipo basado en número de personas según nuevas políticas
-    if (numPeople >= 15 || isPeople20Plus) {
+    if (numPeople >= 15 || isPeopleCustom) {
         typeSelect.value = 'especial';
         if (alert && alertText) {
             alertText.textContent = 'Para grupos de 15+ personas: Anticipo de $150,000 por persona (puede pagar 50%). El anticipo es consumible.';

@@ -2735,3 +2735,69 @@ nav {
 .form-group.error label {
     color: #dc3545;
 }
+
+/* Custom People Input - Para más de 20 personas */
+.custom-people-input {
+    margin-top: 12px;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--beige-claro) 0%, #fff 100%);
+    border: 1px solid var(--dorado-sutil);
+    border-radius: 10px;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.custom-people-input label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--marron-elegante);
+    font-size: 0.9rem;
+}
+
+.custom-people-input input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--crema-premium);
+    border-radius: 8px;
+    font-size: 1rem;
+    background: #fff;
+    transition: all 0.3s ease;
+}
+
+.custom-people-input input:focus {
+    outline: none;
+    border-color: var(--dorado-sutil);
+    box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.15);
+}
+
+.custom-people-input input::placeholder {
+    color: var(--gris-elegante);
+    font-style: italic;
+}
+
+.custom-people-input .input-hint {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: var(--gris-elegante);
+}
+
+.custom-people-input.error input {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.custom-people-input.error .input-hint {
+    color: #dc3545;
+}

@@ -574,7 +574,7 @@ function getReservationsForSlot(salonId, date, time) {
       const rowDate = row[6]; // Columna Fecha
       const rowTime = row[7]; // Columna Hora
       const rowPeople = row[8]; // Columna Personas
-      const rowStatus = row[14]; // Columna Estado
+      const rowStatus = row[13]; // Columna Estado (índice 13, columna 14)
 
       // Ignorar reservas canceladas o completadas
       if (rowStatus === 'Cancelada' || rowStatus === 'Completada') {
