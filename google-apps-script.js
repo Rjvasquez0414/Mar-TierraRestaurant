@@ -570,11 +570,11 @@ function getReservationsForSlot(salonId, date, time) {
 
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
-      const rowSalon = row[5]; // Columna Salón
-      const rowDate = row[6]; // Columna Fecha
-      const rowTime = row[7]; // Columna Hora
-      const rowPeople = row[8]; // Columna Personas
-      const rowStatus = row[13]; // Columna Estado (índice 13, columna 14)
+      const rowSalon = row[5]; // Columna Salón (índice 5)
+      const rowDate = row[6]; // Columna Fecha (índice 6)
+      const rowTime = row[7]; // Columna Hora (índice 7)
+      const rowPeople = row[8]; // Columna Personas (índice 8)
+      const rowStatus = row[14]; // Columna Estado (índice 14, después de Comentarios)
 
       // Ignorar reservas canceladas o completadas
       if (rowStatus === 'Cancelada' || rowStatus === 'Completada') {
@@ -2070,8 +2070,8 @@ function showStatistics() {
   let totalAnticipo = 0;
   
   for (let i = 1; i < data.length; i++) {
-    const estado = data[i][13]; // Columna de Estado
-    const anticipo = data[i][11]; // Columna de Anticipo
+    const estado = data[i][14]; // Columna de Estado (índice 14)
+    const anticipo = data[i][12]; // Columna de Anticipo (índice 12)
     
     if (estado === 'Pendiente de pago') pendientes++;
     else if (estado === 'Confirmada') confirmadas++;
@@ -2271,14 +2271,14 @@ function checkAndSendReminders() {
 
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
-      const reservationDate = row[5]; // Columna de Fecha
-      const status = row[13]; // Columna de Estado
-      const paymentStatus = row[14]; // Estado de Pago
-      const reminderSent = row[16]; // Columna de Recordatorios Enviados
+      const reservationDate = row[6]; // Columna de Fecha (índice 6)
+      const status = row[14]; // Columna de Estado (índice 14)
+      const paymentStatus = row[15]; // Estado de Pago (índice 15)
+      const reminderSent = row[17]; // Columna de Recordatorios Enviados (índice 17)
       const email = row[4]; // Email
       const name = row[2]; // Nombre
-      const time = row[6]; // Hora
-      const people = row[7]; // Personas
+      const time = row[7]; // Hora (índice 7)
+      const people = row[8]; // Personas (índice 8)
       const reservationId = row[0]; // ID
 
       // Formatear fecha de reserva para comparar
@@ -2444,25 +2444,25 @@ function sendDailySummary() {
           hora: row[6],
           nombre: row[2],
           telefono: row[3],
-          personas: row[7],
-          tipo: row[8],
-          decoracion: row[9],
-          servicios: row[10],
-          anticipo: row[11],
-          estado: row[13],
-          estadoPago: row[14]
+          personas: row[8],  // índice 8
+          tipo: row[9],      // índice 9
+          decoracion: row[10], // índice 10
+          servicios: row[11],  // índice 11
+          anticipo: row[12],   // índice 12
+          estado: row[14],     // índice 14
+          estadoPago: row[15]  // índice 15
         });
 
-        totalPersonas += parseInt(row[7]) || 0;
+        totalPersonas += parseInt(row[8]) || 0;
 
-        if (row[14] === 'Confirmado') {
+        if (row[15] === 'Confirmado') {  // Estado Pago está en índice 15
           confirmadas++;
         } else {
           pendientesPago++;
         }
 
-        if (row[10] && row[10] !== 'Ninguno') {
-          serviciosEspeciales.push(`${row[2]}: ${row[10]}`);
+        if (row[11] && row[11] !== 'Ninguno') {  // Servicios está en índice 11
+          serviciosEspeciales.push(`${row[2]}: ${row[11]}`);
         }
       }
     }
@@ -2693,8 +2693,8 @@ function applyConditionalFormatting() {
     // También aplicar colores a filas completas basado en el estado de pago
     const data = sheet.getDataRange().getValues();
     for (let i = 1; i < data.length; i++) {
-      const estadoPago = data[i][14];
-      const estado = data[i][13];
+      const estadoPago = data[i][15]; // Estado Pago (índice 15)
+      const estado = data[i][14];     // Estado (índice 14)
 
       if (estado === 'Cancelada') {
         sheet.getRange(i + 1, 1, 1, lastColumn).setBackground('#f8d7da');
@@ -2704,7 +2704,7 @@ function applyConditionalFormatting() {
         sheet.getRange(i + 1, 1, 1, lastColumn).setBackground('#d4edda');
       } else {
         // Verificar si tiene más de 48 horas pendiente
-        const fechaRegistro = data[i][18];
+        const fechaRegistro = data[i][19]; // Fecha Registro (índice 19)
         if (fechaRegistro) {
           const ahora = new Date();
           const registro = new Date(fechaRegistro);

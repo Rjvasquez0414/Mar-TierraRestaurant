@@ -1694,16 +1694,12 @@ function updateReservationOptions() {
 
 function calculateTotal() {
     const typeSelect = document.getElementById('resType');
-    const peopleSelect = document.getElementById('resPeople');
     const decorationSelect = document.getElementById('resDecoration');
     const serviceCheckboxes = document.querySelectorAll('input[name="services"]:checked');
     const costSummary = document.getElementById('costSummary');
 
-    // Obtener número de personas
-    let numberOfPeople = parseInt(peopleSelect?.value) || 0;
-    if (peopleSelect?.value === '20+') {
-        numberOfPeople = 20; // Usar 20 como mínimo para 20+
-    }
+    // Obtener número de personas usando la función que considera el input personalizado
+    const numberOfPeople = getActualPeopleCount();
 
     // Calculate services cost primero
     let servicesCost = 0;
