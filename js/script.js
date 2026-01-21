@@ -816,7 +816,7 @@ let currentAvailability = null;
 let isCheckingAvailability = false;
 
 // URL del Google Apps Script (usar la misma que para POST)
-const AVAILABILITY_API_URL = 'https://script.google.com/macros/s/AKfycbz3ZG--co9k3ihaNRMHgUMZbzYvZKHMiK5ptzwm8TFTxKSXqiVY3gJTjHeVbTqhJLU/exec';
+const AVAILABILITY_API_URL = 'https://script.google.com/macros/s/AKfycbxXHJPWxtlo1Thj_zMe_rtlEN_NEn_kYcuh5gTS4y_iJZN2y81kBQdRCmV_VYQQk2SO/exec';
 
 /**
  * Verifica la disponibilidad en tiempo real
@@ -1366,7 +1366,7 @@ async function handleReservationSubmit(event) {
     
     try {
         // IMPORTANT: Replace with your Google Apps Script Web App URL
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz3ZG--co9k3ihaNRMHgUMZbzYvZKHMiK5ptzwm8TFTxKSXqiVY3gJTjHeVbTqhJLU/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXHJPWxtlo1Thj_zMe_rtlEN_NEn_kYcuh5gTS4y_iJZN2y81kBQdRCmV_VYQQk2SO/exec';
         
         if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
             throw new Error('Por favor configure la URL de Google Apps Script');
