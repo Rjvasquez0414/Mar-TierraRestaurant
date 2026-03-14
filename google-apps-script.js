@@ -121,31 +121,34 @@ function confirmPayment() {
   }
   
   // Obtener datos de la reserva
-  const statusColumn = 15; // Columna de Estado de Pago
-  const emailColumn = 5; // Columna de Email
-  const nameColumn = 3; // Columna de Nombre
-  
-  const currentStatus = sheet.getRange(row, statusColumn).getValue();
-  
+  // Columnas con Salón incluido: Estado=15, Estado Pago=16, Fecha Confirmación=17
+  const estadoColumn = 15;      // Columna O - Estado
+  const estadoPagoColumn = 16;  // Columna P - Estado Pago
+  const fechaConfColumn = 17;   // Columna Q - Fecha Confirmación
+  const emailColumn = 5;        // Columna E - Email
+  const nameColumn = 3;         // Columna C - Nombre
+
+  const currentStatus = sheet.getRange(row, estadoPagoColumn).getValue();
+
   if (currentStatus === 'Confirmado') {
     SpreadsheetApp.getUi().alert('Esta reserva ya está confirmada.');
     return;
   }
-  
+
   // Actualizar estado
-  sheet.getRange(row, statusColumn).setValue('Confirmado');
-  sheet.getRange(row, statusColumn - 1).setValue('Confirmada'); // Estado general
-  sheet.getRange(row, statusColumn + 1).setValue(new Date()); // Fecha de confirmación
-  
+  sheet.getRange(row, estadoPagoColumn).setValue('Confirmado');  // Estado Pago
+  sheet.getRange(row, estadoColumn).setValue('Confirmada');       // Estado general
+  sheet.getRange(row, fechaConfColumn).setValue(new Date());      // Fecha de confirmación
+
   // Colorear la fila de verde suave
   sheet.getRange(row, 1, 1, sheet.getLastColumn()).setBackground('#d4f4dd');
-  
+
   // Obtener datos para el email
   const email = sheet.getRange(row, emailColumn).getValue();
   const name = sheet.getRange(row, nameColumn).getValue();
-  const date = sheet.getRange(row, 6).getValue();
-  const time = sheet.getRange(row, 7).getValue();
-  const people = sheet.getRange(row, 8).getValue();
+  const date = sheet.getRange(row, 7).getValue();   // Columna G - Fecha
+  const time = sheet.getRange(row, 8).getValue();   // Columna H - Hora
+  const people = sheet.getRange(row, 9).getValue(); // Columna I - Personas
   
   // Enviar email de confirmación
   if (email) {
@@ -168,35 +171,36 @@ function sendPaymentReminder() {
   const sheet = SpreadsheetApp.getActiveSheet();
   const range = sheet.getActiveRange();
   const row = range.getRow();
-  
+
   if (row <= 1) {
     SpreadsheetApp.getUi().alert('Por favor seleccione una reserva válida.');
     return;
   }
-  
-  const email = sheet.getRange(row, 5).getValue();
-  const name = sheet.getRange(row, 3).getValue();
-  const totalDeposit = sheet.getRange(row, 12).getValue();
-  const date = sheet.getRange(row, 6).getValue();
-  
+
+  // Columnas con Salón incluido
+  const email = sheet.getRange(row, 5).getValue();        // Email
+  const name = sheet.getRange(row, 3).getValue();         // Nombre
+  const totalDeposit = sheet.getRange(row, 13).getValue(); // Anticipo Total (columna M)
+  const date = sheet.getRange(row, 7).getValue();         // Fecha (columna G)
+
   if (!email) {
     SpreadsheetApp.getUi().alert('No hay email registrado para esta reserva.');
     return;
   }
-  
+
   sendReminderEmail({
     email: email,
     name: name,
     totalDeposit: totalDeposit,
     date: date
   });
-  
+
   // Registrar el recordatorio
-  const reminderColumn = 17; // Nueva columna para recordatorios
+  const reminderColumn = 18; // Recordatorios Enviados (columna R)
   const currentReminders = sheet.getRange(row, reminderColumn).getValue() || 0;
   sheet.getRange(row, reminderColumn).setValue(currentReminders + 1);
-  sheet.getRange(row, reminderColumn + 1).setValue(new Date()); // Último recordatorio
-  
+  sheet.getRange(row, reminderColumn + 1).setValue(new Date()); // Último recordatorio (columna S)
+
   SpreadsheetApp.getUi().alert('📧 Recordatorio de pago enviado exitosamente.');
 }
 
@@ -393,10 +397,151 @@ function doGet(e) {
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
+    // Acción: Debug - Ver estructura de la hoja (para verificar índices de columnas)
+    if (action === 'debug-structure') {
+      const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
+      if (!sheet) {
+        return ContentService.createTextOutput(JSON.stringify({
+          success: false,
+          error: 'Hoja no encontrada'
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+
+      const data = sheet.getDataRange().getValues();
+      const headers = data[0] || [];
+
+      // Detectar índices de columnas importantes
+      let detectedIndices = {
+        salon: -1,
+        fecha: -1,
+        hora: -1,
+        personas: -1,
+        estado: -1,
+        estadoPago: -1
+      };
+
+      headers.forEach((h, i) => {
+        const header = h ? h.toString().toLowerCase() : '';
+        if (header === 'salón' || header === 'salon') detectedIndices.salon = i;
+        else if (header === 'fecha') detectedIndices.fecha = i;
+        else if (header === 'hora') detectedIndices.hora = i;
+        else if (header === 'personas') detectedIndices.personas = i;
+        else if (header === 'estado' && !header.includes('pago')) detectedIndices.estado = i;
+        else if (header === 'estado pago') detectedIndices.estadoPago = i;
+      });
+
+      // Obtener las primeras filas para debug usando índices detectados
+      const sampleRows = data.slice(1, 6).map((row, idx) => {
+        const estadoVal = detectedIndices.estado >= 0 ? row[detectedIndices.estado] : null;
+        return {
+          rowNumber: idx + 2,
+          salon: detectedIndices.salon >= 0 ? row[detectedIndices.salon] : 'N/A (columna no existe)',
+          fecha: detectedIndices.fecha >= 0 ? row[detectedIndices.fecha] : null,
+          hora: detectedIndices.hora >= 0 ? row[detectedIndices.hora] : null,
+          personas: detectedIndices.personas >= 0 ? row[detectedIndices.personas] : null,
+          estado: estadoVal,
+          estado_normalizado: estadoVal ? estadoVal.toString().trim().toLowerCase() : null,
+          estadoPago: detectedIndices.estadoPago >= 0 ? row[detectedIndices.estadoPago] : null
+        };
+      });
+
+      return ContentService.createTextOutput(JSON.stringify({
+        success: true,
+        headers: headers.map((h, i) => ({ index: i, name: h })),
+        detectedIndices: detectedIndices,
+        hasSalonColumn: detectedIndices.salon >= 0,
+        sampleRows: sampleRows,
+        totalRows: data.length,
+        note: detectedIndices.salon < 0 ? 'ADVERTENCIA: No se encontró columna Salón. El sistema funcionará pero sin filtrar por salón.' : 'OK'
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // Acción: Debug de disponibilidad - Ver exactamente qué reservas se encuentran
+    if (action === 'debug-availability') {
+      const salon = params.salon || 'arca';
+      const date = params.date;
+      const time = params.time;
+      const people = parseInt(params.people) || 2;
+
+      if (!date || !time) {
+        return ContentService.createTextOutput(JSON.stringify({
+          success: false,
+          error: 'Parámetros requeridos: date, time (formato: date=2026-01-22&time=14:00)'
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+
+      const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(SHEET_NAME);
+      const data = sheet.getDataRange().getValues();
+      const headers = data[0];
+
+      // Detectar índices
+      let indices = { salon: -1, fecha: -1, hora: -1, personas: -1, estado: -1 };
+      headers.forEach((h, i) => {
+        const header = h ? h.toString().toLowerCase() : '';
+        if (header === 'salón' || header === 'salon') indices.salon = i;
+        else if (header === 'fecha') indices.fecha = i;
+        else if (header === 'hora') indices.hora = i;
+        else if (header === 'personas') indices.personas = i;
+        else if (header === 'estado' && !header.includes('pago')) indices.estado = i;
+      });
+
+      // Analizar cada fila
+      const analysis = [];
+      for (let i = 1; i < data.length; i++) {
+        const row = data[i];
+        const rowSalon = indices.salon >= 0 ? row[indices.salon] : null;
+        const rowDate = row[indices.fecha];
+        const rowTime = row[indices.hora];
+        const rowPeople = row[indices.personas];
+        const rowStatus = row[indices.estado];
+        const normalizedStatus = rowStatus ? rowStatus.toString().trim().toLowerCase() : '';
+
+        // Formatear fecha para comparar
+        let rowDateStr = '';
+        if (rowDate instanceof Date) {
+          rowDateStr = Utilities.formatDate(rowDate, 'America/Bogota', 'yyyy-MM-dd');
+        } else if (typeof rowDate === 'string') {
+          rowDateStr = rowDate.split('T')[0];
+        }
+
+        const isCancelled = normalizedStatus === 'cancelada' || normalizedStatus === 'completada';
+        const dateMatches = rowDateStr === date;
+
+        analysis.push({
+          row: i + 1,
+          salon: rowSalon,
+          fecha: rowDateStr,
+          hora: rowTime,
+          personas: rowPeople,
+          estado: rowStatus,
+          estado_normalizado: normalizedStatus,
+          isCancelled: isCancelled,
+          willBeSkipped: isCancelled,
+          dateMatches: dateMatches,
+          requestedDate: date
+        });
+      }
+
+      // Obtener reservas que realmente se cuentan
+      const reservationsFound = getReservationsForSlot(salon, date, time);
+
+      return ContentService.createTextOutput(JSON.stringify({
+        success: true,
+        requestedParams: { salon, date, time, people },
+        detectedIndices: indices,
+        allRowsAnalysis: analysis,
+        reservationsFoundForSlot: reservationsFound,
+        totalReservationsCount: reservationsFound.length,
+        conclusion: reservationsFound.length === 0 ?
+          'No hay reservas activas para este slot - DEBERÍA ESTAR DISPONIBLE' :
+          `Hay ${reservationsFound.length} reserva(s) activa(s) para este slot`
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
     // Acción no reconocida
     return ContentService.createTextOutput(JSON.stringify({
       success: false,
-      error: 'Acción no reconocida. Acciones disponibles: status, check-availability, get-all-availability, get-available-times, get-salon-config'
+      error: 'Acción no reconocida. Acciones disponibles: status, check-availability, get-all-availability, get-available-times, get-salon-config, debug-structure, debug-availability'
     })).setMimeType(ContentService.MimeType.JSON);
 
   } catch (error) {
@@ -568,25 +713,55 @@ function getReservationsForSlot(salonId, date, time) {
       salonNameToId[id.toLowerCase()] = id;
     });
 
+    // NOTA: Detectar automáticamente si la hoja tiene columna Salón
+    // Verificamos el encabezado para determinar los índices correctos
+    const headers = data[0];
+    let salonIndex = -1;
+    let dateIndex = 5;
+    let timeIndex = 6;
+    let peopleIndex = 7;
+    let statusIndex = 13; // Estado por defecto en índice 13
+
+    // Buscar la columna Salón en los encabezados
+    for (let h = 0; h < headers.length; h++) {
+      const header = headers[h] ? headers[h].toString().toLowerCase() : '';
+      if (header === 'salón' || header === 'salon') {
+        salonIndex = h;
+      } else if (header === 'fecha') {
+        dateIndex = h;
+      } else if (header === 'hora') {
+        timeIndex = h;
+      } else if (header === 'personas') {
+        peopleIndex = h;
+      } else if (header === 'estado' && header !== 'estado pago') {
+        statusIndex = h;
+      }
+    }
+
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
-      const rowSalon = row[5]; // Columna Salón (índice 5)
-      const rowDate = row[6]; // Columna Fecha (índice 6)
-      const rowTime = row[7]; // Columna Hora (índice 7)
-      const rowPeople = row[8]; // Columna Personas (índice 8)
-      const rowStatus = row[14]; // Columna Estado (índice 14, después de Comentarios)
+      const rowSalon = salonIndex >= 0 ? row[salonIndex] : null; // Columna Salón (si existe)
+      const rowDate = row[dateIndex]; // Columna Fecha
+      const rowTime = row[timeIndex]; // Columna Hora
+      const rowPeople = row[peopleIndex]; // Columna Personas
+      const rowStatus = row[statusIndex]; // Columna Estado
+
+      // Normalizar el estado para comparación (eliminar espacios y convertir a minúsculas)
+      const normalizedStatus = rowStatus ? rowStatus.toString().trim().toLowerCase() : '';
 
       // Ignorar reservas canceladas o completadas
-      if (rowStatus === 'Cancelada' || rowStatus === 'Completada') {
+      if (normalizedStatus === 'cancelada' || normalizedStatus === 'completada') {
         continue;
       }
 
-      // Verificar salón (comparar tanto ID como nombre)
-      const rowSalonLower = rowSalon ? rowSalon.toString().toLowerCase() : '';
-      const rowSalonId = salonNameToId[rowSalonLower] || rowSalonLower;
+      // Verificar salón (solo si la columna existe)
+      if (salonIndex >= 0 && rowSalon) {
+        const rowSalonLower = rowSalon.toString().toLowerCase();
+        const rowSalonId = salonNameToId[rowSalonLower] || rowSalonLower;
 
-      if (rowSalonId !== salonId && rowSalonLower !== SALON_CONFIG[salonId]?.name.toLowerCase()) {
-        continue;
+        if (rowSalonId !== salonId && rowSalonLower !== SALON_CONFIG[salonId]?.name.toLowerCase()) {
+          continue;
+        }
       }
 
       // Verificar fecha
@@ -2790,7 +2965,7 @@ function markAsCompleted() {
     return;
   }
 
-  sheet.getRange(row, 14).setValue('Completada'); // Estado
+  sheet.getRange(row, 15).setValue('Completada'); // Estado (columna O = 15)
   sheet.getRange(row, 1, 1, sheet.getLastColumn()).setBackground('#e9ecef');
 
   SpreadsheetApp.getUi().alert('✅ Reserva marcada como completada.');
@@ -2815,7 +2990,7 @@ function cancelReservation() {
     ui.ButtonSet.YES_NO);
 
   if (response === ui.Button.YES) {
-    sheet.getRange(row, 14).setValue('Cancelada'); // Estado
+    sheet.getRange(row, 15).setValue('Cancelada'); // Estado (columna O = 15)
     sheet.getRange(row, 1, 1, sheet.getLastColumn()).setBackground('#f8d7da');
 
     // Enviar email de cancelación al cliente
