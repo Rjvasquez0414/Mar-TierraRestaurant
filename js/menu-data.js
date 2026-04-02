@@ -460,6 +460,7 @@ window.menuData = {
             description: "Corte nacional de 500 gr. Viene con un acompañamiento a elección y chimichurri de la casa.",
             price: "$120.000",
             image: "https://res.cloudinary.com/dxvl2i2fy/image/upload/v1768570241/T-Bone_500_Gr_lrxsgs.jpg",
+            video: "https://res.cloudinary.com/dxvl2i2fy/video/upload/q_auto/f_auto/v1775146116/T-Bone_1_hu5gpk.mov",
             tags: [],
             available: true,
             category: "grill",
