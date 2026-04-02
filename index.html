@@ -3,14 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mar&Tierra | Menú Exclusivo</title>
-    
+    <title>Mar&Tierra Restaurant | Restaurante en Bucaramanga - Cocina de Autor</title>
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#4A3429">
+
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="images/placeholder.svg">
-    
-    <!-- Preconnect para fonts -->
+    <link rel="icon" type="image/png" href="images/logos/logo-sin-fondo.png">
+
+    <!-- Preconnect para fonts y CDNs -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+    <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
+    <!-- Preload Custom Fonts -->
+    <link rel="preload" href="fonts/Valerius.otf" as="font" type="font/otf" crossorigin>
+    <link rel="preload" href="fonts/causten-light.otf" as="font" type="font/otf" crossorigin>
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Bebas+Neue&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -25,15 +35,24 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     
     <!-- Meta tags para SEO -->
-    <meta name="description" content="Mar&Tierra Restaurant - Un encuentro de culturas, texturas e historias. Menú exclusivo donde el mar y la tierra se complementan en perfecta armonía.">
-    <meta name="keywords" content="restaurante, mar, tierra, gastronomía, Bucaramanga, menú, mariscos, carnes">
+    <meta name="description" content="Mar&Tierra Restaurant en Bucaramanga - Cocina de autor donde el mar y la tierra se complementan. Ceviches, cortes premium, mariscos frescos y eventos exclusivos en Cabecera del Llano.">
+    <meta name="keywords" content="restaurante Bucaramanga, Mar y Tierra, cocina de autor, mariscos Bucaramanga, carnes premium, ceviche, eventos Bucaramanga, reservas restaurante, Cabecera del Llano">
     <meta name="author" content="Mar&Tierra Restaurant">
-    
+    <meta name="robots" content="index, follow">
+
     <!-- Open Graph para redes sociales -->
-    <meta property="og:title" content="Mar&Tierra Restaurant - Menú Exclusivo">
-    <meta property="og:description" content="Donde el mar y la tierra no compiten, se complementan. Descubre nuestro menú exclusivo.">
-    <meta property="og:type" content="website"> 
-    <meta property="og:image" content="images/placeholder.jpg">
+    <meta property="og:title" content="Mar&Tierra Restaurant - Cocina de Autor en Bucaramanga">
+    <meta property="og:description" content="Donde el mar y la tierra no compiten, se complementan. Descubre nuestro menú exclusivo de cocina de autor.">
+    <meta property="og:type" content="restaurant">
+    <meta property="og:image" content="https://res.cloudinary.com/dxvl2i2fy/image/upload/v1764181801/_MG_8945_pjgoxy.webp">
+    <meta property="og:locale" content="es_CO">
+    <meta property="og:site_name" content="Mar&Tierra Restaurant">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Mar&Tierra Restaurant - Bucaramanga">
+    <meta name="twitter:description" content="Cocina de autor donde el mar y la tierra se complementan en perfecta armonía.">
+    <meta name="twitter:image" content="https://res.cloudinary.com/dxvl2i2fy/image/upload/v1764181801/_MG_8945_pjgoxy.webp">
     
     <!-- Estilos CSS -->
     <link rel="stylesheet" href="css/styles.css">
@@ -47,12 +66,15 @@
     <link rel="stylesheet" href="css/custom-fonts.css">
 </head>
 <body>
+    <!-- Skip Link para Accesibilidad -->
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
     <!-- Preloader -->
-    <div class="preloader" id="preloader">
+    <div class="preloader" id="preloader" aria-hidden="true">
         <div class="loader-content">
             <div class="loader-logo">
                 <div class="logo-main">
-                    <img src="contextocolores/Logomartierraconcolores.png" alt="Mar&Tierra Logo" class="main-logo"
+                    <img src="contextocolores/Logomartierraconcolores.png" alt="Mar&Tierra Logo" class="main-logo" width="320" height="320"
                          onerror="this.src='contextocolores/logomartierra3solologo.jpg';">
                 </div>
                 <div class="pulse-ring"></div>
@@ -65,28 +87,31 @@
     <!-- Header -->
     <header id="header">
         <div class="header-container">
-            <div class="logo-section" onclick="showSection('hero')">
-                <img src="contextocolores/LogoMartierra2.png" alt="Mar&Tierra" class="navbar-logo"
-                     onerror="this.src='contextocolores/Logomartierraconcolores';">
-            </div>
-            
-            <nav id="nav">
-                <a class="nav-link active" onclick="showSection('hero')">Inicio</a>
-                <a class="nav-link" onclick="showSection('categories')">Menú</a>
-                <a class="nav-link" onclick="showSection('instalaciones')">Instalaciones</a>
-                <a class="nav-link" onclick="showSection('reservation-info')">Reservas</a>
-                <a class="nav-link" onclick="showSection('contact')">Contacto</a>
-                <a href="#" class="reservation-btn" onclick="openReservationModal(event)"><span>Reservar Mesa</span></a>
+            <a href="#" class="logo-section" onclick="showSection('hero'); return false;" aria-label="Ir al inicio - Mar&Tierra">
+                <img src="contextocolores/LogoMartierra2.png" alt="Mar&Tierra Restaurant - Inicio" class="navbar-logo" width="320" height="140"
+                     onerror="this.src='contextocolores/Logomartierraconcolores.png';">
+            </a>
+
+            <nav id="nav" aria-label="Navegación principal">
+                <a href="#hero" class="nav-link active" onclick="showSection('hero'); return false;">Inicio</a>
+                <a href="#categories" class="nav-link" onclick="showSection('categories'); return false;">Menú</a>
+                <a href="#instalaciones" class="nav-link" onclick="showSection('instalaciones'); return false;">Instalaciones</a>
+                <a href="#reservation-info" class="nav-link" onclick="showSection('reservation-info'); return false;">Reservas</a>
+                <a href="#contact" class="nav-link" onclick="showSection('contact'); return false;">Contacto</a>
+                <button type="button" class="reservation-btn" onclick="openReservationModal(event)"><span>Reservar Mesa</span></button>
             </nav>
-            
-            <div class="mobile-toggle" id="mobileToggle">
+
+            <button type="button" class="mobile-toggle" id="mobileToggle" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="nav">
                 <span></span>
                 <span></span>
                 <span></span>
-            </div>
+            </button>
         </div>
     </header>
     
+    <!-- Contenido Principal -->
+    <main id="main-content">
+
     <!-- Hero Section -->
     <section class="hero" id="hero">
         <div class="hero-content">
@@ -96,7 +121,7 @@
                 Donde el mar y la tierra no compiten, se complementan.<br>
                 Y en ese equilibrio es donde nace nuestra esencia.
             </p>
-            <a href="#" class="hero-cta" onclick="showSection('categories')">Descubrir Menú</a>
+            <a href="#categories" class="hero-cta" onclick="showSection('categories'); return false;">Descubrir Menú</a>
         </div>
         <div class="wave-divider"></div>
     </section>
@@ -119,74 +144,64 @@
         
         <div class="categories-grid">
             <!-- Para Compartir -->
-            <div class="category-card" style="background-image: url('https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?w=800&q=80')" onclick="showMenuSection('compartir')">
+            <button type="button" class="category-card" style="background-image: url('https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?w=800&q=80')" onclick="showMenuSection('compartir')">
                 <div class="category-overlay"></div>
                 <div class="category-content">
                     <div class="category-line"></div>
                     <h3 class="category-name">Para Compartir</h3>
                     <p class="category-desc">Ceviches, tartares y entradas para iniciar la experiencia</p>
                 </div>
-            </div>
+            </button>
 
             <!-- Ritual de Mar -->
-            <div class="category-card" style="background-image: url('https://images.unsplash.com/photo-1559737558-2f5a35f4523b?w=800&q=80')" onclick="showMenuSection('mar')">
+            <button type="button" class="category-card" style="background-image: url('https://images.unsplash.com/photo-1559737558-2f5a35f4523b?w=800&q=80')" onclick="showMenuSection('mar')">
                 <div class="category-overlay"></div>
                 <div class="category-content">
                     <div class="category-line"></div>
                     <h3 class="category-name">Ritual de Mar</h3>
                     <p class="category-desc">Pescados y mariscos frescos con tecnicas de autor</p>
                 </div>
-            </div>
+            </button>
 
             <!-- Ritual de Tierra -->
-            <div class="category-card" style="background-image: url('https://images.unsplash.com/photo-1546833998-877b37c2e5c6?w=800&q=80')" onclick="showMenuSection('tierra')">
+            <button type="button" class="category-card" style="background-image: url('https://images.unsplash.com/photo-1546833998-877b37c2e5c6?w=800&q=80')" onclick="showMenuSection('tierra')">
                 <div class="category-overlay"></div>
                 <div class="category-content">
                     <div class="category-line"></div>
                     <h3 class="category-name">Ritual de Tierra</h3>
                     <p class="category-desc">Carnes selectas y platos de tradicion</p>
                 </div>
-            </div>
+            </button>
 
             <!-- Mar y Tierra -->
-            <div class="category-card featured" style="background-image: url('https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80')" onclick="showMenuSection('marytierra')">
+            <button type="button" class="category-card featured" style="background-image: url('https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80')" onclick="showMenuSection('marytierra')">
                 <div class="category-overlay"></div>
                 <div class="category-content">
                     <div class="category-line"></div>
                     <h3 class="category-name">Mar y Tierra</h3>
                     <p class="category-desc">Fusion perfecta de sabores del mar y la tierra</p>
                 </div>
-            </div>
+            </button>
 
             <!-- Grill -->
-            <div class="category-card" style="background-image: url('https://images.unsplash.com/photo-1558030006-450675393462?w=800&q=80')" onclick="showMenuSection('grill')">
+            <button type="button" class="category-card" style="background-image: url('https://images.unsplash.com/photo-1558030006-450675393462?w=800&q=80')" onclick="showMenuSection('grill')">
                 <div class="category-overlay"></div>
                 <div class="category-content">
                     <div class="category-line"></div>
                     <h3 class="category-name">Grill</h3>
                     <p class="category-desc">Cortes selectos a la parrilla con chimichurri de la casa</p>
                 </div>
-            </div>
-
-            <!-- Guarniciones -->
-            <div class="category-card" style="background-image: url('https://images.unsplash.com/photo-1534938665420-4193effeacc4?w=800&q=80')" onclick="showMenuSection('guarniciones')">
-                <div class="category-overlay"></div>
-                <div class="category-content">
-                    <div class="category-line"></div>
-                    <h3 class="category-name">Guarniciones</h3>
-                    <p class="category-desc">Acompañamientos para completar tu experiencia</p>
-                </div>
-            </div>
+            </button>
 
             <!-- Menu Infantil -->
-            <div class="category-card" style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80')" onclick="showMenuSection('infantil')">
+            <button type="button" class="category-card" style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80')" onclick="showMenuSection('infantil')">
                 <div class="category-overlay"></div>
                 <div class="category-content">
                     <div class="category-line"></div>
                     <h3 class="category-name">Menu Infantil</h3>
                     <p class="category-desc">Platos especiales para los mas jovenes</p>
                 </div>
-            </div>
+            </button>
         </div>
     </section>
 
@@ -210,11 +225,11 @@
             <!-- Grid de Espacios -->
             <div class="espacios-grid">
                 <!-- Almaterra -->
-                <div class="espacio-card" data-aos="fade-up" data-aos-delay="100" onclick="openEspacioModal('almaterra')">
+                <button type="button" class="espacio-card" data-aos="fade-up" data-aos-delay="100" onclick="openEspacioModal('almaterra')">
                     <div class="espacio-image-wrapper">
                         <div class="espacio-image" style="background-image: url('images/EspaciosRestaurante/almaterra/_MG_8912.webp');">
                             <div class="espacio-overlay">
-                                <i class="fas fa-expand-alt"></i>
+                                <i class="fas fa-expand-alt" aria-hidden="true"></i>
                             </div>
                         </div>
                     </div>
@@ -229,17 +244,17 @@
                         <div class="espacio-features">
                             <span class="feature-item"><i class="fas fa-wifi"></i> WiFi Premium</span>
                             <span class="feature-item"><i class="fas fa-users"></i> 20-30 personas</span>
-                            <span class="feature-item"><i class="fas fa-laptop"></i> Business Center</span>
+                            <span class="feature-item"><i class="fas fa-laptop" aria-hidden="true"></i> Business Center</span>
                         </div>
                     </div>
-                </div>
+                </button>
 
                 <!-- Arca -->
-                <div class="espacio-card" data-aos="fade-up" data-aos-delay="200" onclick="openEspacioModal('arca')">
+                <button type="button" class="espacio-card" data-aos="fade-up" data-aos-delay="200" onclick="openEspacioModal('arca')">
                     <div class="espacio-image-wrapper">
                         <div class="espacio-image" id="arca-image" style="background-image: url('images/EspaciosRestaurante/arca/_MG_8885.webp');">
                             <div class="espacio-overlay">
-                                <i class="fas fa-expand-alt"></i>
+                                <i class="fas fa-expand-alt" aria-hidden="true"></i>
                             </div>
                         </div>
                     </div>
@@ -254,17 +269,17 @@
                         <div class="espacio-features">
                             <span class="feature-item"><i class="fas fa-utensils"></i> Fine Dining</span>
                             <span class="feature-item"><i class="fas fa-users"></i> 50-80 personas</span>
-                            <span class="feature-item"><i class="fas fa-music"></i> Música en vivo</span>
+                            <span class="feature-item"><i class="fas fa-music" aria-hidden="true"></i> Música en vivo</span>
                         </div>
                     </div>
-                </div>
+                </button>
 
                 <!-- Barco -->
-                <div class="espacio-card" data-aos="fade-up" data-aos-delay="300" onclick="openEspacioModal('barco')">
+                <button type="button" class="espacio-card" data-aos="fade-up" data-aos-delay="300" onclick="openEspacioModal('barco')">
                     <div class="espacio-image-wrapper">
                         <div class="espacio-image" id="barco-image" style="background-image: url('images/EspaciosRestaurante/barco/_MG_8908.webp');">
                             <div class="espacio-overlay">
-                                <i class="fas fa-expand-alt"></i>
+                                <i class="fas fa-expand-alt" aria-hidden="true"></i>
                             </div>
                         </div>
                     </div>
@@ -279,17 +294,17 @@
                         <div class="espacio-features">
                             <span class="feature-item"><i class="fas fa-anchor"></i> Temática Marina</span>
                             <span class="feature-item"><i class="fas fa-users"></i> 30-40 personas</span>
-                            <span class="feature-item"><i class="fas fa-fish"></i> Especialidad Mar</span>
+                            <span class="feature-item"><i class="fas fa-fish" aria-hidden="true"></i> Especialidad Mar</span>
                         </div>
                     </div>
-                </div>
+                </button>
 
                 <!-- Chillout -->
-                <div class="espacio-card" data-aos="fade-up" data-aos-delay="100" onclick="openEspacioModal('chillout')">
+                <button type="button" class="espacio-card" data-aos="fade-up" data-aos-delay="100" onclick="openEspacioModal('chillout')">
                     <div class="espacio-image-wrapper">
                         <div class="espacio-image" id="chillout-image" style="background-image: url('images/EspaciosRestaurante/Chillout/_MG_9344.webp');">
                             <div class="espacio-overlay">
-                                <i class="fas fa-expand-alt"></i>
+                                <i class="fas fa-expand-alt" aria-hidden="true"></i>
                             </div>
                         </div>
                     </div>
@@ -304,17 +319,17 @@
                         <div class="espacio-features">
                             <span class="feature-item"><i class="fas fa-paw"></i> Pet Friendly</span>
                             <span class="feature-item"><i class="fas fa-sun"></i> Terraza al aire</span>
-                            <span class="feature-item"><i class="fas fa-cocktail"></i> Cocktail Bar</span>
+                            <span class="feature-item"><i class="fas fa-cocktail" aria-hidden="true"></i> Cocktail Bar</span>
                         </div>
                     </div>
-                </div>
+                </button>
 
                 <!-- Moon Terraza -->
-                <div class="espacio-card" data-aos="fade-up" data-aos-delay="200" onclick="openEspacioModal('rooftop')">
+                <button type="button" class="espacio-card" data-aos="fade-up" data-aos-delay="200" onclick="openEspacioModal('rooftop')">
                     <div class="espacio-image-wrapper">
                         <div class="espacio-image" id="rooftop-image" style="background-image: url('images/EspaciosRestaurante/rooftop/_MG_9320.webp');">
                             <div class="espacio-overlay">
-                                <i class="fas fa-expand-alt"></i>
+                                <i class="fas fa-expand-alt" aria-hidden="true"></i>
                             </div>
                         </div>
                     </div>
@@ -329,17 +344,17 @@
                         <div class="espacio-features">
                             <span class="feature-item"><i class="fas fa-city"></i> Vista 360°</span>
                             <span class="feature-item"><i class="fas fa-glass-martini-alt"></i> Premium Bar</span>
-                            <span class="feature-item"><i class="fas fa-moon"></i> Eventos nocturnos</span>
+                            <span class="feature-item"><i class="fas fa-moon" aria-hidden="true"></i> Eventos nocturnos</span>
                         </div>
                     </div>
-                </div>
+                </button>
 
                 <!-- Salon VIP -->
-                <div class="espacio-card" data-aos="fade-up" data-aos-delay="300" onclick="openEspacioModal('salonvip')">
+                <button type="button" class="espacio-card" data-aos="fade-up" data-aos-delay="300" onclick="openEspacioModal('salonvip')">
                     <div class="espacio-image-wrapper">
                         <div class="espacio-image" id="salonvip-image" style="background-image: url('images/EspaciosRestaurante/SalonVIP/_MG_8865.webp');">
                             <div class="espacio-overlay">
-                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star" aria-hidden="true"></i>
                             </div>
                         </div>
                     </div>
@@ -351,22 +366,22 @@
                             diseñado para los paladares más exigentes. Un ambiente donde cada detalle define la excelencia.
                         </p>
                         <div class="espacio-features">
-                            <span class="feature-item"><i class="fas fa-star"></i> El Favorito</span>
+                            <span class="feature-item"><i class="fas fa-star" aria-hidden="true"></i> El Favorito</span>
                             <span class="feature-item"><i class="fas fa-crown"></i> Ultra Premium</span>
-                            <span class="feature-item"><i class="fas fa-users"></i> 15-25 personas</span>
+                            <span class="feature-item"><i class="fas fa-users" aria-hidden="true"></i> 15-25 personas</span>
                         </div>
                     </div>
-                </div>
+                </button>
             </div>
         </div>
     </section>
 
     <!-- Modal para Galería de Espacios -->
-    <div class="espacio-modal-overlay" id="espacioModal">
+    <div class="espacio-modal-overlay" id="espacioModal" role="dialog" aria-modal="true" aria-label="Galería de espacios">
         <div class="espacio-modal-container">
-            <div class="espacio-modal-close" onclick="closeEspacioModal()">
-                <i class="fas fa-times"></i>
-            </div>
+            <button type="button" class="espacio-modal-close" onclick="closeEspacioModal()" aria-label="Cerrar galería">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
 
             <!-- Swiper Gallery -->
             <div class="swiper espacioSwiper">
@@ -404,7 +419,7 @@
             <!-- Tipos de Reserva -->
             <div class="reservation-types-grid">
                 <!-- Reserva Free (Anticipo Consumible) -->
-                <div class="reservation-type-card" onclick="showReservationDetail('normal')" style="cursor: pointer;">
+                <button type="button" class="reservation-type-card" onclick="showReservationDetail('normal')">
                     <div class="card-image" style="background: linear-gradient(135deg, #2c3e50, #34495e);">
                         <img src="images/placeholder.jpg" alt="Reserva Free" onerror="this.style.display='none'">
                     </div>
@@ -424,10 +439,10 @@
                             <p class="note">Perfecto para cenas y almuerzos con reserva confirmada</p>
                         </div>
                     </div>
-                </div>
+                </button>
 
                 <!-- Reservas con Decoración -->
-                <div class="reservation-type-card" onclick="showReservationDetail('regular')" style="cursor: pointer;">
+                <button type="button" class="reservation-type-card" onclick="showReservationDetail('regular')">
                     <div class="card-image" style="background: linear-gradient(135deg, #0056D2, #003d8f);">
                         <img src="images/placeholder.jpg" alt="Reserva con Decoración" onerror="this.style.display='none'">
                     </div>
@@ -447,10 +462,10 @@
                             <p class="note">Experiencia personalizada para ocasiones especiales</p>
                         </div>
                     </div>
-                </div>
+                </button>
 
                 <!-- Reservas Especiales -->
-                <div class="reservation-type-card featured" onclick="showReservationDetail('gold')" style="cursor: pointer;">
+                <button type="button" class="reservation-type-card featured" onclick="showReservationDetail('gold')">
                     <div class="card-image" style="background: linear-gradient(135deg, #D4AF37, #b8941f);">
                         <img src="images/placeholder.jpg" alt="Salón Gold" onerror="this.style.display='none'">
                     </div>
@@ -471,7 +486,7 @@
                             <p class="note">Experiencia premium para grupos grandes</p>
                         </div>
                     </div>
-                </div>
+                </button>
             </div>
 
             <!-- Planes de Decoración -->
@@ -885,31 +900,6 @@
         </div>
     </section>
 
-    <!-- Guarniciones -->
-    <section class="menu-section" id="guarniciones">
-        <div class="menu-container">
-            <button class="back-btn" onclick="showSection('categories')">
-                <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                Volver al Menu
-            </button>
-
-            <div class="section-header">
-                <p class="section-overtitle">Complementos perfectos</p>
-                <h2 class="section-title">Guarniciones</h2>
-                <div class="ornament">
-                    <div class="ornament-line"></div>
-                    <div class="ornament-center"></div>
-                    <div class="ornament-line"></div>
-                </div>
-                <p class="section-description">
-                    Acompañamientos para completar tu experiencia
-                </p>
-            </div>
-
-            <div class="menu-grid"></div>
-        </div>
-    </section>
-
     <!-- Menu Infantil -->
     <section class="menu-section" id="infantil">
         <div class="menu-container">
@@ -996,19 +986,19 @@
                 <h3 class="contact-title">Horarios</h3>
                 <div class="hour-item">
                     <span class="hour-day">Lunes</span>
-                    <span class="hour-time">11:30 AM - 9:00 PM</span>
-                </div>
-                <div class="hour-item">
-                    <span class="hour-day">Martes - Jueves</span>
                     <span class="hour-time">11:30 AM - 10:00 PM</span>
                 </div>
                 <div class="hour-item">
-                    <span class="hour-day">Viernes - Sábado</span>
+                    <span class="hour-day">Martes - Jueves</span>
                     <span class="hour-time">11:30 AM - 11:00 PM</span>
                 </div>
                 <div class="hour-item">
+                    <span class="hour-day">Viernes - Sábado</span>
+                    <span class="hour-time">11:30 AM - 12:00 AM</span>
+                </div>
+                <div class="hour-item">
                     <span class="hour-day">Domingo</span>
-                    <span class="hour-time">11:30 AM - 6:00 PM</span>
+                    <span class="hour-time">11:30 AM - 9:00 PM</span>
                 </div>
             </div>
         </div>
@@ -1042,7 +1032,7 @@
     </section>
     
     <!-- Modal para Reservas -->
-    <div class="reservation-modal-overlay" id="reservationModal">
+    <div class="reservation-modal-overlay" id="reservationModal" role="dialog" aria-modal="true" aria-label="Formulario de reserva">
         <div class="reservation-modal-container">
             <div class="reservation-modal-close" onclick="closeReservationModal()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -1061,13 +1051,13 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="resName">Nombre Completo *</label>
-                            <input type="text" id="resName" name="name" required>
+                            <input type="text" id="resName" name="name" required autocomplete="name" placeholder="Nombre completo...">
                             <span class="error-message"></span>
                         </div>
                         
                         <div class="form-group">
                             <label for="resPhone">Teléfono *</label>
-                            <input type="tel" id="resPhone" name="phone" required>
+                            <input type="tel" id="resPhone" name="phone" required autocomplete="tel" placeholder="Ej: 300 123 4567..." inputmode="tel">
                             <span class="error-message"></span>
                         </div>
                     </div>
@@ -1075,7 +1065,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="resEmail">Email *</label>
-                            <input type="email" id="resEmail" name="email" required>
+                            <input type="email" id="resEmail" name="email" required autocomplete="email" placeholder="correo@ejemplo.com..." spellcheck="false" inputmode="email">
                             <span class="error-message"></span>
                         </div>
                         
@@ -1158,7 +1148,7 @@
                                 <option value="">Primero seleccione una fecha</option>
                             </select>
                             <span class="error-message"></span>
-                            <div id="availabilityStatus" class="availability-status" style="display: none;"></div>
+                            <div id="availabilityStatus" class="availability-status" style="display: none;" role="status" aria-live="polite"></div>
                         </div>
                     </div>
 
@@ -1337,7 +1327,7 @@
                 </form>
                 
                 <!-- Success Message -->
-                <div class="reservation-success" id="reservationSuccess" style="display: none;">
+                <div class="reservation-success" id="reservationSuccess" style="display: none;" role="alert" aria-live="polite">
                     <div class="success-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <circle cx="12" cy="12" r="10"></circle>
@@ -1353,7 +1343,7 @@
                 </div>
                 
                 <!-- Error Message -->
-                <div class="reservation-error" id="reservationError" style="display: none;">
+                <div class="reservation-error" id="reservationError" style="display: none;" role="alert" aria-live="assertive">
                     <div class="error-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <circle cx="12" cy="12" r="10"></circle>
@@ -1370,7 +1360,7 @@
     </div>
     
     <!-- Modal para Detalles de Reserva/Decoración - Diseño Premium -->
-    <div class="detail-modal-overlay" id="detailModal">
+    <div class="detail-modal-overlay" id="detailModal" role="dialog" aria-modal="true" aria-label="Detalle de reserva">
         <div class="detail-modal-container premium">
             <!-- Botón de cerrar elegante -->
             <div class="detail-modal-close" onclick="closeDetailModal()">
@@ -1452,7 +1442,7 @@
     </div>
 
     <!-- Modal para Detalles del Plato -->
-    <div class="dish-modal-overlay" id="dishModal">
+    <div class="dish-modal-overlay" id="dishModal" role="dialog" aria-modal="true" aria-label="Detalle del plato">
         <div class="dish-modal-container">
             <div class="dish-modal-close" onclick="closeDishModal()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -1496,6 +1486,8 @@
         </div>
     </div>
     
+    </main><!-- /main-content -->
+
     <!-- Scripts -->
     <script src="js/menu-data.js"></script>
     <script src="js/script.js"></script>

@@ -318,6 +318,7 @@ window.menuData = {
             description: "Lomo fino (250 gr) a la brasa en salsa de queso azul, parmesano y crocantes de tocineta, acompañado de papa francesa y ensalada de la casa.",
             price: "$97.000",
             image: "",
+            video: "https://res.cloudinary.com/dxvl2i2fy/video/upload/q_auto/f_auto/v1775145793/Ceniza_azul_1_zqykzg.mov",
             tags: ["popular"],
             available: true,
             category: "tierra"
@@ -447,6 +448,7 @@ window.menuData = {
             description: "Corte nacional de 1000 gr. Viene con un acompañamiento a elección y chimichurri de la casa.",
             price: "$220.000",
             image: "",
+            video: "https://res.cloudinary.com/dxvl2i2fy/video/upload/q_auto/f_auto/v1775146348/Tomahawk_Gold_1_vbjuuc.mov",
             tags: ["popular"],
             available: true,
             category: "grill",
@@ -506,80 +508,6 @@ window.menuData = {
             available: true,
             category: "grill",
             subcategory: "importado"
-        }
-    ],
-
-    // GUARNICIONES
-    guarniciones: [
-        {
-            id: "ensalada-casa",
-            name: "ENSALADA DE LA CASA",
-            description: "Fresca ensalada de la casa con vinagreta especial.",
-            price: "$12.000",
-            image: "",
-            tags: [],
-            available: true,
-            category: "guarniciones"
-        },
-        {
-            id: "milhojas-papa",
-            name: "MIL HOJA DE PAPA GRATINADA",
-            description: "Capas de papa gratinadas con queso y crema.",
-            price: "$15.000",
-            image: "",
-            tags: ["popular"],
-            available: true,
-            category: "guarniciones"
-        },
-        {
-            id: "papa-deluxe",
-            name: "PAPA DELUXE",
-            description: "Papas estilo deluxe con especias y hierbas.",
-            price: "$9.000",
-            image: "",
-            tags: [],
-            available: true,
-            category: "guarniciones"
-        },
-        {
-            id: "papa-francesa",
-            name: "PAPA FRANCESA",
-            description: "Clásicas papas a la francesa crujientes.",
-            price: "$8.000",
-            image: "",
-            tags: [],
-            available: true,
-            category: "guarniciones"
-        },
-        {
-            id: "pasta-crema",
-            name: "PASTA EN CREMA",
-            description: "Pasta fresca en salsa cremosa.",
-            price: "$12.000",
-            image: "",
-            tags: [],
-            available: true,
-            category: "guarniciones"
-        },
-        {
-            id: "pure-amazonico",
-            name: "PURÉ AMAZÓNICO",
-            description: "Puré cremoso con especias amazónicas.",
-            price: "$12.000",
-            image: "",
-            tags: ["popular"],
-            available: true,
-            category: "guarniciones"
-        },
-        {
-            id: "vegetales-parrillados",
-            name: "VEGETALES PARRILLADOS",
-            description: "Selección de vegetales frescos a la parrilla.",
-            price: "$15.000",
-            image: "",
-            tags: [],
-            available: true,
-            category: "guarniciones"
         }
     ],
 
@@ -657,11 +585,6 @@ window.menuConfig = {
             title: "Grill",
             subtitle: "El arte del fuego",
             description: "Cortes selectos a la parrilla con chimichurri de la casa"
-        },
-        guarniciones: {
-            title: "Guarniciones",
-            subtitle: "Complementos perfectos",
-            description: "Acompañamientos para completar tu experiencia"
         },
         infantil: {
             title: "Menu Infantil",

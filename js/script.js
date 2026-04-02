@@ -80,8 +80,10 @@ class MenuApp {
         
         if (mobileToggle && nav) {
             mobileToggle.addEventListener('click', () => {
-                mobileToggle.classList.toggle('active');
+                const isExpanded = mobileToggle.classList.toggle('active');
                 nav.classList.toggle('active');
+                mobileToggle.setAttribute('aria-expanded', isExpanded);
+                mobileToggle.setAttribute('aria-label', isExpanded ? 'Cerrar menú de navegación' : 'Abrir menú de navegación');
             });
         }
 
@@ -258,11 +260,21 @@ class MenuApp {
         menuItemEl.dataset.name = item.name.toLowerCase();
         menuItemEl.dataset.description = item.description.toLowerCase();
 
-        // Detectar si el plato tiene imagen válida
+        // Detectar si el plato tiene imagen o video válido
         const hasImage = item.image && item.image !== '' && item.image !== null;
+        const hasVideo = item.video && item.video !== '' && item.video !== null;
 
-        // Agregar clase según si tiene imagen o no
-        menuItemEl.className = hasImage ? 'menu-item fade-in' : 'menu-item fade-in no-image';
+        // Generar poster/thumbnail de Cloudinary para videos
+        const videoPoster = hasVideo ? item.video.replace('/video/upload/', '/video/upload/so_2,w_600,h_400,c_fill,f_jpg/') : '';
+
+        // Agregar clase según tipo de contenido
+        if (hasVideo) {
+            menuItemEl.className = 'menu-item fade-in has-video';
+        } else if (hasImage) {
+            menuItemEl.className = 'menu-item fade-in';
+        } else {
+            menuItemEl.className = 'menu-item fade-in no-image';
+        }
 
         // Create tags HTML - ahora se posicionan sobre la imagen
         const tagsHTML = item.tags && item.tags.length > 0 ? `
@@ -279,8 +291,36 @@ class MenuApp {
             </svg>
         `;
 
-        // Estructura diferente según si tiene imagen o no
-        if (hasImage) {
+        // Boton play para videos
+        const playBtnHTML = `
+            <div class="video-play-overlay">
+                <div class="video-play-btn" aria-label="Reproducir video de ${item.name}">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+                <span class="video-label">Ver experiencia</span>
+            </div>
+        `;
+
+        // Estructura según tipo de contenido
+        if (hasVideo) {
+            menuItemEl.innerHTML = `
+                <div class="menu-item-image-wrapper video-thumbnail">
+                    <img src="${videoPoster}"
+                         alt="${item.name}"
+                         loading="lazy">
+                    ${playBtnHTML}
+                    ${tagsHTML}
+                </div>
+                <div class="menu-item-content">
+                    <div class="menu-item-line"></div>
+                    <h3 class="menu-item-name">${item.name}</h3>
+                    <p class="menu-item-desc">${item.description}</p>
+                    <div class="menu-item-footer">
+                        <span class="menu-item-price">${item.price}</span>
+                    </div>
+                </div>
+            `;
+        } else if (hasImage) {
             menuItemEl.innerHTML = `
                 <div class="menu-item-image-wrapper">
                     <img src="${item.image}"
@@ -315,9 +355,13 @@ class MenuApp {
             `;
         }
 
-        // Add click event listener for modal
-        menuItemEl.addEventListener('click', () => {
-            this.openDishModal(item);
+        // Add click event listener - video modal or dish modal
+        menuItemEl.addEventListener('click', (e) => {
+            if (hasVideo && (e.target.closest('.video-play-overlay') || e.target.closest('.video-thumbnail'))) {
+                this.openVideoModal(item);
+            } else if (!hasVideo) {
+                this.openDishModal(item);
+            }
         });
 
         return menuItemEl;
@@ -676,6 +720,79 @@ class MenuApp {
         document.body.style.overflow = '';
     }
 
+    // Video modal functionality
+    openVideoModal(item) {
+        // Create video modal if it doesn't exist
+        let modal = document.getElementById('videoModal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'videoModal';
+            modal.className = 'video-modal-overlay';
+            modal.setAttribute('role', 'dialog');
+            modal.setAttribute('aria-modal', 'true');
+            modal.setAttribute('aria-label', 'Video del plato');
+            modal.innerHTML = `
+                <div class="video-modal-container">
+                    <button type="button" class="video-modal-close" aria-label="Cerrar video">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                    <div class="video-modal-content">
+                        <video id="modalVideo" controls playsinline>
+                            <source id="modalVideoSource" src="" type="video/mp4">
+                            Tu navegador no soporta video HTML5.
+                        </video>
+                        <div class="video-modal-info">
+                            <h3 id="modalVideoName"></h3>
+                            <p id="modalVideoDesc"></p>
+                            <span id="modalVideoPrice" class="video-modal-price"></span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            // Close events
+            modal.querySelector('.video-modal-close').addEventListener('click', () => this.closeVideoModal());
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) this.closeVideoModal();
+            });
+        }
+
+        // Populate
+        const video = document.getElementById('modalVideo');
+        const source = document.getElementById('modalVideoSource');
+        document.getElementById('modalVideoName').textContent = item.name;
+        document.getElementById('modalVideoDesc').textContent = item.description;
+        document.getElementById('modalVideoPrice').textContent = item.price;
+
+        // Set optimized video URL (720p for modal)
+        const optimizedUrl = item.video.replace('/video/upload/', '/video/upload/q_auto,w_1280/');
+        source.src = optimizedUrl;
+        video.load();
+
+        // Show and play
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        video.play().catch(() => {}); // Autoplay may fail, user can press play
+    }
+
+    closeVideoModal() {
+        const modal = document.getElementById('videoModal');
+        if (!modal) return;
+
+        const video = document.getElementById('modalVideo');
+        if (video) {
+            video.pause();
+            video.currentTime = 0;
+        }
+
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
     // Setup modal event listeners
     setupModalEventListeners() {
         // Close modal when clicking close button or its children
@@ -696,6 +813,7 @@ class MenuApp {
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 this.closeDishModal();
+                this.closeVideoModal();
             }
         });
     }
@@ -1298,10 +1416,18 @@ function validateReservationForm() {
         if (availabilityStatus) {
             availabilityStatus.classList.add('shake');
             setTimeout(() => availabilityStatus.classList.remove('shake'), 500);
+            availabilityStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-
-        alert(`No hay disponibilidad:\n\n${currentAvailability.message || 'El horario seleccionado no está disponible.'}\n\nPor favor seleccione otro horario o salón.`);
         isValid = false;
+    }
+
+    // Focus first error field for accessibility
+    if (!isValid) {
+        const firstError = document.querySelector('.form-group.error input, .form-group.error select, .form-group.error textarea');
+        if (firstError) {
+            firstError.focus();
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
     }
 
     return isValid;
