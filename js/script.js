@@ -265,7 +265,8 @@ class MenuApp {
         const hasVideo = item.video && item.video !== '' && item.video !== null;
 
         // Generar poster/thumbnail de Cloudinary para videos
-        const videoPoster = hasVideo ? item.video.replace('/video/upload/', '/video/upload/so_2,w_600,h_400,c_fill,f_jpg/') : '';
+        // Reemplaza toda la cadena de transformaciones existente y genera un JPG del frame en el segundo 3
+        const videoPoster = hasVideo ? item.video.replace('/video/upload/q_auto/f_auto/', '/video/upload/so_3,w_600,h_400,c_fill,q_auto,f_jpg/') : '';
 
         // Agregar clase según tipo de contenido
         if (hasVideo) {

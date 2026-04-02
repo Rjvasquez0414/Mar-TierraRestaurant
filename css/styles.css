@@ -2911,6 +2911,7 @@ nav {
     position: relative;
     transform: scale(0.9) translateY(20px);
     transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    background: transparent;
 }
 
 .video-modal-overlay.active .video-modal-container {
@@ -2950,8 +2951,10 @@ nav {
 .video-modal-content video {
     width: 100%;
     border-radius: 12px;
-    background: #000;
-    max-height: 70vh;
+    background: transparent;
+    max-height: 75vh;
+    object-fit: contain;
+    display: block;
 }
 
 .video-modal-info {
