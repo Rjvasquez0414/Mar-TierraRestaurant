@@ -24,3 +24,9 @@ node_modules/
 
 # Carpeta de pruebas locales y archivos de test temporales
 tests/__pycache__/
+
+# Documentos comerciales / propuestas (datos personales del proveedor — no van al repo)
+propuesta-*.html
+propuesta-*.pdf
+cotizacion-*.html
+cotizacion-*.pdf
