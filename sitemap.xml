@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+    <!-- Página principal -->
+    <url>
+        <loc>https://marytierrarestaurantbga.com/</loc>
+        <lastmod>2026-05-19</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+        <image:image>
+            <image:loc>https://res.cloudinary.com/dxvl2i2fy/image/upload/v1764181801/_MG_8945_pjgoxy.webp</image:loc>
+            <image:title>Mar&amp;Tierra Restaurant — Bucaramanga</image:title>
+            <image:caption>Cocina de autor en Cabecera del Llano</image:caption>
+        </image:image>
+    </url>
+
+    <!-- Política de tratamiento de datos -->
+    <url>
+        <loc>https://marytierrarestaurantbga.com/politica-datos.html</loc>
+        <lastmod>2026-05-19</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+    </url>
+
+    <!-- Términos y condiciones -->
+    <url>
+        <loc>https://marytierrarestaurantbga.com/terminos.html</loc>
+        <lastmod>2026-05-19</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+    </url>
+
+</urlset>

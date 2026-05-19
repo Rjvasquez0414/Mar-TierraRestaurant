@@ -1,0 +1,39 @@
+# Mar&Tierra Restaurant — Bucaramanga
+# https://marytierrarestaurantbga.com/
+
+User-agent: *
+Allow: /
+Allow: /images/
+Allow: /css/
+Allow: /js/
+
+# Archivos internos y de desarrollo — no indexar
+Disallow: /tests/
+Disallow: /memory/
+Disallow: /.git/
+Disallow: /.vscode/
+Disallow: /.claude/
+Disallow: /contextocolores/
+Disallow: /google-apps-script.js
+Disallow: /google-apps-script-v2.js
+Disallow: /fix-instalaciones.html
+Disallow: /test-fonts.html
+Disallow: /verificar-cambios.html
+Disallow: /propuesta-comercial.html
+Disallow: /menu.txt
+
+# AI crawlers — permitir (mejora visibilidad en respuestas de IA)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+# Sitemap
+Sitemap: https://marytierrarestaurantbga.com/sitemap.xml
