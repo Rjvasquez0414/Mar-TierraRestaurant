@@ -1,42 +1,61 @@
 // Professional Enhancements for Mar&Tierra
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize all enhancements
-    initParallaxEffects();
+    // Footer: año dinámico (siempre actual)
+    const yearEl = document.getElementById('footerYear');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    // Si el usuario prefiere menos movimiento, saltamos todos los efectos
+    // visuales pesados (parallax, scroll reveal, hover 3D, etc.).
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     initSmoothScrolling();
-    initMagneticButtons();
-    initTextAnimations();
-    initImageLazyLoading();
-    initAdvancedHoverEffects();
-    initScrollReveal();
     enhanceFormElements();
     initPerformanceOptimizations();
+
+    if (!prefersReduced) {
+        initParallaxEffects();
+        initMagneticButtons();
+        initTextAnimations();
+        initImageLazyLoading();
+        initAdvancedHoverEffects();
+        initScrollReveal();
+    }
 });
 
-// Parallax scrolling effects
+// Parallax scrolling effects (throttled con rAF para no saturar el main thread)
 function initParallaxEffects() {
     const parallaxElements = document.querySelectorAll('[data-parallax]');
+    const hero = document.querySelector('.hero');
+    const heroContent = hero ? hero.querySelector('.hero-content') : null;
 
-    window.addEventListener('scroll', () => {
+    let ticking = false;
+
+    function update() {
         const scrolled = window.pageYOffset;
 
         parallaxElements.forEach(element => {
             const speed = element.dataset.parallax || 0.5;
-            const yPos = -(scrolled * speed);
-            element.style.transform = `translateY(${yPos}px)`;
+            element.style.transform = `translateY(${-(scrolled * speed)}px)`;
         });
 
-        // Hero parallax
-        const hero = document.querySelector('.hero');
         if (hero && scrolled < window.innerHeight) {
             hero.style.transform = `translateY(${scrolled * 0.3}px)`;
-            const heroContent = hero.querySelector('.hero-content');
             if (heroContent) {
                 heroContent.style.opacity = 1 - (scrolled / window.innerHeight);
                 heroContent.style.transform = `translateY(${scrolled * 0.5}px)`;
             }
         }
-    });
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(update);
+            ticking = true;
+        }
+    }, { passive: true });
 }
 
 // Smooth scrolling with easing

@@ -1,0 +1,26 @@
+# Claude Code — configuración personal de cada desarrollador
+.claude/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs y temporales
+*.log
+*.tmp
+*.bak
+
+# Dependencias (por si en el futuro se añade Node)
+node_modules/
+.env
+.env.local
+
+# Carpeta de pruebas locales y archivos de test temporales
+tests/__pycache__/

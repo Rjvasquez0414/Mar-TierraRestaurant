@@ -151,16 +151,10 @@ class MenuApp {
     // Render individual menu section
     renderMenuSection(category, items) {
         const sectionElement = document.getElementById(category);
-        if (!sectionElement) {
-            console.log(`Section ${category} not found`);
-            return;
-        }
+        if (!sectionElement) return;
 
         const menuGrid = sectionElement.querySelector('.menu-grid');
-        if (!menuGrid) {
-            console.log(`Menu grid for ${category} not found`);
-            return;
-        }
+        if (!menuGrid) return;
 
         // Clear existing items (but not controls)
         const existingItems = menuGrid.querySelectorAll('.menu-item');
@@ -174,8 +168,6 @@ class MenuApp {
             const menuItem = this.createMenuItem(item);
             menuGrid.appendChild(menuItem);
         });
-
-        console.log(`Rendered ${items.length} items for ${category}`);
     }
 
     // Add search and filter controls to menu sections
@@ -308,7 +300,8 @@ class MenuApp {
                 <div class="menu-item-image-wrapper video-thumbnail">
                     <img src="${videoPoster}"
                          alt="${item.name}"
-                         loading="lazy">
+                         loading="lazy"
+                         decoding="async">
                     ${playBtnHTML}
                     ${tagsHTML}
                 </div>
@@ -326,7 +319,8 @@ class MenuApp {
                 <div class="menu-item-image-wrapper">
                     <img src="${item.image}"
                          alt="${item.name}"
-                         loading="lazy">
+                         loading="lazy"
+                         decoding="async">
                     ${tagsHTML}
                 </div>
                 <div class="menu-item-content">
@@ -649,9 +643,8 @@ class MenuApp {
             });
         } else {
             // Fallback: copy to clipboard
-            navigator.clipboard.writeText(window.location.href).then(() => {
-                // You could show a toast notification here
-                console.log('URL copied to clipboard');
+            navigator.clipboard.writeText(window.location.href).catch(() => {
+                // Sin acción si el usuario no permite portapapeles
             });
         }
     }
@@ -820,14 +813,80 @@ class MenuApp {
     }
 }
 
-// Global functions for backward compatibility
+// ============================================================
+// Global functions for backward compatibility + History API
+// ------------------------------------------------------------
+// showSection() también actualiza la URL (hash) y el título del
+// documento para que las secciones sean compartibles y el botón
+// "atrás" del navegador funcione como el usuario espera.
+// ============================================================
+
+const MT_SECTION_META = {
+    'hero':              { hash: '',                  title: 'Mar&Tierra Restaurant | Cocina de Autor en Bucaramanga' },
+    'categories':        { hash: '#menu',             title: 'Menú | Mar&Tierra Restaurant' },
+    'instalaciones':     { hash: '#instalaciones',    title: 'Instalaciones | Mar&Tierra Restaurant' },
+    'reservation-info':  { hash: '#reservas',         title: 'Reservas | Mar&Tierra Restaurant' },
+    'contact':           { hash: '#contacto',         title: 'Contacto | Mar&Tierra Restaurant' },
+    'compartir':         { hash: '#menu/compartir',   title: 'Para Compartir | Mar&Tierra' },
+    'mar':               { hash: '#menu/mar',         title: 'Ritual de Mar | Mar&Tierra' },
+    'tierra':            { hash: '#menu/tierra',      title: 'Ritual de Tierra | Mar&Tierra' },
+    'marytierra':        { hash: '#menu/marytierra',  title: 'Mar y Tierra | Mar&Tierra' },
+    'grill':             { hash: '#menu/grill',       title: 'Grill | Mar&Tierra' },
+    'infantil':          { hash: '#menu/infantil',    title: 'Menú Infantil | Mar&Tierra' },
+    'bebidas':           { hash: '#menu/bebidas',     title: 'Bebidas | Mar&Tierra' }
+};
+
+const MT_HASH_TO_SECTION = (() => {
+    const map = {};
+    Object.keys(MT_SECTION_META).forEach(id => {
+        const h = MT_SECTION_META[id].hash.replace(/^#/, '');
+        if (h) map[h] = id;
+    });
+    return map;
+})();
+
+function _mtUpdateBrowserState(sectionId, push) {
+    const meta = MT_SECTION_META[sectionId];
+    if (!meta) return;
+    document.title = meta.title;
+    const newUrl = window.location.pathname + window.location.search + meta.hash;
+    if (push) {
+        if (window.location.hash !== meta.hash) {
+            history.pushState({ section: sectionId }, '', newUrl);
+        }
+    } else {
+        history.replaceState({ section: sectionId }, '', newUrl);
+    }
+}
+
 function showSection(sectionId) {
     window.menuApp?.showSection(sectionId);
+    _mtUpdateBrowserState(sectionId, true);
 }
 
 function showMenuSection(category) {
     window.menuApp?.showMenuSection(category);
+    _mtUpdateBrowserState(category, true);
 }
+
+// Botón atrás / adelante del navegador
+window.addEventListener('popstate', (e) => {
+    const sectionId = (e.state && e.state.section)
+        || MT_HASH_TO_SECTION[window.location.hash.replace(/^#/, '')]
+        || 'hero';
+    window.menuApp?.showSection(sectionId);
+    _mtUpdateBrowserState(sectionId, false);
+});
+
+// Al cargar, si la URL trae un hash conocido, abrir esa sección
+window.addEventListener('load', () => {
+    const initialHash = window.location.hash.replace(/^#/, '');
+    const initialSection = MT_HASH_TO_SECTION[initialHash];
+    if (initialSection && window.menuApp) {
+        window.menuApp.showSection(initialSection);
+        _mtUpdateBrowserState(initialSection, false);
+    }
+});
 
 function closeDishModal() {
     window.menuApp?.closeDishModal();

@@ -1,0 +1,227 @@
+/* ============================================================
+   legal.css — Estilos compartidos por las páginas legales
+   (politica-datos.html, terminos.html). Diseño minimalista
+   coherente con la marca: crema, marrón, dorado.
+   ============================================================ */
+
+:root {
+    --legal-bg:         #FDFBF7;
+    --legal-surface:    #FFFFFF;
+    --legal-text:       #3D2E26;
+    --legal-text-soft:  #6B4C3B;
+    --legal-accent:     #C9A961;
+    --legal-border:     rgba(107, 76, 59, 0.12);
+    --legal-max-width:  760px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body.legal-page {
+    margin: 0;
+    background: var(--legal-bg);
+    color: var(--legal-text);
+    font-family: 'Causten', 'Outfit', 'Poppins', sans-serif;
+    font-weight: 300;
+    line-height: 1.75;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+
+/* --- Header --- */
+.legal-header {
+    background: #fff;
+    border-bottom: 1px solid var(--legal-border);
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+    background-color: rgba(255, 255, 255, 0.92);
+}
+
+.legal-logo {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.legal-logo img {
+    height: 56px;
+    width: auto;
+    display: block;
+}
+
+.legal-back {
+    color: var(--legal-text-soft);
+    text-decoration: none;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+    transition: color 0.2s ease, transform 0.25s ease;
+}
+
+.legal-back:hover,
+.legal-back:focus-visible {
+    color: var(--legal-accent);
+    transform: translateX(-3px);
+}
+
+
+/* --- Container --- */
+.legal-container {
+    max-width: var(--legal-max-width);
+    margin: 0 auto;
+    padding: 64px 32px 96px;
+}
+
+.legal-overtitle {
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--legal-accent);
+    margin: 0 0 14px;
+}
+
+.legal-container h1 {
+    font-family: 'Valerius', 'Playfair Display', serif;
+    font-size: clamp(2rem, 4.5vw, 2.8rem);
+    line-height: 1.15;
+    color: var(--legal-text);
+    margin: 0 0 12px;
+    letter-spacing: -0.005em;
+}
+
+.legal-updated {
+    color: var(--legal-text-soft);
+    font-size: 0.9rem;
+    font-style: italic;
+    margin: 0 0 48px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--legal-border);
+}
+
+
+/* --- Sections --- */
+.legal-container section {
+    margin: 0 0 40px;
+}
+
+.legal-container h2 {
+    font-family: 'Valerius', 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--legal-text);
+    margin: 0 0 16px;
+    letter-spacing: 0;
+}
+
+.legal-container p,
+.legal-container li {
+    color: var(--legal-text);
+    margin: 0 0 14px;
+}
+
+.legal-container ul {
+    padding-left: 22px;
+    margin: 0 0 18px;
+}
+
+.legal-container li {
+    margin-bottom: 10px;
+}
+
+.legal-container strong {
+    color: var(--legal-text);
+    font-weight: 500;
+}
+
+.legal-container a {
+    color: var(--legal-text-soft);
+    text-decoration: underline;
+    text-decoration-color: var(--legal-accent);
+    text-underline-offset: 3px;
+    transition: color 0.2s ease;
+}
+
+.legal-container a:hover,
+.legal-container a:focus-visible {
+    color: var(--legal-accent);
+}
+
+
+/* --- Footer --- */
+.legal-footer {
+    background: #2C1D14;
+    color: rgba(212, 196, 170, 0.85);
+    padding: 32px 24px;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+.legal-footer p {
+    margin: 6px 0;
+}
+
+.legal-footer a {
+    color: rgba(212, 196, 170, 0.95);
+    text-decoration: none;
+    margin: 0 6px;
+    transition: color 0.2s ease;
+}
+
+.legal-footer a:hover,
+.legal-footer a:focus-visible {
+    color: var(--legal-accent);
+}
+
+
+/* --- Focus accesible --- */
+.legal-page a:focus-visible,
+.legal-page button:focus-visible {
+    outline: 2px solid var(--legal-accent);
+    outline-offset: 3px;
+    border-radius: 3px;
+}
+
+
+/* --- Responsive --- */
+@media (max-width: 600px) {
+    .legal-header {
+        padding: 14px 18px;
+    }
+    .legal-logo img {
+        height: 44px;
+    }
+    .legal-back {
+        font-size: 0.85rem;
+    }
+    .legal-container {
+        padding: 40px 22px 64px;
+    }
+    body.legal-page {
+        font-size: 16px;
+    }
+}
+
+
+/* --- Reduced motion --- */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+    }
+}

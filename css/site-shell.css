@@ -1,0 +1,415 @@
+/* ============================================================
+   site-shell.css
+   ------------------------------------------------------------
+   Componentes transversales del sitio Mar&Tierra:
+     1. Sistema de z-index (tokens)
+     2. Botón flotante de WhatsApp
+     3. Footer semántico
+     4. Focus visible accesible
+     5. Reduced-motion global
+
+   Carga DESPUÉS de los archivos base y ANTES de custom-fonts.css.
+   ============================================================ */
+
+
+/* ------------------------------------------------------------
+   1. SISTEMA DE Z-INDEX
+   Tokens semánticos para evitar los z-index arbitrarios
+   (99999, 100000, etc.) repartidos por el proyecto.
+   ------------------------------------------------------------ */
+:root {
+    --z-base:        1;
+    --z-header:      900;
+    --z-overlay:     1000;
+    --z-modal:       1100;
+    --z-modal-top:   1200;   /* botones dentro del modal */
+    --z-toast:       1300;
+    --z-wa-float:    1400;   /* siempre por encima */
+    --z-skip-link:   9999;   /* máxima prioridad para a11y */
+}
+
+
+/* ------------------------------------------------------------
+   2. WHATSAPP FLOATING BUTTON
+   ------------------------------------------------------------ */
+.wa-float {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: var(--z-wa-float);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px 12px 12px;
+    background: #25D366;
+    color: #fff;
+    border-radius: 999px;
+    box-shadow:
+        0 8px 24px rgba(37, 211, 102, 0.35),
+        0 2px 6px rgba(0, 0, 0, 0.15);
+    text-decoration: none;
+    font-family: 'Causten', 'Outfit', 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.wa-float:hover,
+.wa-float:focus-visible {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow:
+        0 12px 30px rgba(37, 211, 102, 0.45),
+        0 4px 10px rgba(0, 0, 0, 0.2);
+    color: #fff;
+}
+
+.wa-float-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.wa-float-pulse {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: #25D366;
+    opacity: 0.55;
+    z-index: -1;
+    animation: waFloatPulse 2.4s ease-out infinite;
+    pointer-events: none;
+}
+
+.wa-float-label {
+    padding-right: 4px;
+    white-space: nowrap;
+}
+
+@keyframes waFloatPulse {
+    0%   { transform: scale(1);    opacity: 0.55; }
+    70%  { transform: scale(1.35); opacity: 0;    }
+    100% { transform: scale(1.35); opacity: 0;    }
+}
+
+/* Variante compacta en móvil — solo el icono */
+@media (max-width: 600px) {
+    .wa-float {
+        padding: 0;
+        width: 60px;
+        height: 60px;
+        justify-content: center;
+        right: 18px;
+        bottom: 18px;
+    }
+    .wa-float-icon {
+        background: transparent;
+    }
+    .wa-float-label {
+        display: none;
+    }
+}
+
+
+/* ------------------------------------------------------------
+   3. FOOTER SEMÁNTICO
+   ------------------------------------------------------------ */
+.site-footer {
+    background: linear-gradient(180deg, #2C1D14 0%, #1A0F08 100%);
+    color: #D4C4AA;
+    padding: 80px 0 0;
+    margin-top: 100px;
+    font-family: 'Causten', 'Outfit', 'Poppins', sans-serif;
+    position: relative;
+}
+
+.site-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--dorado-sutil, #C9A961), transparent);
+}
+
+.footer-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 32px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 56px;
+    padding-bottom: 56px;
+}
+
+.footer-brand .footer-logo {
+    display: block;
+    width: 200px;
+    height: auto;
+    margin-bottom: 20px;
+    filter: brightness(1.1);
+}
+
+.footer-tagline {
+    font-family: 'Valerius', 'Playfair Display', serif;
+    font-size: 1.05rem;
+    line-height: 1.55;
+    color: #E4D4A8;
+    margin: 0 0 24px;
+    font-style: italic;
+    letter-spacing: 0.01em;
+}
+
+.footer-social {
+    display: flex;
+    gap: 14px;
+}
+
+.footer-social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(201, 169, 97, 0.4);
+    border-radius: 50%;
+    color: #E4D4A8;
+    text-decoration: none;
+    transition: all 0.25s ease;
+}
+
+.footer-social a:hover,
+.footer-social a:focus-visible {
+    background: var(--dorado-sutil, #C9A961);
+    color: #2C1D14;
+    border-color: var(--dorado-sutil, #C9A961);
+    transform: translateY(-2px);
+}
+
+.footer-heading {
+    font-family: 'Valerius', 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #E4D4A8;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin: 0 0 22px;
+}
+
+.footer-heading::after {
+    content: '';
+    display: block;
+    width: 28px;
+    height: 1px;
+    margin-top: 10px;
+    background: var(--dorado-sutil, #C9A961);
+}
+
+.footer-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.footer-nav a {
+    color: #D4C4AA;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s ease, padding-left 0.25s ease;
+    display: inline-block;
+}
+
+.footer-nav a:hover,
+.footer-nav a:focus-visible {
+    color: #E4D4A8;
+    padding-left: 6px;
+}
+
+.footer-contact address {
+    font-style: normal;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: #D4C4AA;
+    margin: 0 0 16px;
+}
+
+.footer-phone a {
+    color: #E4D4A8;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.footer-phone a:hover,
+.footer-phone a:focus-visible {
+    color: var(--dorado-sutil, #C9A961);
+}
+
+.footer-hours dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px 16px;
+    font-size: 0.9rem;
+}
+
+.footer-hours dt {
+    color: #E4D4A8;
+    font-weight: 500;
+}
+
+.footer-hours dd {
+    margin: 0;
+    color: #D4C4AA;
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(201, 169, 97, 0.18);
+    padding: 24px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    text-align: center;
+    font-size: 0.82rem;
+    color: rgba(212, 196, 170, 0.7);
+}
+
+.footer-bottom a {
+    color: rgba(212, 196, 170, 0.85);
+    text-decoration: none;
+    margin: 0 6px;
+    transition: color 0.2s ease;
+}
+
+.footer-bottom a:hover,
+.footer-bottom a:focus-visible {
+    color: var(--dorado-sutil, #C9A961);
+}
+
+.footer-copy {
+    margin: 0;
+}
+
+.footer-legal {
+    margin: 0;
+}
+
+/* Responsive footer */
+@media (max-width: 960px) {
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+    }
+}
+
+@media (max-width: 600px) {
+    .site-footer {
+        padding-top: 56px;
+    }
+    .footer-container {
+        padding: 0 22px;
+    }
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 36px;
+        padding-bottom: 36px;
+        text-align: left;
+    }
+    .footer-brand .footer-logo {
+        width: 160px;
+    }
+}
+
+
+/* ------------------------------------------------------------
+   4. FOCUS VISIBLE — accesibilidad consistente
+   Aplica un anillo dorado a TODO lo interactivo cuando el
+   usuario navega con teclado. No interfiere con click de mouse
+   gracias a :focus-visible.
+   ------------------------------------------------------------ */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible,
+.category-card:focus-visible,
+.espacio-card:focus-visible,
+.decoration-plan-card:focus-visible,
+.reservation-type-card:focus-visible,
+.menu-item:focus-visible,
+.nav-link:focus-visible {
+    outline: 2px solid var(--dorado-sutil, #C9A961);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Skip link visible al recibir foco */
+.skip-link:focus {
+    z-index: var(--z-skip-link);
+}
+
+
+/* ------------------------------------------------------------
+   5. CLASE UTILITARIA — solo lectores de pantalla
+   ------------------------------------------------------------ */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+
+/* ------------------------------------------------------------
+   6. PREFERS-REDUCED-MOTION (GLOBAL)
+   Respeta a usuarios con mareo vestibular o que prefieren
+   menos movimiento. Desactiva todas las animaciones,
+   transiciones y scroll-behavior suave.
+   ------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .wa-float-pulse,
+    .pulse-ring,
+    .pulse-ring-2 {
+        animation: none !important;
+        display: none !important;
+    }
+
+    [data-aos] {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    html {
+        scroll-behavior: auto !important;
+    }
+}

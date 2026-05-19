@@ -288,14 +288,12 @@ if ('IntersectionObserver' in window) {
 function switchToExternalImages(baseURL = '') {
     imageConfig.useExternalURLs = true;
     imageConfig.externalBaseURL = baseURL;
-    console.log('Cambiado a imágenes externas. Base URL:', baseURL);
 }
 
 // FUNCIÓN DE UTILIDAD: Actualizar URLs externas para un espacio específico
 function updateExternalImages(espacioKey, urls) {
     if (imageConfig.externalImages[espacioKey]) {
         imageConfig.externalImages[espacioKey] = urls;
-        console.log(`URLs actualizadas para ${espacioKey}:`, urls);
     }
 }
 
