@@ -632,126 +632,107 @@
     </section>
 
     <!-- ============================================================
-         SECCIÓN TESTIMONIOS — reseñas reales (placeholders)
+         SECCIÓN "LA EXPERIENCIA MAR&TIERRA"
+         ------------------------------------------------------------
+         Esta sección presenta los pilares de la propuesta de marca,
+         no testimonios. Es 100% honesta porque NO atribuye frases
+         a personas concretas.
 
-         IMPORTANTE: reemplaza estos 4 testimonios con reseñas REALES
-         de tus clientes (Google Maps, Instagram, formulario).
-         Cuando tengas un mínimo de 5 reseñas reales con calificación,
-         puedes habilitar el aggregateRating en el JSON-LD del head
-         (busca el comentario "TODO aggregateRating").
+         CUANDO TENGAS RESEÑAS REALES DE CLIENTES (Google Maps,
+         Instagram), reemplaza estos 4 bloques por testimonios
+         con autor real. La estructura visual (.experience-card)
+         se reutiliza fácilmente: sólo cambias el texto interno
+         y añades atribución al final. Cuando reúnas 5+ reseñas
+         con calificación, activa también el aggregateRating en
+         el JSON-LD del head (busca el comentario "TODO aggregateRating").
          ============================================================ -->
     <section class="testimonials-section" id="testimonios">
         <div class="section-header" data-aos="fade-up">
-            <p class="section-overtitle">Voces que nos eligieron</p>
-            <h2 class="section-title">Testimonios</h2>
+            <p class="section-overtitle">La experiencia</p>
+            <h2 class="section-title">Cuatro pilares, una promesa</h2>
             <div class="ornament">
                 <div class="ornament-line"></div>
                 <div class="ornament-center"></div>
                 <div class="ornament-line"></div>
             </div>
             <p class="section-description">
-                Lo que comparten quienes han vivido la experiencia Mar&amp;Tierra.
+                Lo que define cada visita a Mar&amp;Tierra — más allá del plato.
             </p>
         </div>
 
         <div class="testimonials-grid">
 
-            <!-- Testimonio 1 -->
-            <article class="testimonial-card" itemscope itemtype="https://schema.org/Review">
-                <meta itemprop="itemReviewed" content="Mar&Tierra Restaurant">
-                <div class="testimonial-rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating" aria-label="5 de 5 estrellas">
-                    <meta itemprop="ratingValue" content="5">
-                    <meta itemprop="bestRating" content="5">
-                    <span aria-hidden="true">★★★★★</span>
+            <!-- Pilar 1 — Cocina -->
+            <article class="experience-card">
+                <div class="experience-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M6 2v6a3 3 0 0 0 6 0V2"/>
+                        <path d="M18 2v14"/>
+                        <circle cx="18" cy="18" r="2.5"/>
+                    </svg>
                 </div>
-                <blockquote class="testimonial-text" itemprop="reviewBody">
-                    "Una experiencia que combina cocina de altura con un ambiente cálido y elegante.
-                    El servicio se nota cuidado, los sabores son auténticos y cada detalle —desde la
-                    decoración hasta la presentación— transmite que este es un lugar pensado para ocasiones
-                    que importan."
-                </blockquote>
-                <footer class="testimonial-author">
-                    <div class="testimonial-avatar" aria-hidden="true">M</div>
-                    <div class="testimonial-meta">
-                        <cite itemprop="author">Cliente verificado</cite>
-                        <span class="testimonial-source">Reseña Google · Bucaramanga</span>
-                    </div>
-                </footer>
+                <h3 class="experience-title">Cocina de autor</h3>
+                <p class="experience-text">
+                    Cada plato nace del diálogo entre el mar y la tierra. Ingredientes seleccionados,
+                    técnicas cuidadas y un respeto profundo por el producto que se traduce en sabores
+                    auténticos.
+                </p>
             </article>
 
-            <!-- Testimonio 2 -->
-            <article class="testimonial-card" itemscope itemtype="https://schema.org/Review">
-                <meta itemprop="itemReviewed" content="Mar&Tierra Restaurant">
-                <div class="testimonial-rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating" aria-label="5 de 5 estrellas">
-                    <meta itemprop="ratingValue" content="5">
-                    <meta itemprop="bestRating" content="5">
-                    <span aria-hidden="true">★★★★★</span>
+            <!-- Pilar 2 — Servicio -->
+            <article class="experience-card">
+                <div class="experience-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
                 </div>
-                <blockquote class="testimonial-text" itemprop="reviewBody">
-                    "Celebramos un aniversario en el Salón Gold y todo salió impecable.
-                    La atención del equipo, la decoración personalizada y la calidad de los platos
-                    convirtieron la velada en un recuerdo inolvidable. Volveremos sin dudarlo."
-                </blockquote>
-                <footer class="testimonial-author">
-                    <div class="testimonial-avatar" aria-hidden="true">A</div>
-                    <div class="testimonial-meta">
-                        <cite itemprop="author">Pareja anfitriona</cite>
-                        <span class="testimonial-source">Evento privado · Salón Golden</span>
-                    </div>
-                </footer>
+                <h3 class="experience-title">Servicio personalizado</h3>
+                <p class="experience-text">
+                    Un equipo entrenado para anticipar lo que cada mesa necesita. La diferencia entre
+                    cenar bien y vivir una experiencia memorable está en los detalles invisibles que
+                    cuidamos por ti.
+                </p>
             </article>
 
-            <!-- Testimonio 3 -->
-            <article class="testimonial-card" itemscope itemtype="https://schema.org/Review">
-                <meta itemprop="itemReviewed" content="Mar&Tierra Restaurant">
-                <div class="testimonial-rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating" aria-label="5 de 5 estrellas">
-                    <meta itemprop="ratingValue" content="5">
-                    <meta itemprop="bestRating" content="5">
-                    <span aria-hidden="true">★★★★★</span>
+            <!-- Pilar 3 — Espacios -->
+            <article class="experience-card">
+                <div class="experience-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
                 </div>
-                <blockquote class="testimonial-text" itemprop="reviewBody">
-                    "El ceviche y los cortes son de otro nivel. Se nota el respeto por el producto y la
-                    técnica detrás de cada plato. Bucaramanga necesitaba un restaurante con esta propuesta —
-                    Mar&amp;Tierra eleva el estándar de la ciudad."
-                </blockquote>
-                <footer class="testimonial-author">
-                    <div class="testimonial-avatar" aria-hidden="true">J</div>
-                    <div class="testimonial-meta">
-                        <cite itemprop="author">Comensal habitual</cite>
-                        <span class="testimonial-source">Reseña Instagram</span>
-                    </div>
-                </footer>
+                <h3 class="experience-title">Espacios únicos</h3>
+                <p class="experience-text">
+                    Seis ambientes pensados para distintas ocasiones — desde la elegancia ejecutiva
+                    de Almaterra hasta la calidez al aire libre de Chillout. Tú eliges el escenario
+                    de tu velada.
+                </p>
             </article>
 
-            <!-- Testimonio 4 -->
-            <article class="testimonial-card" itemscope itemtype="https://schema.org/Review">
-                <meta itemprop="itemReviewed" content="Mar&Tierra Restaurant">
-                <div class="testimonial-rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating" aria-label="5 de 5 estrellas">
-                    <meta itemprop="ratingValue" content="5">
-                    <meta itemprop="bestRating" content="5">
-                    <span aria-hidden="true">★★★★★</span>
+            <!-- Pilar 4 — Celebraciones -->
+            <article class="experience-card">
+                <div class="experience-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 2L9.91 8.26L3 9.27l5 4.87L6.82 21L12 17.77L17.18 21L16 14.14l5-4.87l-6.91-1.01L12 2z"/>
+                    </svg>
                 </div>
-                <blockquote class="testimonial-text" itemprop="reviewBody">
-                    "Reservamos el Chillout para una cena con amigos y mascotas — algo poco común en
-                    Bucaramanga. Cocteles bien preparados, tapas creativas, terraza acogedora.
-                    Una propuesta única que combina lo mejor de la noche con un toque relajado."
-                </blockquote>
-                <footer class="testimonial-author">
-                    <div class="testimonial-avatar" aria-hidden="true">L</div>
-                    <div class="testimonial-meta">
-                        <cite itemprop="author">Grupo de amigos</cite>
-                        <span class="testimonial-source">Terraza Chillout · pet friendly</span>
-                    </div>
-                </footer>
+                <h3 class="experience-title">Detalles para celebrar</h3>
+                <p class="experience-text">
+                    Planes de decoración, salones privados y atención especial para que cada
+                    aniversario, cumpleaños o evento corporativo se convierta en un recuerdo que
+                    valga la pena guardar.
+                </p>
             </article>
 
         </div>
 
         <p class="testimonials-cta">
-            ¿Ya nos visitaste?
+            ¿Ya viviste la experiencia?
             <a href="https://search.google.com/local/writereview?placeid=ChIJFXIoYAA_aI4Ru0sKzJp5gRM"
                target="_blank" rel="noopener noreferrer">
-                Comparte tu experiencia en Google
+                Comparte tu reseña en Google
             </a>
         </p>
     </section>

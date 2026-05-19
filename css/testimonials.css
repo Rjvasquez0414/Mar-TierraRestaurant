@@ -162,13 +162,90 @@
 }
 
 
+/* ============================================================
+   .experience-card — Pilares de experiencia (no testimonios)
+   Usado mientras no hay reseñas reales. Reemplazar por
+   .testimonial-card cuando lleguen reseñas con atribución real.
+   ============================================================ */
+.experience-card {
+    position: relative;
+    background: #fff;
+    border: 1px solid rgba(201, 169, 97, 0.18);
+    border-radius: 14px;
+    padding: 36px 28px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 4px 18px rgba(74, 52, 41, 0.06);
+    transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1),
+                box-shadow 0.35s ease,
+                border-color 0.35s ease;
+}
+
+.experience-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(74, 52, 41, 0.12);
+    border-color: rgba(201, 169, 97, 0.55);
+}
+
+.experience-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--dorado-brillante, #E4D4A8), var(--dorado-sutil, #C9A961));
+    color: var(--marron-oscuro, #4A3429);
+    margin-bottom: 20px;
+    box-shadow: 0 6px 18px rgba(201, 169, 97, 0.28);
+}
+
+.experience-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+.experience-title {
+    font-family: 'Valerius', 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--marron-oscuro, #4A3429);
+    margin: 0 0 14px;
+    letter-spacing: 0.01em;
+}
+
+.experience-text {
+    font-family: 'Causten', 'Outfit', 'Poppins', sans-serif;
+    font-weight: 300;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--marron-elegante, #6B4C3B);
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .experience-card {
+        padding: 30px 22px 26px;
+    }
+    .experience-title {
+        font-size: 1.15rem;
+    }
+    .experience-text {
+        font-size: 0.96rem;
+    }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
     .testimonial-card,
-    .testimonials-cta a {
+    .testimonials-cta a,
+    .experience-card {
         transition: none !important;
     }
-    .testimonial-card:hover {
+    .testimonial-card:hover,
+    .experience-card:hover {
         transform: none;
     }
 }
