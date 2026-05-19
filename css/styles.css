@@ -9,8 +9,13 @@
     --crema-premium: #D4C4AA;
     --marron-elegante: #6B4C3B;
     --marron-oscuro: #4A3429;
-    --dorado-sutil: #C9A961;
-    --dorado-brillante: #E4D4A8;
+
+    /* Escala de dorados: del más sutil al más oscuro */
+    --dorado-brillante: #E4D4A8;   /* highlight, glints */
+    --dorado-sutil:     #C9A961;   /* color de marca, acentos */
+    --dorado-premium:   #D4AF37;   /* dorado intenso para CTAs y selecciones */
+    --dorado-oscuro:    #B8941F;   /* hover/active state del premium */
+
     --blanco-perla: #FDFBF7;
     --beige-claro: #F5EFE6;
     --negro-carbon: #1A1A1A;

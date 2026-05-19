@@ -1,0 +1,174 @@
+/* ============================================================
+   testimonials.css
+   ------------------------------------------------------------
+   Sección de testimonios — cards elegantes en grid responsive.
+   Diseño coherente con la marca (crema/dorado).
+   ============================================================ */
+
+.testimonials-section {
+    padding: 100px 32px 120px;
+    background:
+        radial-gradient(ellipse at top, rgba(201, 169, 97, 0.06) 0%, transparent 60%),
+        var(--blanco-perla);
+    position: relative;
+}
+
+.testimonials-section .section-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.testimonials-grid {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 28px;
+    align-items: stretch;
+}
+
+.testimonial-card {
+    position: relative;
+    background: #fff;
+    border: 1px solid rgba(201, 169, 97, 0.18);
+    border-radius: 14px;
+    padding: 38px 30px 30px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 18px rgba(74, 52, 41, 0.06);
+    transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1),
+                box-shadow 0.35s ease,
+                border-color 0.35s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(74, 52, 41, 0.12);
+    border-color: rgba(201, 169, 97, 0.45);
+}
+
+/* Comilla decorativa */
+.testimonial-card::before {
+    content: '“';
+    position: absolute;
+    top: 6px;
+    left: 18px;
+    font-family: 'Valerius', 'Playfair Display', serif;
+    font-size: 6rem;
+    line-height: 1;
+    color: rgba(201, 169, 97, 0.18);
+    pointer-events: none;
+}
+
+.testimonial-rating {
+    color: var(--dorado-premium, #D4AF37);
+    font-size: 1.05rem;
+    letter-spacing: 0.15em;
+    margin-bottom: 18px;
+    line-height: 1;
+}
+
+.testimonial-text {
+    font-family: 'Causten', 'Outfit', 'Poppins', sans-serif;
+    font-weight: 300;
+    font-size: 1.02rem;
+    line-height: 1.75;
+    color: var(--marron-elegante);
+    margin: 0 0 28px;
+    flex: 1;
+    font-style: italic;
+    quotes: '“' '”';
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(107, 76, 59, 0.1);
+}
+
+.testimonial-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--dorado-brillante), var(--dorado-sutil));
+    color: var(--marron-oscuro);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Valerius', 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 500;
+    flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(201, 169, 97, 0.3);
+}
+
+.testimonial-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.testimonial-meta cite {
+    font-family: 'Valerius', 'Playfair Display', serif;
+    font-style: normal;
+    font-size: 1rem;
+    color: var(--marron-oscuro);
+    letter-spacing: 0.01em;
+}
+
+.testimonial-source {
+    font-size: 0.78rem;
+    color: var(--gris-elegante);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.testimonials-cta {
+    text-align: center;
+    margin: 56px 0 0;
+    font-family: 'Causten', 'Outfit', 'Poppins', sans-serif;
+    color: var(--marron-elegante);
+    font-size: 1rem;
+}
+
+.testimonials-cta a {
+    color: var(--dorado-premium, #D4AF37);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 2px;
+    margin-left: 6px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.testimonials-cta a:hover,
+.testimonials-cta a:focus-visible {
+    color: var(--dorado-oscuro, #B8941F);
+    border-color: var(--dorado-oscuro, #B8941F);
+}
+
+
+@media (max-width: 600px) {
+    .testimonials-section {
+        padding: 70px 22px 90px;
+    }
+    .testimonial-card {
+        padding: 32px 24px 26px;
+    }
+    .testimonial-text {
+        font-size: 0.98rem;
+    }
+}
+
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .testimonial-card,
+    .testimonials-cta a {
+        transition: none !important;
+    }
+    .testimonial-card:hover {
+        transform: none;
+    }
+}

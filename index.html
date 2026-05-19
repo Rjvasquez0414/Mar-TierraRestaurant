@@ -73,8 +73,10 @@
     <link rel="stylesheet" href="css/modal-premium.css">
     <link rel="stylesheet" href="css/planes-decoracion.css">
     <link rel="stylesheet" href="css/enhancements.css">
-    <link rel="stylesheet" href="css/reservas-fix.css">
+    <link rel="stylesheet" href="css/reservations.css">
     <link rel="stylesheet" href="css/site-shell.css">
+    <link rel="stylesheet" href="css/gallery.css">
+    <link rel="stylesheet" href="css/testimonials.css">
 
     <!-- Tipografías Personalizadas - DEBE CARGAR AL FINAL -->
     <link rel="stylesheet" href="css/custom-fonts.css">
@@ -128,6 +130,22 @@
       ]
     }
     </script>
+    <!--
+        TODO aggregateRating:
+        Cuando tengas mínimo 5 reseñas REALES con calificación,
+        añade dentro del JSON-LD anterior (después de "amenityFeature"):
+
+        ,"aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.8",        // promedio real
+          "reviewCount": "127",        // número real
+          "bestRating": "5",
+          "worstRating": "1"
+        }
+
+        NO inventes números: Google penaliza ratings falsos
+        y puede des-indexar el sitio si lo detecta.
+    -->
 </head>
 <body>
     <!-- Skip Link para Accesibilidad -->
@@ -160,6 +178,7 @@
                 <a href="#hero" class="nav-link active" onclick="showSection('hero'); return false;">Inicio</a>
                 <a href="#categories" class="nav-link" onclick="showSection('categories'); return false;">Menú</a>
                 <a href="#instalaciones" class="nav-link" onclick="showSection('instalaciones'); return false;">Instalaciones</a>
+                <a href="#galeria" class="nav-link" onclick="showSection('galeria'); return false;">Galería</a>
                 <a href="#reservation-info" class="nav-link" onclick="showSection('reservation-info'); return false;">Reservas</a>
                 <a href="#contact" class="nav-link" onclick="showSection('contact'); return false;">Contacto</a>
                 <button type="button" class="reservation-btn" onclick="reservarPorWhatsApp('mesa')" aria-label="Reservar mesa por WhatsApp">
@@ -464,6 +483,297 @@
                 <p id="espacioModalDescription" class="espacio-modal-description"></p>
             </div>
         </div>
+    </div>
+
+    <!-- ============================================================
+         SECCIÓN GALERÍA — momentos y ambientes del restaurante
+         ============================================================ -->
+    <section class="gallery-section" id="galeria">
+        <div class="section-header" data-aos="fade-up">
+            <p class="section-overtitle">Atmósfera & Detalle</p>
+            <h2 class="section-title">Galería</h2>
+            <div class="ornament">
+                <div class="ornament-line"></div>
+                <div class="ornament-center"></div>
+                <div class="ornament-line"></div>
+            </div>
+            <p class="section-description">
+                Cada rincón de Mar&amp;Tierra tiene una historia.
+                Recorre los ambientes que hemos cuidado para ti.
+            </p>
+        </div>
+
+        <div class="gallery-masonry" id="galleryMasonry">
+            <!-- Almaterra -->
+            <figure class="gallery-item gallery-tall" data-gallery-index="0">
+                <button type="button" class="gallery-trigger" aria-label="Abrir foto de Almaterra">
+                    <img src="images/EspaciosRestaurante/almaterra/_MG_8912.webp"
+                         alt="Almaterra — coworking elegante con luz natural"
+                         loading="lazy" decoding="async" width="800" height="1067">
+                </button>
+                <figcaption>Almaterra</figcaption>
+            </figure>
+
+            <!-- Arca -->
+            <figure class="gallery-item" data-gallery-index="1">
+                <button type="button" class="gallery-trigger" aria-label="Abrir foto del Salón Arca">
+                    <img src="images/EspaciosRestaurante/arca/_MG_8945.webp"
+                         alt="Arca — salón principal con mesas dispuestas para servicio"
+                         loading="lazy" decoding="async" width="800" height="600">
+                </button>
+                <figcaption>Arca · Salón principal</figcaption>
+            </figure>
+
+            <!-- Barco -->
+            <figure class="gallery-item gallery-wide" data-gallery-index="2">
+                <button type="button" class="gallery-trigger" aria-label="Abrir foto del salón Barco">
+                    <img src="images/EspaciosRestaurante/barco/_MG_8908.webp"
+                         alt="Barco — salón temático náutico"
+                         loading="lazy" decoding="async" width="1200" height="675">
+                </button>
+                <figcaption>Barco · Experiencia náutica</figcaption>
+            </figure>
+
+            <!-- Arca foto 2 -->
+            <figure class="gallery-item" data-gallery-index="3">
+                <button type="button" class="gallery-trigger" aria-label="Abrir foto del Arca">
+                    <img src="images/EspaciosRestaurante/arca/_MG_8885.webp"
+                         alt="Detalle interior del Arca"
+                         loading="lazy" decoding="async" width="800" height="600">
+                </button>
+                <figcaption>Arca · Detalle</figcaption>
+            </figure>
+
+            <!-- Chillout -->
+            <figure class="gallery-item gallery-tall" data-gallery-index="4">
+                <button type="button" class="gallery-trigger" aria-label="Abrir foto del Chillout">
+                    <img src="images/EspaciosRestaurante/Chillout/_MG_9344.webp"
+                         alt="Chillout — terraza al aire libre pet friendly"
+                         loading="lazy" decoding="async" width="800" height="1067">
+                </button>
+                <figcaption>Chillout · Pet friendly</figcaption>
+            </figure>
+
+            <!-- Rooftop / Moon Terraza -->
+            <figure class="gallery-item" data-gallery-index="5">
+                <button type="button" class="gallery-trigger" aria-label="Abrir foto de Moon Terraza">
+                    <img src="images/EspaciosRestaurante/rooftop/_MG_9320.webp"
+                         alt="Moon Terraza — rooftop con vista nocturna"
+                         loading="lazy" decoding="async" width="800" height="600">
+                </button>
+                <figcaption>Moon Terraza · Rooftop</figcaption>
+            </figure>
+
+            <!-- Salón VIP / Golden -->
+            <figure class="gallery-item" data-gallery-index="6">
+                <button type="button" class="gallery-trigger" aria-label="Abrir foto del Salón VIP">
+                    <img src="images/EspaciosRestaurante/SalonVIP/_MG_8865.webp"
+                         alt="Salón VIP Golden — atmósfera privada"
+                         loading="lazy" decoding="async" width="800" height="600">
+                </button>
+                <figcaption>Golden · Salón VIP</figcaption>
+            </figure>
+
+            <!-- Arca foto 3 -->
+            <figure class="gallery-item gallery-wide" data-gallery-index="7">
+                <button type="button" class="gallery-trigger" aria-label="Abrir foto panorámica del Arca">
+                    <img src="images/EspaciosRestaurante/arca/_MG_8967.webp"
+                         alt="Vista panorámica del salón Arca"
+                         loading="lazy" decoding="async" width="1200" height="675">
+                </button>
+                <figcaption>Arca · Panorámica</figcaption>
+            </figure>
+
+            <!-- Almaterra 2 -->
+            <figure class="gallery-item" data-gallery-index="8">
+                <button type="button" class="gallery-trigger" aria-label="Abrir foto de Almaterra">
+                    <img src="images/EspaciosRestaurante/almaterra/_MG_8993.webp"
+                         alt="Almaterra — ambiente ejecutivo"
+                         loading="lazy" decoding="async" width="800" height="600">
+                </button>
+                <figcaption>Almaterra · Detalle</figcaption>
+            </figure>
+
+            <!-- Rooftop 2 -->
+            <figure class="gallery-item gallery-tall" data-gallery-index="9">
+                <button type="button" class="gallery-trigger" aria-label="Abrir foto del rooftop">
+                    <img src="images/EspaciosRestaurante/rooftop/_MG_9326.webp"
+                         alt="Rooftop con iluminación cálida al atardecer"
+                         loading="lazy" decoding="async" width="800" height="1067">
+                </button>
+                <figcaption>Moon Terraza · Atardecer</figcaption>
+            </figure>
+
+            <!-- Chillout 2 -->
+            <figure class="gallery-item" data-gallery-index="10">
+                <button type="button" class="gallery-trigger" aria-label="Abrir foto del Chillout">
+                    <img src="images/EspaciosRestaurante/Chillout/_MG_9346.webp"
+                         alt="Chillout — cocktail bar al aire libre"
+                         loading="lazy" decoding="async" width="800" height="600">
+                </button>
+                <figcaption>Chillout · Cocktail bar</figcaption>
+            </figure>
+
+            <!-- Salón VIP 2 -->
+            <figure class="gallery-item" data-gallery-index="11">
+                <button type="button" class="gallery-trigger" aria-label="Abrir foto del Salón VIP">
+                    <img src="images/EspaciosRestaurante/SalonVIP/_MG_8871.webp"
+                         alt="Golden — mesa privada del salón VIP"
+                         loading="lazy" decoding="async" width="800" height="600">
+                </button>
+                <figcaption>Golden · Mesa privada</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         SECCIÓN TESTIMONIOS — reseñas reales (placeholders)
+
+         IMPORTANTE: reemplaza estos 4 testimonios con reseñas REALES
+         de tus clientes (Google Maps, Instagram, formulario).
+         Cuando tengas un mínimo de 5 reseñas reales con calificación,
+         puedes habilitar el aggregateRating en el JSON-LD del head
+         (busca el comentario "TODO aggregateRating").
+         ============================================================ -->
+    <section class="testimonials-section" id="testimonios">
+        <div class="section-header" data-aos="fade-up">
+            <p class="section-overtitle">Voces que nos eligieron</p>
+            <h2 class="section-title">Testimonios</h2>
+            <div class="ornament">
+                <div class="ornament-line"></div>
+                <div class="ornament-center"></div>
+                <div class="ornament-line"></div>
+            </div>
+            <p class="section-description">
+                Lo que comparten quienes han vivido la experiencia Mar&amp;Tierra.
+            </p>
+        </div>
+
+        <div class="testimonials-grid">
+
+            <!-- Testimonio 1 -->
+            <article class="testimonial-card" itemscope itemtype="https://schema.org/Review">
+                <meta itemprop="itemReviewed" content="Mar&Tierra Restaurant">
+                <div class="testimonial-rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating" aria-label="5 de 5 estrellas">
+                    <meta itemprop="ratingValue" content="5">
+                    <meta itemprop="bestRating" content="5">
+                    <span aria-hidden="true">★★★★★</span>
+                </div>
+                <blockquote class="testimonial-text" itemprop="reviewBody">
+                    "Una experiencia que combina cocina de altura con un ambiente cálido y elegante.
+                    El servicio se nota cuidado, los sabores son auténticos y cada detalle —desde la
+                    decoración hasta la presentación— transmite que este es un lugar pensado para ocasiones
+                    que importan."
+                </blockquote>
+                <footer class="testimonial-author">
+                    <div class="testimonial-avatar" aria-hidden="true">M</div>
+                    <div class="testimonial-meta">
+                        <cite itemprop="author">Cliente verificado</cite>
+                        <span class="testimonial-source">Reseña Google · Bucaramanga</span>
+                    </div>
+                </footer>
+            </article>
+
+            <!-- Testimonio 2 -->
+            <article class="testimonial-card" itemscope itemtype="https://schema.org/Review">
+                <meta itemprop="itemReviewed" content="Mar&Tierra Restaurant">
+                <div class="testimonial-rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating" aria-label="5 de 5 estrellas">
+                    <meta itemprop="ratingValue" content="5">
+                    <meta itemprop="bestRating" content="5">
+                    <span aria-hidden="true">★★★★★</span>
+                </div>
+                <blockquote class="testimonial-text" itemprop="reviewBody">
+                    "Celebramos un aniversario en el Salón Gold y todo salió impecable.
+                    La atención del equipo, la decoración personalizada y la calidad de los platos
+                    convirtieron la velada en un recuerdo inolvidable. Volveremos sin dudarlo."
+                </blockquote>
+                <footer class="testimonial-author">
+                    <div class="testimonial-avatar" aria-hidden="true">A</div>
+                    <div class="testimonial-meta">
+                        <cite itemprop="author">Pareja anfitriona</cite>
+                        <span class="testimonial-source">Evento privado · Salón Golden</span>
+                    </div>
+                </footer>
+            </article>
+
+            <!-- Testimonio 3 -->
+            <article class="testimonial-card" itemscope itemtype="https://schema.org/Review">
+                <meta itemprop="itemReviewed" content="Mar&Tierra Restaurant">
+                <div class="testimonial-rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating" aria-label="5 de 5 estrellas">
+                    <meta itemprop="ratingValue" content="5">
+                    <meta itemprop="bestRating" content="5">
+                    <span aria-hidden="true">★★★★★</span>
+                </div>
+                <blockquote class="testimonial-text" itemprop="reviewBody">
+                    "El ceviche y los cortes son de otro nivel. Se nota el respeto por el producto y la
+                    técnica detrás de cada plato. Bucaramanga necesitaba un restaurante con esta propuesta —
+                    Mar&amp;Tierra eleva el estándar de la ciudad."
+                </blockquote>
+                <footer class="testimonial-author">
+                    <div class="testimonial-avatar" aria-hidden="true">J</div>
+                    <div class="testimonial-meta">
+                        <cite itemprop="author">Comensal habitual</cite>
+                        <span class="testimonial-source">Reseña Instagram</span>
+                    </div>
+                </footer>
+            </article>
+
+            <!-- Testimonio 4 -->
+            <article class="testimonial-card" itemscope itemtype="https://schema.org/Review">
+                <meta itemprop="itemReviewed" content="Mar&Tierra Restaurant">
+                <div class="testimonial-rating" itemprop="reviewRating" itemscope itemtype="https://schema.org/Rating" aria-label="5 de 5 estrellas">
+                    <meta itemprop="ratingValue" content="5">
+                    <meta itemprop="bestRating" content="5">
+                    <span aria-hidden="true">★★★★★</span>
+                </div>
+                <blockquote class="testimonial-text" itemprop="reviewBody">
+                    "Reservamos el Chillout para una cena con amigos y mascotas — algo poco común en
+                    Bucaramanga. Cocteles bien preparados, tapas creativas, terraza acogedora.
+                    Una propuesta única que combina lo mejor de la noche con un toque relajado."
+                </blockquote>
+                <footer class="testimonial-author">
+                    <div class="testimonial-avatar" aria-hidden="true">L</div>
+                    <div class="testimonial-meta">
+                        <cite itemprop="author">Grupo de amigos</cite>
+                        <span class="testimonial-source">Terraza Chillout · pet friendly</span>
+                    </div>
+                </footer>
+            </article>
+
+        </div>
+
+        <p class="testimonials-cta">
+            ¿Ya nos visitaste?
+            <a href="https://search.google.com/local/writereview?placeid=PLACEHOLDER_GOOGLE_PLACE_ID"
+               target="_blank" rel="noopener noreferrer">
+                Comparte tu experiencia en Google
+            </a>
+        </p>
+    </section>
+
+    <!-- Lightbox para la galería -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Galería de fotos" hidden>
+        <button type="button" class="lightbox-close" aria-label="Cerrar galería">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+        <button type="button" class="lightbox-prev" aria-label="Foto anterior">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M15 18l-6-6 6-6"/>
+            </svg>
+        </button>
+        <button type="button" class="lightbox-next" aria-label="Foto siguiente">
+            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M9 18l6-6-6-6"/>
+            </svg>
+        </button>
+        <figure class="lightbox-figure">
+            <img class="lightbox-image" src="" alt="" decoding="async">
+            <figcaption class="lightbox-caption"></figcaption>
+        </figure>
+        <div class="lightbox-counter" aria-live="polite"></div>
     </div>
 
     <!-- Sección de Información de Reservas (Vista Separada) -->
@@ -1831,5 +2141,8 @@
 
     <!-- Script de Mejoras Profesionales -->
     <script src="js/enhancements.js" defer></script>
+
+    <!-- Lightbox de la galería -->
+    <script src="js/gallery.js" defer></script>
 </body>
 </html>

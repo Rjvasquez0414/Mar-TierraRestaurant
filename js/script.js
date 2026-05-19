@@ -451,7 +451,7 @@ class MenuApp {
     // Navigation functionality
     showSection(sectionId) {
         // Get all sections
-        const allSections = document.querySelectorAll('.hero, .categories-section, .menu-section, .contact-section, .reservation-info-section, .instalaciones-section');
+        const allSections = document.querySelectorAll('.hero, .categories-section, .menu-section, .contact-section, .reservation-info-section, .instalaciones-section, .gallery-section, .testimonials-section');
 
         // Hide all sections first
         allSections.forEach(section => {
@@ -511,8 +511,9 @@ class MenuApp {
             'arroces': 1,
             'bebidas': 1,
             'instalaciones': 2,
-            'reservation-info': 3,
-            'contact': 4
+            'galeria': 3,
+            'reservation-info': 4,
+            'contact': 5
         };
 
         const navIndex = navLinkMap[sectionId];
@@ -825,6 +826,8 @@ const MT_SECTION_META = {
     'hero':              { hash: '',                  title: 'Mar&Tierra Restaurant | Cocina de Autor en Bucaramanga' },
     'categories':        { hash: '#menu',             title: 'Menú | Mar&Tierra Restaurant' },
     'instalaciones':     { hash: '#instalaciones',    title: 'Instalaciones | Mar&Tierra Restaurant' },
+    'galeria':           { hash: '#galeria',          title: 'Galería | Mar&Tierra Restaurant' },
+    'testimonios':       { hash: '#testimonios',      title: 'Testimonios | Mar&Tierra Restaurant' },
     'reservation-info':  { hash: '#reservas',         title: 'Reservas | Mar&Tierra Restaurant' },
     'contact':           { hash: '#contacto',         title: 'Contacto | Mar&Tierra Restaurant' },
     'compartir':         { hash: '#menu/compartir',   title: 'Para Compartir | Mar&Tierra' },
