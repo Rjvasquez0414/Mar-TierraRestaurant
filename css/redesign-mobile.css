@@ -1,0 +1,1059 @@
+/* =====================================================================
+   REDESIGN-MOBILE.CSS — Mar & Tierra · Mobile Premium Pass
+   ---------------------------------------------------------------------
+   Capa de premium mobile que se carga DESPUÉS de mobile.css.
+   Objetivo: que mobile no se sienta "responsive shrink" sino una
+   experiencia editorial diseñada específicamente para una pantalla
+   pequeña sostenida en la mano.
+
+   Cubre:
+     1. Mobile nav drawer: editorial fullscreen oscuro con serif
+     2. Hero polish + scroll cue elegante
+     3. Menu cards: alturas premium + números visibles sin clip
+     4. Espacio modal fullscreen inmersivo
+     5. Oro restringido en contacto + instalaciones (tags/icons)
+     6. WhatsApp button rediseñado en paleta de marca
+     7. Sticky reservation bar mobile (reemplaza CTAs flotantes feos)
+     8. Footer editorial mobile
+     9. Tap states (no hay hover en touch — feedback al press)
+    10. Ritmo de secciones + tipografía mobile
+   ===================================================================== */
+
+
+/* =====================================================================
+   1. MOBILE NAV DRAWER — EDITORIAL FULLSCREEN OSCURO
+   El drawer hoy es plain cream con links centrados. Lo reinventamos
+   como una página propia: dark, serif, numerada, con info de contacto
+   al pie. Patrón hotel boutique / Aesop.
+   ===================================================================== */
+
+@media (max-width: 960px) {
+
+    /* Nav drawer base */
+    nav#nav,
+    header nav {
+        position: fixed !important;
+        top: 0 !important;
+        right: -100% !important;
+        width: 100% !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        background:
+            radial-gradient(ellipse 800px 600px at 90% 10%, rgba(27, 58, 75, 0.25), transparent 60%),
+            radial-gradient(ellipse 600px 500px at 10% 90%, rgba(184, 148, 31, 0.10), transparent 65%),
+            linear-gradient(180deg, var(--marron-tinta) 0%, #0F0908 100%) !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        align-items: stretch !important;
+        gap: 0 !important;
+        padding: 90px 32px 36px !important;
+        transition: right 0.7s var(--ease-cinematic) !important;
+        box-shadow: -20px 0 60px rgba(0, 0, 0, 0.5) !important;
+        overflow-y: auto;
+        overflow-x: hidden;
+        z-index: 9000;
+    }
+
+    /* Noise overlay sutil dentro del drawer */
+    nav#nav::before,
+    header nav::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='5'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.4'/></svg>");
+        background-size: 200px 200px;
+        opacity: 0.08;
+        mix-blend-mode: screen;
+    }
+
+    /* Marco dorado decorativo top + bottom (editorial frame) */
+    nav#nav::after,
+    header nav::after {
+        content: '';
+        position: absolute;
+        left: 32px;
+        right: 32px;
+        top: 24px;
+        height: 1px;
+        background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(212, 175, 55, 0.5) 30%,
+            rgba(212, 175, 55, 0.5) 70%,
+            transparent 100%);
+        opacity: 0;
+        transition: opacity 0.6s var(--ease-cinematic) 0.3s;
+    }
+    nav#nav.active::after,
+    header nav.active::after {
+        opacity: 1;
+    }
+
+    nav#nav.active,
+    header nav.active {
+        right: 0 !important;
+    }
+
+    /* Eyebrow editorial arriba del menú (insertado vía CSS antes del 1er link) */
+    nav#nav .nav-link:first-of-type,
+    header nav .nav-link:first-of-type {
+        position: relative;
+    }
+
+    /* Cada nav-link como entrada editorial */
+    nav#nav .nav-link,
+    header nav .nav-link {
+        font-family: var(--serif-display) !important;
+        font-weight: 400 !important;
+        font-size: 2.1rem !important;
+        line-height: 1.1 !important;
+        letter-spacing: -0.005em !important;
+        color: var(--blanco-perla) !important;
+        text-align: left !important;
+        text-transform: none !important;
+        padding: 16px 0 16px 56px !important;
+        margin: 0 !important;
+        border-bottom: 1px solid rgba(253, 251, 247, 0.10) !important;
+        background: transparent !important;
+        position: relative;
+        opacity: 0;
+        transform: translateX(20px);
+        transition: opacity 0.6s var(--ease-cinematic),
+                    transform 0.6s var(--ease-cinematic),
+                    color 0.35s ease,
+                    padding-left 0.4s var(--ease-cinematic) !important;
+        min-height: 0 !important;
+    }
+
+    /* Eliminar los pseudo-elementos doradas del nav-link genérico */
+    nav#nav .nav-link::before,
+    nav#nav .nav-link::after,
+    header nav .nav-link::before,
+    header nav .nav-link::after {
+        background: transparent !important;
+        display: none !important;
+    }
+
+    /* Re-insertar el numeral romano con :before */
+    nav#nav .nav-link::first-letter {
+        /* no usar, vamos por data-num */
+    }
+
+    /* Numerales i. ii. iii. iv. v. vi. con counter-reset */
+    nav#nav,
+    header nav {
+        counter-reset: navlink;
+    }
+    nav#nav .nav-link {
+        counter-increment: navlink;
+    }
+    nav#nav .nav-link::before,
+    header nav .nav-link::before {
+        content: counter(navlink, lower-roman) "." !important;
+        display: inline-block !important;
+        position: absolute !important;
+        left: 8px !important;
+        top: 24px !important;
+        font-family: var(--serif-display) !important;
+        font-style: italic !important;
+        font-size: 0.85rem !important;
+        color: rgba(212, 175, 55, 0.72) !important;
+        letter-spacing: 0.05em !important;
+        background: transparent !important;
+        width: auto !important;
+        height: auto !important;
+        opacity: 1 !important;
+    }
+
+    /* Stagger reveal de los links cuando nav.active */
+    nav#nav.active .nav-link,
+    header nav.active .nav-link {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    nav#nav.active .nav-link:nth-of-type(1) { transition-delay: 0.15s, 0.15s, 0s, 0s; }
+    nav#nav.active .nav-link:nth-of-type(2) { transition-delay: 0.22s, 0.22s, 0s, 0s; }
+    nav#nav.active .nav-link:nth-of-type(3) { transition-delay: 0.29s, 0.29s, 0s, 0s; }
+    nav#nav.active .nav-link:nth-of-type(4) { transition-delay: 0.36s, 0.36s, 0s, 0s; }
+    nav#nav.active .nav-link:nth-of-type(5) { transition-delay: 0.43s, 0.43s, 0s, 0s; }
+    nav#nav.active .nav-link:nth-of-type(6) { transition-delay: 0.50s, 0.50s, 0s, 0s; }
+
+    nav#nav .nav-link:hover,
+    nav#nav .nav-link:active,
+    nav#nav .nav-link.active,
+    header nav .nav-link:hover,
+    header nav .nav-link:active,
+    header nav .nav-link.active {
+        color: var(--dorado-brillante) !important;
+        padding-left: 64px !important;
+    }
+
+    /* Reservar mesa: botón editorial dentro del drawer */
+    nav#nav .reservation-btn,
+    header nav .reservation-btn {
+        margin: 28px 0 0 !important;
+        background: var(--dorado-premium) !important;
+        color: var(--marron-tinta) !important;
+        border: none !important;
+        padding: 18px 32px !important;
+        font-family: var(--sans-body) !important;
+        font-size: 0.78rem !important;
+        font-weight: 500 !important;
+        letter-spacing: 0.32em !important;
+        text-transform: uppercase;
+        border-radius: 2px !important;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s var(--ease-cinematic) 0.6s,
+                    transform 0.6s var(--ease-cinematic) 0.6s,
+                    background 0.4s ease !important;
+        align-self: stretch;
+    }
+    nav#nav.active .reservation-btn,
+    header nav.active .reservation-btn {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    nav#nav .reservation-btn::before,
+    nav#nav .reservation-btn::after,
+    header nav .reservation-btn::before,
+    header nav .reservation-btn::after {
+        display: none !important;
+    }
+    nav#nav .reservation-btn:active,
+    header nav .reservation-btn:active {
+        transform: translateY(1px) scale(0.99);
+        background: var(--dorado-oscuro) !important;
+    }
+
+    /* Info de contacto al pie del drawer (insertado via ::after en .reservation-btn? mejor agregamos elemento via JS o usamos pseudo en nav). Usamos pseudo-block bajo el botón. */
+    nav#nav .reservation-btn + .nav-footer,
+    header nav .reservation-btn + .nav-footer {
+        margin-top: 32px;
+        padding-top: 28px;
+        border-top: 1px solid rgba(253, 251, 247, 0.12);
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        font-family: var(--sans-body);
+        color: rgba(253, 251, 247, 0.72);
+        font-size: 0.85rem;
+        opacity: 0;
+        transition: opacity 0.6s var(--ease-cinematic) 0.75s;
+    }
+    nav#nav.active .reservation-btn + .nav-footer,
+    header nav.active .reservation-btn + .nav-footer {
+        opacity: 1;
+    }
+    nav#nav .nav-footer .nav-footer-row,
+    header nav .nav-footer .nav-footer-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        letter-spacing: 0.02em;
+    }
+    nav#nav .nav-footer .nav-footer-label,
+    header nav .nav-footer .nav-footer-label {
+        font-family: var(--sans-body);
+        font-size: 0.62rem;
+        font-weight: 500;
+        letter-spacing: 0.36em;
+        text-transform: uppercase;
+        color: rgba(212, 175, 55, 0.7);
+        min-width: 88px;
+    }
+    nav#nav .nav-footer a,
+    header nav .nav-footer a {
+        color: rgba(253, 251, 247, 0.88) !important;
+        text-decoration: none;
+        font-family: var(--sans-body) !important;
+    }
+    nav#nav .nav-footer a:active,
+    header nav .nav-footer a:active {
+        color: var(--dorado-brillante) !important;
+    }
+
+    /* Mobile toggle: hamburguesa rediseñada */
+    .mobile-toggle {
+        position: relative;
+        z-index: 9500;
+        background: transparent !important;
+        border: 1px solid rgba(43, 24, 16, 0.18) !important;
+        border-radius: 2px !important;
+        width: 44px;
+        height: 44px;
+        padding: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .mobile-toggle span {
+        background: var(--marron-tinta) !important;
+        height: 1.5px !important;
+        transition: transform 0.5s var(--ease-cinematic),
+                    opacity 0.3s var(--ease-cinematic),
+                    background 0.3s ease !important;
+    }
+    .mobile-toggle.active {
+        border-color: rgba(253, 251, 247, 0.3) !important;
+    }
+    .mobile-toggle.active span {
+        background: var(--blanco-perla) !important;
+    }
+}
+
+
+/* =====================================================================
+   2. HERO MOBILE POLISH — scroll cue + proportions
+   ===================================================================== */
+
+@media (max-width: 720px) {
+
+    /* Hero respira un poco más arriba — el logo ya no choca */
+    .hero {
+        height: 100svh;
+        min-height: 600px;
+        padding-top: 20px;
+    }
+
+    .hero-content {
+        padding: 0 26px !important;
+        margin: 0 !important;
+    }
+
+    /* Eyebrow más generoso */
+    .hero-eyebrow {
+        font-size: 0.6rem !important;
+        letter-spacing: 0.42em !important;
+        margin-bottom: 24px !important;
+        opacity: 0;
+        animation: heroFade 1.2s var(--ease-cinematic) 0.2s forwards;
+    }
+    .hero-eyebrow::before,
+    .hero-eyebrow::after {
+        width: 18px !important;
+        margin: 0 10px !important;
+        opacity: 0.7;
+    }
+
+    /* Title: forzar línea única con ampersand inline */
+    .hero-title {
+        font-size: clamp(3.4rem, 17vw, 5.4rem) !important;
+        letter-spacing: -0.015em !important;
+        margin-bottom: 28px !important;
+        gap: 0.05em !important;
+        line-height: 0.95 !important;
+    }
+    .hero-ampersand {
+        font-size: 1.18em !important;
+        transform: translateY(0.08em) rotate(-2deg);
+    }
+
+    .hero-subtitle {
+        font-size: 0.7rem !important;
+        letter-spacing: 0.25em !important;
+        margin-bottom: 18px !important;
+    }
+
+    .hero-description {
+        font-size: 0.95rem !important;
+        line-height: 1.55 !important;
+        max-width: 90% !important;
+        margin-bottom: 40px !important;
+    }
+
+    .hero-cta {
+        padding: 14px 36px !important;
+        font-size: 0.68rem !important;
+        letter-spacing: 0.36em !important;
+    }
+
+    /* Scroll cue elegante al pie del hero (insertado via ::after en .hero) */
+    .hero::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: 26px;
+        width: 1px;
+        height: 38px;
+        background: linear-gradient(180deg, transparent 0%, rgba(253, 251, 247, 0.6) 100%);
+        transform: translateX(-50%);
+        z-index: 4;
+        animation: scrollCue 2.2s ease-in-out infinite;
+    }
+    @keyframes scrollCue {
+        0%   { opacity: 0; transform: translateX(-50%) translateY(-12px); }
+        40%  { opacity: 1; }
+        100% { opacity: 0; transform: translateX(-50%) translateY(8px); }
+    }
+}
+
+
+/* =====================================================================
+   3. MENU CARDS — alturas premium + números visibles
+   En mobile las cards estaban comprimidas (230px) y el outline number
+   se cortaba. Damos aire.
+   ===================================================================== */
+
+@media (max-width: 720px) {
+
+    .categories-grid.menu-v2 {
+        grid-auto-rows: 300px !important;
+        gap: 18px !important;
+        padding: 0 24px !important;
+    }
+
+    .categories-grid.menu-v2 .category-card {
+        min-height: 300px !important;
+        border-radius: 4px !important;
+    }
+
+    .categories-grid.menu-v2 .category-card.featured {
+        min-height: 360px !important;
+    }
+
+    .categories-grid.menu-v2 .category-card.banner {
+        min-height: 200px !important;
+    }
+
+    /* Outline number: más pequeño y bien posicionado */
+    .categories-grid.menu-v2 .category-card[data-number]::after {
+        font-size: 6.2rem !important;
+        bottom: -12px !important;
+        right: 16px !important;
+        -webkit-text-stroke-color: rgba(228, 212, 168, 0.28) !important;
+        text-stroke-color: rgba(228, 212, 168, 0.28) !important;
+    }
+    .categories-grid.menu-v2 .category-card.featured[data-number]::after {
+        font-size: 10rem !important;
+        bottom: -18px !important;
+        right: 22px !important;
+    }
+    .categories-grid.menu-v2 .category-card.banner[data-number]::after {
+        font-size: 5.5rem !important;
+        bottom: -10px !important;
+        right: 14px !important;
+    }
+
+    /* Card content: tipografía generosa */
+    .categories-grid.menu-v2 .category-content {
+        padding: 24px 22px !important;
+    }
+    .categories-grid.menu-v2 .category-card.featured .category-content {
+        padding: 30px 26px !important;
+    }
+    .categories-grid.menu-v2 .category-name {
+        font-size: 1.5rem !important;
+        line-height: 1.1 !important;
+        margin-bottom: 10px !important;
+    }
+    .categories-grid.menu-v2 .category-card.featured .category-name {
+        font-size: 2rem !important;
+    }
+    .categories-grid.menu-v2 .category-desc {
+        font-size: 0.92rem !important;
+        line-height: 1.5 !important;
+    }
+
+    /* Borde superior animado se muestra siempre en mobile (no hay hover) */
+    .categories-grid.menu-v2 .category-card::before {
+        transform: scaleX(0.6) !important;
+        opacity: 0.7;
+    }
+
+    /* Tap state: feedback claro */
+    .categories-grid.menu-v2 .category-card:active {
+        transform: scale(0.985) !important;
+        filter: brightness(1.06);
+    }
+    .categories-grid.menu-v2 .category-card:active::before {
+        transform: scaleX(1) !important;
+        opacity: 1;
+    }
+}
+
+
+/* =====================================================================
+   4. ESPACIO MODAL FULLSCREEN MOBILE
+   Reemplaza el card-on-overlay actual por una experiencia inmersiva
+   tipo ficha editorial — pantalla completa, sin paddings sueltos.
+   ===================================================================== */
+
+@media (max-width: 720px) {
+
+    .espacio-modal-overlay {
+        padding: 0 !important;
+        background: var(--marron-tinta) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    .espacio-modal-overlay.active {
+        align-items: stretch !important;
+    }
+
+    .espacio-modal-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 100vh !important;
+        max-height: 100dvh !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        display: flex;
+        flex-direction: column;
+        background: var(--blanco-perla) !important;
+    }
+
+    /* Swiper toma 55-60% arriba */
+    .espacio-modal-container .espacioSwiper {
+        flex: 0 0 56vh;
+        flex: 0 0 56dvh;
+        height: 56vh;
+        height: 56dvh;
+        margin: 0 !important;
+        border-radius: 0;
+    }
+    .espacioSwiper .swiper-slide img {
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+
+    /* Info card debajo: scroll interno si hace falta */
+    .espacio-modal-info {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        padding: 28px 26px 36px !important;
+        text-align: left;
+    }
+
+    .espacio-modal-title {
+        font-size: 1.9rem !important;
+        text-align: left !important;
+        margin-bottom: 16px !important;
+    }
+    .espacio-modal-title::after {
+        margin: 12px 0 0 !important;
+        width: 36px !important;
+    }
+
+    .espacio-modal-description {
+        font-size: 1rem !important;
+        line-height: 1.7 !important;
+        text-align: left !important;
+        max-width: 100% !important;
+    }
+
+    /* Close button: sticky top right */
+    .espacio-modal-close {
+        position: fixed !important;
+        top: 16px !important;
+        right: 16px !important;
+        width: 40px !important;
+        height: 40px !important;
+        z-index: 100000;
+        background: rgba(15, 8, 4, 0.78) !important;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+
+    /* Swiper arrows + pagination más visibles sobre la foto */
+    .espacioSwiper .swiper-button-next,
+    .espacioSwiper .swiper-button-prev {
+        width: 38px !important;
+        height: 38px !important;
+        background: rgba(15, 8, 4, 0.55) !important;
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(253, 251, 247, 0.3) !important;
+    }
+    .espacioSwiper .swiper-pagination {
+        bottom: 12px !important;
+    }
+}
+
+
+/* =====================================================================
+   5. ORO RESTRINGIDO EN INSTALACIONES + CONTACTO
+   ===================================================================== */
+
+@media (max-width: 960px) {
+
+    /* Espacio tags ("Coworking Elegante", "Salón Principal", etc.):
+       eran amarillas. Ahora marrón tinta sutiles. */
+    .espacio-tag,
+    .espacio-tag.pet-friendly {
+        background: rgba(43, 24, 16, 0.08) !important;
+        color: var(--marron-tinta) !important;
+        border: 1px solid rgba(43, 24, 16, 0.16) !important;
+        font-family: var(--sans-body) !important;
+        font-size: 0.66rem !important;
+        letter-spacing: 0.28em !important;
+        font-weight: 500 !important;
+        padding: 6px 14px !important;
+        border-radius: 2px !important;
+        text-transform: uppercase;
+        background-image: none !important;
+    }
+
+    /* Pet friendly conserva un toque verde sutil — pero discreto */
+    .espacio-tag.pet-friendly {
+        background: rgba(74, 110, 90, 0.12) !important;
+        color: #4A6E5A !important;
+        border-color: rgba(74, 110, 90, 0.28) !important;
+    }
+
+    /* Feature pills (WiFi, capacidad, etc.): neutrales en lugar de doradas */
+    .feature-item {
+        background: rgba(43, 24, 16, 0.05) !important;
+        color: var(--marron-tinta) !important;
+        border: 1px solid rgba(43, 24, 16, 0.10) !important;
+        padding: 8px 14px !important;
+        border-radius: 2px !important;
+        font-family: var(--sans-body) !important;
+        font-size: 0.78rem !important;
+        font-weight: 400 !important;
+        background-image: none !important;
+    }
+    .feature-item i {
+        color: rgba(43, 24, 16, 0.55) !important;
+    }
+
+    /* Contact icons (location/phone/@): círculos marrón tinta no oro */
+    .contact-item i,
+    .contact-icon,
+    .contact-item .icon-circle {
+        background: var(--marron-tinta) !important;
+        color: var(--blanco-perla) !important;
+        background-image: none !important;
+    }
+
+    /* Si los íconos están en círculos con fondo dorado, anular */
+    .contact-section [class*="circle"],
+    .contact-section .icon-wrapper {
+        background: var(--marron-tinta) !important;
+    }
+
+    /* Líneas separadoras doradas en contacto */
+    .contact-section hr,
+    .contact-section .divider {
+        background: rgba(43, 24, 16, 0.15) !important;
+        border-color: rgba(43, 24, 16, 0.15) !important;
+    }
+
+    /* "Comparte tu reseña en Google" link: que no quede azul de browser */
+    .contact-section a,
+    .testimonial-cta a,
+    .testimonial-section a {
+        color: var(--marron-tinta) !important;
+        text-decoration: underline;
+        text-decoration-color: rgba(43, 24, 16, 0.35);
+        text-underline-offset: 4px;
+    }
+}
+
+
+/* =====================================================================
+   6. WHATSAPP BUTTON — REDISEÑO EN PALETA DE MARCA
+   El verde neón del WhatsApp rompe la atmósfera editorial.
+   Lo transformamos en un botón discreto en marrón tinta con
+   acento dorado, y eliminamos el pulse ring verde.
+   ===================================================================== */
+
+.wa-float {
+    background: var(--marron-tinta) !important;
+    background-image: none !important;
+    color: var(--blanco-perla) !important;
+    box-shadow:
+        0 8px 24px rgba(15, 8, 4, 0.45),
+        0 0 0 1px rgba(212, 175, 55, 0.25) !important;
+    border: none !important;
+    transition: transform 0.4s var(--ease-cinematic),
+                box-shadow 0.4s var(--ease-cinematic),
+                background 0.3s ease !important;
+}
+
+.wa-float:hover,
+.wa-float:focus-visible,
+.wa-float:active {
+    background: #0F0908 !important;
+    color: var(--dorado-brillante) !important;
+    box-shadow:
+        0 12px 30px rgba(15, 8, 4, 0.55),
+        0 0 0 1px rgba(212, 175, 55, 0.5) !important;
+    transform: translateY(-2px) scale(1.02) !important;
+}
+
+/* Iconito SVG en dorado */
+.wa-float-icon {
+    background: transparent !important;
+    color: var(--dorado-brillante) !important;
+}
+.wa-float-icon svg {
+    fill: var(--dorado-brillante) !important;
+}
+
+/* Label en dorado sutil */
+.wa-float-label {
+    color: rgba(228, 212, 168, 0.95) !important;
+    font-family: var(--sans-body) !important;
+    letter-spacing: 0.16em !important;
+    font-size: 0.72rem !important;
+    text-transform: uppercase;
+    font-weight: 500 !important;
+}
+
+/* Eliminar el pulse verde — reemplazar por uno dorado muy sutil */
+.wa-float-pulse {
+    background: rgba(212, 175, 55, 0.4) !important;
+    opacity: 0.35 !important;
+}
+
+/* Mobile: variante compacta sólo icono, también en paleta */
+@media (max-width: 600px) {
+    .wa-float {
+        width: 54px !important;
+        height: 54px !important;
+        right: 16px !important;
+        bottom: 16px !important;
+    }
+    .wa-float-icon svg {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+
+/* =====================================================================
+   7. STICKY MOBILE BOTTOM BAR — Reservar discreto + permanente
+   En mobile, dejamos un bar fino inferior con la acción "Reservar"
+   siempre disponible. Estilo editorial: marrón tinta + acento dorado
+   sólo en el botón.
+   ===================================================================== */
+
+@media (max-width: 720px) {
+
+    /* Insertamos un bar sticky via fixed positioning. Como no podemos
+       agregar HTML solo con CSS, usamos un pseudo-element en body o
+       confiamos en JS para inyectarlo. Aquí preparamos los estilos. */
+
+    .mobile-cta-bar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 8000;
+        background: linear-gradient(180deg,
+            rgba(43, 24, 16, 0.94) 0%,
+            rgba(15, 8, 4, 0.98) 100%);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border-top: 1px solid rgba(212, 175, 55, 0.18);
+        padding: 12px 18px calc(12px + env(safe-area-inset-bottom, 0px));
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        transform: translateY(110%);
+        transition: transform 0.6s var(--ease-cinematic);
+        box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.25);
+    }
+    .mobile-cta-bar.visible {
+        transform: translateY(0);
+    }
+
+    .mobile-cta-bar .mcb-quote {
+        flex: 1 1 auto;
+        font-family: var(--serif-display);
+        font-style: italic;
+        font-size: 0.82rem;
+        color: rgba(253, 251, 247, 0.82);
+        line-height: 1.25;
+        letter-spacing: 0.01em;
+    }
+
+    .mobile-cta-bar .mcb-cta {
+        flex: 0 0 auto;
+        background: var(--dorado-premium);
+        color: var(--marron-tinta);
+        font-family: var(--sans-body);
+        font-size: 0.68rem;
+        font-weight: 500;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        padding: 14px 22px;
+        border: none;
+        border-radius: 2px;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background 0.3s ease, transform 0.2s ease;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+    }
+    .mobile-cta-bar .mcb-cta:active {
+        background: var(--dorado-oscuro);
+        transform: scale(0.98);
+    }
+
+    /* Cuando el CTA bar es visible, dejamos espacio al pie de la página
+       para que no tape el footer. */
+    body.has-mcb-visible {
+        padding-bottom: 78px;
+    }
+
+    /* Ocultamos el WhatsApp float cuando el CTA bar está activo —
+       el CTA bar lo absorbe. */
+    body.has-mcb-visible .whatsapp-float,
+    body.has-mcb-visible .floating-whatsapp,
+    body.has-mcb-visible .wa-float,
+    body.has-mcb-visible .wa-button-float {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+    }
+}
+
+
+/* =====================================================================
+   8. FOOTER MOBILE EDITORIAL
+   ===================================================================== */
+
+@media (max-width: 720px) {
+
+    footer,
+    .site-footer,
+    .footer {
+        padding: 56px 26px 32px !important;
+        background: linear-gradient(180deg,
+            var(--marron-tinta) 0%,
+            #0F0908 100%) !important;
+        color: rgba(253, 251, 247, 0.78);
+        text-align: center;
+    }
+
+    footer .footer-logo img,
+    .site-footer .footer-logo img,
+    .footer-logo img {
+        max-width: 110px !important;
+        height: auto !important;
+        margin: 0 auto 18px !important;
+        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+    }
+
+    /* Frase de marca: Valerius italic, generosa */
+    footer .footer-tagline,
+    .footer-tagline,
+    footer p:first-of-type {
+        font-family: var(--serif-display) !important;
+        font-style: italic;
+        font-size: 1.15rem !important;
+        line-height: 1.5;
+        color: rgba(253, 251, 247, 0.92);
+        margin: 0 auto 36px !important;
+        max-width: 280px;
+    }
+
+    /* Headers de columnas: small caps en oro sutil */
+    footer h3,
+    footer h4,
+    .footer-section h3,
+    .footer-section h4 {
+        font-family: var(--sans-body) !important;
+        font-size: 0.62rem !important;
+        font-weight: 500 !important;
+        letter-spacing: 0.42em !important;
+        text-transform: uppercase;
+        color: rgba(212, 175, 55, 0.72) !important;
+        margin-bottom: 12px !important;
+        margin-top: 28px;
+    }
+
+    /* Cuerpo del footer en Causten */
+    footer p,
+    footer a,
+    footer span,
+    .footer-section p,
+    .footer-section a {
+        font-family: var(--sans-body) !important;
+        font-size: 0.95rem !important;
+        line-height: 1.7;
+        color: rgba(253, 251, 247, 0.78) !important;
+        text-decoration: none;
+    }
+
+    footer a:active {
+        color: var(--dorado-brillante) !important;
+    }
+
+    /* Social icons */
+    footer .social-links a,
+    .footer-social a {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(253, 251, 247, 0.08) !important;
+        border: 1px solid rgba(253, 251, 247, 0.12) !important;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 6px;
+    }
+
+    /* Línea separadora antes del copyright */
+    footer .footer-bottom,
+    .footer-bottom {
+        border-top: 1px solid rgba(253, 251, 247, 0.10) !important;
+        padding-top: 22px !important;
+        margin-top: 32px !important;
+        font-size: 0.72rem !important;
+        color: rgba(253, 251, 247, 0.55) !important;
+        letter-spacing: 0.05em;
+    }
+}
+
+
+/* =====================================================================
+   9. RITMO DE SECCIONES + TAP STATES + LEGIBILIDAD
+   ===================================================================== */
+
+@media (max-width: 720px) {
+
+    /* Secciones con padding vertical generoso (premium = aire) */
+    .categories-section,
+    .instalaciones-section,
+    .gallery-section,
+    .reservation-info-section,
+    .contact-section,
+    .testimonials-section {
+        padding-top: 96px !important;
+        padding-bottom: 72px !important;
+    }
+
+    /* Numerales romanos mobile: más arriba, más sutiles */
+    .section-header[data-numeral]::before {
+        top: -32px !important;
+        font-size: clamp(2.6rem, 11vw, 4rem) !important;
+        opacity: 0.7;
+    }
+    .categories-section .section-header,
+    .instalaciones-section .section-header,
+    .gallery-section .section-header {
+        padding-top: 50px !important;
+    }
+
+    /* Section title scale */
+    .section-title {
+        font-size: clamp(2.1rem, 8vw, 3rem) !important;
+        line-height: 1.05 !important;
+        letter-spacing: -0.005em !important;
+        padding: 0 12px;
+    }
+    .section-overtitle {
+        font-size: 0.62rem !important;
+        letter-spacing: 0.4em !important;
+    }
+    .section-description {
+        font-size: 0.96rem !important;
+        line-height: 1.7 !important;
+    }
+
+    /* Espacio cards mobile: tap state */
+    .espacio-card:active {
+        transform: scale(0.985) !important;
+        filter: brightness(1.03);
+    }
+    .espacio-card {
+        border-radius: 4px !important;
+    }
+
+    /* Gallery items: tap state */
+    .gallery-v2 .gallery-item:active {
+        transform: scale(0.985);
+        filter: brightness(1.04);
+    }
+    .gallery-v2 .gallery-item {
+        transition: transform 0.4s var(--ease-cinematic),
+                    filter 0.4s var(--ease-cinematic);
+    }
+
+    /* Spotlight captions mobile más legibles */
+    .gallery-v2 .gallery-item.gallery-spotlight figcaption {
+        font-size: 1.35rem !important;
+        padding: 22px 22px 18px !important;
+    }
+    .gallery-v2 .gallery-item.gallery-spotlight figcaption::before {
+        font-size: 0.6rem;
+        letter-spacing: 0.34em;
+    }
+
+    /* Eliminar inset visible del spotlight frame en mobile (era ruidoso) */
+    .gallery-v2 .gallery-item.gallery-spotlight::after {
+        inset: 6px !important;
+        border-color: rgba(253, 251, 247, 0.12) !important;
+    }
+
+    /* Selección de texto bonita */
+    ::selection {
+        background: var(--marron-tinta);
+        color: var(--blanco-perla);
+    }
+}
+
+
+/* =====================================================================
+   10. TINY PHONES (≤ 380px) — proporciones
+   ===================================================================== */
+
+@media (max-width: 380px) {
+    .hero-title {
+        font-size: clamp(2.8rem, 17vw, 4.4rem) !important;
+    }
+    .hero-eyebrow::before,
+    .hero-eyebrow::after {
+        width: 14px !important;
+    }
+    nav#nav .nav-link,
+    header nav .nav-link {
+        font-size: 1.85rem !important;
+        padding-left: 50px !important;
+    }
+    nav#nav .nav-link::before,
+    header nav .nav-link::before {
+        font-size: 0.78rem !important;
+    }
+    .section-title {
+        font-size: clamp(1.85rem, 8vw, 2.5rem) !important;
+    }
+    .categories-grid.menu-v2 .category-card[data-number]::after {
+        font-size: 5rem !important;
+    }
+    .categories-grid.menu-v2 .category-card.featured[data-number]::after {
+        font-size: 8.5rem !important;
+    }
+}
+
+
+/* =====================================================================
+   11. REDUCED MOTION — respect user preference
+   ===================================================================== */
+
+@media (prefers-reduced-motion: reduce) and (max-width: 960px) {
+    nav#nav .nav-link,
+    header nav .nav-link,
+    nav#nav .reservation-btn,
+    header nav .reservation-btn,
+    nav#nav .nav-footer,
+    header nav .nav-footer,
+    .mobile-cta-bar {
+        transition: none !important;
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+    .hero::before {
+        animation: none !important;
+    }
+}
