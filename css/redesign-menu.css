@@ -331,6 +331,12 @@
     border-bottom: 1px solid rgba(43, 24, 16, 0.10);
 }
 
+/* Search/filter — esconde platos que no matchean. Necesita !important
+   para vencer al display:grid !important del editorial layout. */
+.menu-section .menu-item.hidden {
+    display: none !important;
+}
+
 /* Alternar: pares cambian de orden */
 .menu-section .menu-item:nth-child(even) .menu-item-image-wrapper {
     order: 2;
