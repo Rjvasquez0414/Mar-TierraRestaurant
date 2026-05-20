@@ -965,3 +965,134 @@ img, video, iframe, svg {
         margin-bottom: 18px;
     }
 }
+
+
+/* =====================================================================
+   REDESIGN.CSS — Mobile parity overrides
+   Estos overrides aplican al rediseño editorial v2026 en pantallas
+   pequeñas (numerales romanos, ampersand del hero, números outline
+   de cards). Se cargan después de las reglas mobile genéricas para
+   sobreescribir donde sea necesario.
+   ===================================================================== */
+
+@media (max-width: 960px) {
+    /* Hero editorial: el flex de Mar & Tierra puede romper en mobile.
+       Forzamos que se mantenga en una línea con tamaño adaptativo. */
+    .hero-title {
+        font-size: clamp(3.5rem, 16vw, 6rem) !important;
+        gap: 0.08em;
+        letter-spacing: -0.01em !important;
+    }
+    .hero-ampersand {
+        font-size: 1.25em;
+    }
+    .hero-eyebrow {
+        font-size: 0.62rem;
+        letter-spacing: 0.45em;
+        margin-bottom: 20px;
+    }
+    .hero-eyebrow::before,
+    .hero-eyebrow::after {
+        width: 22px;
+        margin: 0 12px;
+    }
+    .hero-subtitle {
+        font-size: 0.78rem !important;
+        letter-spacing: 0.22em !important;
+        margin-bottom: 18px !important;
+    }
+    .hero-description {
+        font-size: 0.98rem !important;
+        max-width: 90% !important;
+        margin-bottom: 38px !important;
+    }
+    .hero-cta {
+        padding: 15px 38px !important;
+        font-size: 0.72rem !important;
+        letter-spacing: 0.32em !important;
+    }
+
+    /* Numerales romanos más pequeños y posicionados más arriba */
+    .section-header[data-numeral]::before {
+        top: -38px;
+        font-size: clamp(2.8rem, 11vw, 4.5rem);
+    }
+    .categories-section .section-header,
+    .instalaciones-section .section-header,
+    .gallery-section .section-header {
+        padding-top: 56px;
+    }
+
+    /* Cards: el número outline se reduce y se mueve para no
+       desbordar en cards más cortas. */
+    .categories-grid.menu-v2 .category-card[data-number]::after {
+        font-size: 5.5rem;
+        bottom: -14px;
+        right: 14px;
+    }
+    .categories-grid.menu-v2 .category-card.featured[data-number]::after {
+        font-size: 9rem;
+        bottom: -18px;
+        right: 20px;
+    }
+    .categories-grid.menu-v2 .category-card.banner[data-number]::after {
+        font-size: 5rem;
+    }
+
+    /* Gallery spotlight: caption proporcional */
+    .gallery-v2 .gallery-item.gallery-spotlight figcaption {
+        font-size: clamp(1.1rem, 4vw, 1.4rem);
+        padding: 20px 22px 18px;
+    }
+    .gallery-v2 .gallery-item.gallery-spotlight figcaption::before {
+        font-size: 0.6rem;
+        letter-spacing: 0.32em;
+        margin-bottom: 6px;
+    }
+    .gallery-v2 .gallery-item.gallery-spotlight::after {
+        inset: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: clamp(2.8rem, 16vw, 4.5rem) !important;
+        gap: 0.05em;
+    }
+    .hero-ampersand {
+        font-size: 1.15em;
+    }
+    .hero-eyebrow {
+        font-size: 0.58rem;
+        letter-spacing: 0.38em;
+    }
+    .hero-eyebrow::before,
+    .hero-eyebrow::after {
+        width: 16px;
+        margin: 0 10px;
+    }
+    .hero-description {
+        font-size: 0.9rem !important;
+    }
+
+    .section-header[data-numeral]::before {
+        top: -30px;
+        font-size: 2.5rem;
+        opacity: 0.65;
+    }
+
+    .categories-grid.menu-v2 .category-card[data-number]::after {
+        font-size: 4.5rem;
+    }
+    .categories-grid.menu-v2 .category-card.featured[data-number]::after {
+        font-size: 6.5rem;
+    }
+}
+
+/* Reducir intensidad de la textura noise en mobile (rinde mejor) */
+@media (max-width: 720px) {
+    body::after {
+        opacity: 0.22;
+        background-size: 180px 180px;
+    }
+}

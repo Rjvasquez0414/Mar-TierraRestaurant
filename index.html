@@ -89,6 +89,10 @@
     <!-- Tipografías Personalizadas - DEBE CARGAR AL FINAL -->
     <link rel="stylesheet" href="css/custom-fonts.css">
 
+    <!-- Redesign editorial v2026 (hero editorial, numerales romanos,
+         cards con número outline, dualidad Mar/Tierra, oro restringido) -->
+    <link rel="stylesheet" href="css/redesign.css">
+
     <!-- Mobile responsive overrides — DEBE CARGAR ÚLTIMO -->
     <link rel="stylesheet" href="css/mobile.css">
 
@@ -219,14 +223,17 @@
     <!-- Contenido Principal -->
     <main id="main-content">
 
-    <!-- Hero Section -->
+    <!-- Hero Section — Editorial -->
     <section class="hero" id="hero">
         <div class="hero-content">
-            <h1 class="hero-title">Mar&Tierra</h1>
+            <p class="hero-eyebrow">Bucaramanga · Cocina de Autor</p>
+            <h1 class="hero-title">
+                <span class="hero-word hero-word--mar">Mar</span><span class="hero-ampersand" aria-hidden="true">&amp;</span><span class="hero-word hero-word--tierra">Tierra</span>
+            </h1>
             <p class="hero-subtitle">Un encuentro de culturas, texturas e historias</p>
             <p class="hero-description">
-                Donde el mar y la tierra no compiten, se complementan.<br>
-                Y en ese equilibrio es donde nace nuestra esencia.
+                Donde el mar y la tierra no compiten, se complementan —<br>
+                y en ese equilibrio es donde nace nuestra esencia.
             </p>
             <a href="#categories" class="hero-cta" onclick="showSection('categories'); return false;">Descubrir Menú</a>
         </div>
@@ -235,7 +242,7 @@
     
     <!-- Categories Section -->
     <section class="categories-section" id="categories">
-        <div class="section-header">
+        <div class="section-header" data-numeral="I">
             <p class="section-overtitle">Nuestra Carta</p>
             <h2 class="section-title">Experiencias Gastronómicas</h2>
             <div class="ornament">
@@ -248,10 +255,10 @@
                 se encuentran en perfecta armonía
             </p>
         </div>
-        
+
         <div class="categories-grid menu-v2">
             <!-- HERO: Mar y Tierra (la firma) -->
-            <button type="button" class="category-card featured solid" data-category="marytierra" onclick="showMenuSection('marytierra')" aria-label="Ver platos Mar y Tierra">
+            <button type="button" class="category-card featured solid" data-category="marytierra" data-number="00" onclick="showMenuSection('marytierra')" aria-label="Ver platos Mar y Tierra">
                 <div class="category-overlay"></div>
                 <span class="category-badge">La firma</span>
                 <div class="category-content">
@@ -268,7 +275,7 @@
             </button>
 
             <!-- Para Compartir -->
-            <button type="button" class="category-card solid" data-category="compartir" onclick="showMenuSection('compartir')" aria-label="Ver platos Para Compartir">
+            <button type="button" class="category-card solid" data-category="compartir" data-number="01" onclick="showMenuSection('compartir')" aria-label="Ver platos Para Compartir">
                 <div class="category-overlay"></div>
                 <div class="category-content">
                     <span class="category-icon" aria-hidden="true">
@@ -284,7 +291,7 @@
             </button>
 
             <!-- Ritual de Mar -->
-            <button type="button" class="category-card solid" data-category="mar" onclick="showMenuSection('mar')" aria-label="Ver platos Ritual de Mar">
+            <button type="button" class="category-card solid" data-category="mar" data-number="02" onclick="showMenuSection('mar')" aria-label="Ver platos Ritual de Mar">
                 <div class="category-overlay"></div>
                 <div class="category-content">
                     <span class="category-icon" aria-hidden="true">
@@ -300,7 +307,7 @@
             </button>
 
             <!-- Ritual de Tierra -->
-            <button type="button" class="category-card solid" data-category="tierra" onclick="showMenuSection('tierra')" aria-label="Ver platos Ritual de Tierra">
+            <button type="button" class="category-card solid" data-category="tierra" data-number="03" onclick="showMenuSection('tierra')" aria-label="Ver platos Ritual de Tierra">
                 <div class="category-overlay"></div>
                 <div class="category-content">
                     <span class="category-icon" aria-hidden="true">
@@ -316,7 +323,7 @@
             </button>
 
             <!-- Grill -->
-            <button type="button" class="category-card solid" data-category="grill" onclick="showMenuSection('grill')" aria-label="Ver platos Grill">
+            <button type="button" class="category-card solid" data-category="grill" data-number="04" onclick="showMenuSection('grill')" aria-label="Ver platos Grill">
                 <div class="category-overlay"></div>
                 <div class="category-content">
                     <span class="category-icon" aria-hidden="true">
@@ -332,7 +339,7 @@
             </button>
 
             <!-- Menu Infantil (banner full-width) -->
-            <button type="button" class="category-card banner solid" data-category="infantil" onclick="showMenuSection('infantil')" aria-label="Ver Menú Infantil">
+            <button type="button" class="category-card banner solid" data-category="infantil" data-number="05" onclick="showMenuSection('infantil')" aria-label="Ver Menú Infantil">
                 <div class="category-overlay"></div>
                 <div class="category-content">
                     <span class="category-icon" aria-hidden="true">
@@ -353,7 +360,7 @@
     <!-- Nueva Sección de Instalaciones -->
     <section class="instalaciones-section" id="instalaciones">
         <div class="instalaciones-container">
-            <div class="section-header" data-aos="fade-up">
+            <div class="section-header" data-aos="fade-up" data-numeral="II">
                 <p class="section-overtitle">Nuestros Espacios</p>
                 <h2 class="section-title">Instalaciones Exclusivas</h2>
                 <div class="ornament">
@@ -549,7 +556,7 @@
          SECCIÓN GALERÍA — momentos y ambientes del restaurante
          ============================================================ -->
     <section class="gallery-section" id="galeria">
-        <div class="section-header" data-aos="fade-up">
+        <div class="section-header" data-aos="fade-up" data-numeral="III">
             <p class="section-overtitle">Atmósfera & Detalle</p>
             <h2 class="section-title">Galería</h2>
             <div class="ornament">
@@ -564,13 +571,13 @@
         </div>
 
         <div class="gallery-masonry gallery-v2" id="galleryMasonry">
-            <!-- Almaterra (HERO 2x2) -->
-            <figure class="gallery-item gallery-large" data-aos="fade-up" data-aos-delay="0">
+            <!-- Almaterra (HERO 2x2 SPOTLIGHT) -->
+            <figure class="gallery-item gallery-large gallery-spotlight" data-aos="fade-up" data-aos-delay="0">
                 <a class="gallery-trigger" href="images/EspaciosRestaurante/almaterra/_MG_8912.webp" data-pswp-width="800" data-pswp-height="1067" aria-label="Abrir foto de Almaterra" target="_blank" rel="noopener">
                     <img src="images/EspaciosRestaurante/almaterra/_MG_8912.webp" alt="Almaterra — coworking elegante con luz natural" loading="lazy" decoding="async" width="800" height="1067">
                     <span class="gallery-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg></span>
                 </a>
-                <figcaption>Almaterra</figcaption>
+                <figcaption data-subtitle="Coworking · Luz Natural">Almaterra</figcaption>
             </figure>
 
             <!-- Arca -->
@@ -582,13 +589,13 @@
                 <figcaption>Arca · Salón principal</figcaption>
             </figure>
 
-            <!-- Barco (wide) -->
-            <figure class="gallery-item gallery-wide" data-aos="fade-up" data-aos-delay="160">
+            <!-- Barco (wide SPOTLIGHT) -->
+            <figure class="gallery-item gallery-wide gallery-spotlight" data-aos="fade-up" data-aos-delay="160">
                 <a class="gallery-trigger" href="images/EspaciosRestaurante/barco/_MG_8908.webp" data-pswp-width="1200" data-pswp-height="675" aria-label="Abrir foto del salón Barco" target="_blank" rel="noopener">
                     <img src="images/EspaciosRestaurante/barco/_MG_8908.webp" alt="Barco — salón temático náutico" loading="lazy" decoding="async" width="1200" height="675">
                     <span class="gallery-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg></span>
                 </a>
-                <figcaption>Barco · Experiencia náutica</figcaption>
+                <figcaption data-subtitle="Experiencia · Náutica">El Barco</figcaption>
             </figure>
 
             <!-- Arca 2 -->
@@ -609,13 +616,13 @@
                 <figcaption>Chillout · Pet friendly</figcaption>
             </figure>
 
-            <!-- Moon Terraza -->
-            <figure class="gallery-item" data-aos="fade-up" data-aos-delay="80">
+            <!-- Moon Terraza (SPOTLIGHT) -->
+            <figure class="gallery-item gallery-spotlight" data-aos="fade-up" data-aos-delay="80">
                 <a class="gallery-trigger" href="images/EspaciosRestaurante/rooftop/_MG_9320.webp" data-pswp-width="800" data-pswp-height="600" aria-label="Abrir foto de Moon Terraza" target="_blank" rel="noopener">
                     <img src="images/EspaciosRestaurante/rooftop/_MG_9320.webp" alt="Moon Terraza — rooftop con vista nocturna" loading="lazy" decoding="async" width="800" height="600">
                     <span class="gallery-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg></span>
                 </a>
-                <figcaption>Moon Terraza · Rooftop</figcaption>
+                <figcaption data-subtitle="Rooftop · Vista 360">Moon Terraza</figcaption>
             </figure>
 
             <!-- Salón VIP -->
