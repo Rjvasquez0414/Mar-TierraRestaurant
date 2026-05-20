@@ -610,7 +610,154 @@ header #nav .nav-link.active {
 
 
 /* =====================================================================
-   11. FOCUS STATES (accesibilidad cohesiva con la nueva estética)
+   11. MODAL DE ESPACIOS — fix de scroll + estética editorial cohesiva
+   ===================================================================== */
+
+/* Overlay: en lugar de flex+center+overflow:auto (que rompe scroll en
+   contenido grande), usamos display block con overflow-y auto y
+   centrado por padding-top. */
+.espacio-modal-overlay {
+    background: linear-gradient(180deg,
+        rgba(43, 24, 16, 0.78) 0%,
+        rgba(16, 12, 8, 0.92) 100%) !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
+    padding: 5vh 24px !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+.espacio-modal-overlay::before {
+    /* radiales dorados anteriores chocan con la nueva paleta — los apagamos */
+    display: none !important;
+}
+
+.espacio-modal-overlay.active {
+    /* mantenemos flex para centrar verticalmente cuando cabe, pero la
+       clave es que el container ahora hace scroll interno. */
+    align-items: flex-start !important;
+}
+
+/* Container: scroll interno + max-height ajustado + tipografía editorial */
+.espacio-modal-container {
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    background: var(--blanco-perla) !important;
+    border-radius: 6px !important;
+    border: 1px solid rgba(43, 24, 16, 0.12) !important;
+    padding: 32px !important;
+    box-shadow:
+        0 30px 80px rgba(15, 8, 4, 0.45),
+        inset 0 1px 0 rgba(253, 251, 247, 0.6) !important;
+    width: min(94vw, 1100px) !important;
+    margin: 0 auto !important;
+    scrollbar-width: thin;
+    scrollbar-color: var(--marron-elegante) transparent;
+}
+
+/* Scrollbar webkit más discreto */
+.espacio-modal-container::-webkit-scrollbar {
+    width: 6px;
+}
+.espacio-modal-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+.espacio-modal-container::-webkit-scrollbar-thumb {
+    background: rgba(43, 24, 16, 0.3);
+    border-radius: 3px;
+}
+
+/* Esquinas doradas decorativas: las quitamos (era ruido visual) */
+.espacio-modal-container::before,
+.espacio-modal-container::after {
+    display: none !important;
+}
+
+/* Botón close: refinado, sin pelearse con el scroll */
+.espacio-modal-close {
+    position: absolute !important;
+    top: 18px !important;
+    right: 18px !important;
+    width: 42px !important;
+    height: 42px !important;
+    background: rgba(43, 24, 16, 0.92) !important;
+    color: var(--blanco-perla) !important;
+    border: none !important;
+    border-radius: 50% !important;
+    box-shadow: 0 4px 14px rgba(15, 8, 4, 0.3) !important;
+    z-index: 10;
+    transition: transform 0.4s var(--ease-cinematic),
+                background 0.4s var(--ease-cinematic) !important;
+}
+.espacio-modal-close:hover {
+    transform: rotate(90deg) scale(1.05) !important;
+    background: var(--marron-tinta) !important;
+}
+.espacio-modal-close i {
+    font-size: 1rem !important;
+}
+
+/* Swiper más limpio sin marco interno extra */
+.espacioSwiper {
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0 0 24px 0;
+}
+
+/* Info card debajo del swiper: editorial, sin marcos dorados */
+.espacio-modal-info {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 24px 8px 12px !important;
+    margin-top: 0 !important;
+    text-align: center;
+}
+.espacio-modal-info::before {
+    display: none !important; /* línea dorada — fuera */
+}
+
+.espacio-modal-title {
+    font-family: var(--serif-display) !important;
+    font-size: clamp(1.8rem, 3vw, 2.6rem) !important;
+    font-weight: 400 !important;
+    background: none !important;
+    -webkit-text-fill-color: var(--marron-tinta) !important;
+    color: var(--marron-tinta) !important;
+    letter-spacing: -0.005em !important;
+    margin-bottom: 18px !important;
+    line-height: 1.1 !important;
+}
+.espacio-modal-title::after {
+    content: '' !important;
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: rgba(43, 24, 16, 0.35);
+    margin: 14px auto 0;
+    position: static !important;
+    transform: none !important;
+    color: transparent !important;
+}
+
+.espacio-modal-description {
+    font-family: var(--serif-display) !important;
+    font-style: italic;
+    font-size: clamp(1rem, 1.2vw, 1.15rem) !important;
+    color: var(--gris-tinta) !important;
+    line-height: 1.75 !important;
+    max-width: 720px !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+}
+.espacio-modal-description::before,
+.espacio-modal-description::after {
+    display: none !important; /* comillas decorativas — fuera */
+}
+
+
+/* =====================================================================
+   12. FOCUS STATES (accesibilidad cohesiva con la nueva estética)
    ===================================================================== */
 
 a:focus-visible,
