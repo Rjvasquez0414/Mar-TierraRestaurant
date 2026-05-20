@@ -1,0 +1,241 @@
+/* ============================================================
+   gallery-v2.css — Galeria bento editorial premium
+   ------------------------------------------------------------
+   Activa con la clase .gallery-v2 en .gallery-masonry.
+   Quitar el <link> o la clase revierte al gallery.css original.
+   ============================================================ */
+
+/* Container bento — 4 col grid con tiles asimetricos */
+.gallery-masonry.gallery-v2 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 220px;
+    grid-auto-flow: dense;
+    gap: 14px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    /* Reset del column-layout viejo */
+    column-count: unset;
+    column-gap: unset;
+}
+
+.gallery-v2 .gallery-item {
+    margin: 0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(74, 52, 41, 0.10);
+    transition: box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    background-color: var(--marron-oscuro);
+    will-change: transform;
+    grid-column: span 1;
+    grid-row: span 1;
+}
+
+/* Tile sizes basados en clases ya existentes */
+.gallery-v2 .gallery-item.gallery-tall {
+    grid-row: span 2;
+}
+
+.gallery-v2 .gallery-item.gallery-wide {
+    grid-column: span 2;
+}
+
+/* Nuevo: gallery-large = hero 2x2 (para foto principal Almaterra) */
+.gallery-v2 .gallery-item.gallery-large {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+/* Trigger ahora es <a> */
+.gallery-v2 .gallery-trigger {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: zoom-in;
+    overflow: hidden;
+    border-radius: 16px;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+}
+
+.gallery-v2 .gallery-trigger img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+                filter 0.5s ease;
+}
+
+/* Hover sofisticado */
+.gallery-v2 .gallery-item:hover {
+    box-shadow: 0 22px 60px rgba(74, 52, 41, 0.28);
+    z-index: 2;
+}
+
+.gallery-v2 .gallery-item:hover .gallery-trigger img {
+    transform: scale(1.08);
+    filter: brightness(1.06) saturate(1.05);
+}
+
+/* Caption editorial */
+.gallery-v2 .gallery-item figcaption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 22px 24px 20px;
+    color: #fff;
+    font-family: 'Valerius', 'Playfair Display', serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.06em;
+    background: linear-gradient(180deg, transparent 0%, rgba(15, 8, 4, 0.88) 90%);
+    transform: translateY(45%);
+    opacity: 0;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.4s ease;
+    pointer-events: none;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.gallery-v2 .gallery-item:hover figcaption,
+.gallery-v2 .gallery-item:focus-within figcaption {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Indicador zoom sutil arriba a la derecha */
+.gallery-v2 .gallery-item .gallery-zoom {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 38px;
+    height: 38px;
+    background-color: rgba(15, 8, 4, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(228, 212, 168, 0.35);
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+}
+
+.gallery-v2 .gallery-item .gallery-zoom svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: var(--dorado-brillante, #E4D4A8);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.gallery-v2 .gallery-item:hover .gallery-zoom,
+.gallery-v2 .gallery-item:focus-within .gallery-zoom {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Tilt: necesita perspective en el contenedor padre */
+@media (hover: hover) and (min-width: 901px) {
+    .gallery-masonry.gallery-v2 {
+        perspective: 1400px;
+    }
+    .gallery-v2 .gallery-item {
+        transform-style: preserve-3d;
+    }
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 1024px) {
+    .gallery-masonry.gallery-v2 {
+        grid-auto-rows: 200px;
+    }
+}
+
+@media (max-width: 900px) {
+    .gallery-masonry.gallery-v2 {
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 220px;
+        gap: 12px;
+    }
+    .gallery-v2 .gallery-item.gallery-wide,
+    .gallery-v2 .gallery-item.gallery-large {
+        grid-column: span 2;
+    }
+    .gallery-v2 .gallery-item.gallery-large {
+        grid-row: span 2;
+    }
+}
+
+@media (max-width: 560px) {
+    .gallery-masonry.gallery-v2 {
+        grid-template-columns: 1fr;
+        grid-auto-rows: 260px;
+        gap: 12px;
+        padding: 0 12px;
+    }
+    .gallery-v2 .gallery-item,
+    .gallery-v2 .gallery-item.gallery-tall,
+    .gallery-v2 .gallery-item.gallery-wide,
+    .gallery-v2 .gallery-item.gallery-large {
+        grid-column: span 1;
+        grid-row: span 1;
+    }
+    .gallery-v2 .gallery-item figcaption {
+        padding: 16px 18px 14px;
+        font-size: 0.95rem;
+    }
+}
+
+/* ====== Reduced motion ====== */
+@media (prefers-reduced-motion: reduce) {
+    .gallery-v2 .gallery-item,
+    .gallery-v2 .gallery-trigger img,
+    .gallery-v2 .gallery-item figcaption,
+    .gallery-v2 .gallery-item .gallery-zoom {
+        transition: none !important;
+        animation: none !important;
+    }
+    .gallery-v2 .gallery-item:hover .gallery-trigger img {
+        transform: none;
+    }
+}
+
+/* ====== PhotoSwipe overrides (look & feel marca) ====== */
+.pswp {
+    --pswp-bg: #1A0F08;
+    --pswp-icon-color: #E4D4A8;
+    --pswp-icon-color-secondary: #1A0F08;
+    --pswp-icon-stroke-color: rgba(228, 212, 168, 0.6);
+    --pswp-icon-stroke-width: 1.8px;
+}
+
+.pswp__counter {
+    font-family: 'Causten', 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    color: rgba(228, 212, 168, 0.85);
+}
+
+.pswp__caption {
+    font-family: 'Valerius', 'Playfair Display', serif;
+    color: rgba(228, 212, 168, 0.95);
+    font-size: 1.05rem;
+    letter-spacing: 0.05em;
+    text-align: center;
+    padding: 16px;
+}

@@ -79,6 +79,10 @@
     <link rel="stylesheet" href="css/testimonials.css">
     <link rel="stylesheet" href="css/menu-v2.css">
 
+    <!-- PhotoSwipe 5 (galeria v2) -->
+    <link rel="stylesheet" href="https://unpkg.com/photoswipe@5.4.4/dist/photoswipe.css">
+    <link rel="stylesheet" href="css/gallery-v2.css">
+
     <!-- Tipografías Personalizadas - DEBE CARGAR AL FINAL -->
     <link rel="stylesheet" href="css/custom-fonts.css">
 
@@ -547,124 +551,112 @@
             </p>
         </div>
 
-        <div class="gallery-masonry" id="galleryMasonry">
-            <!-- Almaterra -->
-            <figure class="gallery-item gallery-tall" data-gallery-index="0">
-                <button type="button" class="gallery-trigger" aria-label="Abrir foto de Almaterra">
-                    <img src="images/EspaciosRestaurante/almaterra/_MG_8912.webp"
-                         alt="Almaterra — coworking elegante con luz natural"
-                         loading="lazy" decoding="async" width="800" height="1067">
-                </button>
+        <div class="gallery-masonry gallery-v2" id="galleryMasonry">
+            <!-- Almaterra (HERO 2x2) -->
+            <figure class="gallery-item gallery-large" data-aos="fade-up" data-aos-delay="0">
+                <a class="gallery-trigger" href="images/EspaciosRestaurante/almaterra/_MG_8912.webp" data-pswp-width="800" data-pswp-height="1067" aria-label="Abrir foto de Almaterra" target="_blank" rel="noopener">
+                    <img src="images/EspaciosRestaurante/almaterra/_MG_8912.webp" alt="Almaterra — coworking elegante con luz natural" loading="lazy" decoding="async" width="800" height="1067">
+                    <span class="gallery-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg></span>
+                </a>
                 <figcaption>Almaterra</figcaption>
             </figure>
 
             <!-- Arca -->
-            <figure class="gallery-item" data-gallery-index="1">
-                <button type="button" class="gallery-trigger" aria-label="Abrir foto del Salón Arca">
-                    <img src="images/EspaciosRestaurante/arca/_MG_8945.webp"
-                         alt="Arca — salón principal con mesas dispuestas para servicio"
-                         loading="lazy" decoding="async" width="800" height="600">
-                </button>
+            <figure class="gallery-item" data-aos="fade-up" data-aos-delay="80">
+                <a class="gallery-trigger" href="images/EspaciosRestaurante/arca/_MG_8945.webp" data-pswp-width="800" data-pswp-height="600" aria-label="Abrir foto del Salón Arca" target="_blank" rel="noopener">
+                    <img src="images/EspaciosRestaurante/arca/_MG_8945.webp" alt="Arca — salón principal con mesas dispuestas para servicio" loading="lazy" decoding="async" width="800" height="600">
+                    <span class="gallery-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg></span>
+                </a>
                 <figcaption>Arca · Salón principal</figcaption>
             </figure>
 
-            <!-- Barco -->
-            <figure class="gallery-item gallery-wide" data-gallery-index="2">
-                <button type="button" class="gallery-trigger" aria-label="Abrir foto del salón Barco">
-                    <img src="images/EspaciosRestaurante/barco/_MG_8908.webp"
-                         alt="Barco — salón temático náutico"
-                         loading="lazy" decoding="async" width="1200" height="675">
-                </button>
+            <!-- Barco (wide) -->
+            <figure class="gallery-item gallery-wide" data-aos="fade-up" data-aos-delay="160">
+                <a class="gallery-trigger" href="images/EspaciosRestaurante/barco/_MG_8908.webp" data-pswp-width="1200" data-pswp-height="675" aria-label="Abrir foto del salón Barco" target="_blank" rel="noopener">
+                    <img src="images/EspaciosRestaurante/barco/_MG_8908.webp" alt="Barco — salón temático náutico" loading="lazy" decoding="async" width="1200" height="675">
+                    <span class="gallery-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg></span>
+                </a>
                 <figcaption>Barco · Experiencia náutica</figcaption>
             </figure>
 
-            <!-- Arca foto 2 -->
-            <figure class="gallery-item" data-gallery-index="3">
-                <button type="button" class="gallery-trigger" aria-label="Abrir foto del Arca">
-                    <img src="images/EspaciosRestaurante/arca/_MG_8885.webp"
-                         alt="Detalle interior del Arca"
-                         loading="lazy" decoding="async" width="800" height="600">
-                </button>
+            <!-- Arca 2 -->
+            <figure class="gallery-item" data-aos="fade-up" data-aos-delay="240">
+                <a class="gallery-trigger" href="images/EspaciosRestaurante/arca/_MG_8885.webp" data-pswp-width="800" data-pswp-height="600" aria-label="Abrir foto del Arca" target="_blank" rel="noopener">
+                    <img src="images/EspaciosRestaurante/arca/_MG_8885.webp" alt="Detalle interior del Arca" loading="lazy" decoding="async" width="800" height="600">
+                    <span class="gallery-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg></span>
+                </a>
                 <figcaption>Arca · Detalle</figcaption>
             </figure>
 
-            <!-- Chillout -->
-            <figure class="gallery-item gallery-tall" data-gallery-index="4">
-                <button type="button" class="gallery-trigger" aria-label="Abrir foto del Chillout">
-                    <img src="images/EspaciosRestaurante/Chillout/_MG_9344.webp"
-                         alt="Chillout — terraza al aire libre pet friendly"
-                         loading="lazy" decoding="async" width="800" height="1067">
-                </button>
+            <!-- Chillout (tall) -->
+            <figure class="gallery-item gallery-tall" data-aos="fade-up" data-aos-delay="0">
+                <a class="gallery-trigger" href="images/EspaciosRestaurante/Chillout/_MG_9344.webp" data-pswp-width="800" data-pswp-height="1067" aria-label="Abrir foto del Chillout" target="_blank" rel="noopener">
+                    <img src="images/EspaciosRestaurante/Chillout/_MG_9344.webp" alt="Chillout — terraza al aire libre pet friendly" loading="lazy" decoding="async" width="800" height="1067">
+                    <span class="gallery-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg></span>
+                </a>
                 <figcaption>Chillout · Pet friendly</figcaption>
             </figure>
 
-            <!-- Rooftop / Moon Terraza -->
-            <figure class="gallery-item" data-gallery-index="5">
-                <button type="button" class="gallery-trigger" aria-label="Abrir foto de Moon Terraza">
-                    <img src="images/EspaciosRestaurante/rooftop/_MG_9320.webp"
-                         alt="Moon Terraza — rooftop con vista nocturna"
-                         loading="lazy" decoding="async" width="800" height="600">
-                </button>
+            <!-- Moon Terraza -->
+            <figure class="gallery-item" data-aos="fade-up" data-aos-delay="80">
+                <a class="gallery-trigger" href="images/EspaciosRestaurante/rooftop/_MG_9320.webp" data-pswp-width="800" data-pswp-height="600" aria-label="Abrir foto de Moon Terraza" target="_blank" rel="noopener">
+                    <img src="images/EspaciosRestaurante/rooftop/_MG_9320.webp" alt="Moon Terraza — rooftop con vista nocturna" loading="lazy" decoding="async" width="800" height="600">
+                    <span class="gallery-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg></span>
+                </a>
                 <figcaption>Moon Terraza · Rooftop</figcaption>
             </figure>
 
-            <!-- Salón VIP / Golden -->
-            <figure class="gallery-item" data-gallery-index="6">
-                <button type="button" class="gallery-trigger" aria-label="Abrir foto del Salón VIP">
-                    <img src="images/EspaciosRestaurante/SalonVIP/_MG_8865.webp"
-                         alt="Salón VIP Golden — atmósfera privada"
-                         loading="lazy" decoding="async" width="800" height="600">
-                </button>
+            <!-- Salón VIP -->
+            <figure class="gallery-item" data-aos="fade-up" data-aos-delay="160">
+                <a class="gallery-trigger" href="images/EspaciosRestaurante/SalonVIP/_MG_8865.webp" data-pswp-width="800" data-pswp-height="600" aria-label="Abrir foto del Salón VIP" target="_blank" rel="noopener">
+                    <img src="images/EspaciosRestaurante/SalonVIP/_MG_8865.webp" alt="Salón VIP Golden — atmósfera privada" loading="lazy" decoding="async" width="800" height="600">
+                    <span class="gallery-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg></span>
+                </a>
                 <figcaption>Golden · Salón VIP</figcaption>
             </figure>
 
-            <!-- Arca foto 3 -->
-            <figure class="gallery-item gallery-wide" data-gallery-index="7">
-                <button type="button" class="gallery-trigger" aria-label="Abrir foto panorámica del Arca">
-                    <img src="images/EspaciosRestaurante/arca/_MG_8967.webp"
-                         alt="Vista panorámica del salón Arca"
-                         loading="lazy" decoding="async" width="1200" height="675">
-                </button>
+            <!-- Arca panorámica (wide) -->
+            <figure class="gallery-item gallery-wide" data-aos="fade-up" data-aos-delay="240">
+                <a class="gallery-trigger" href="images/EspaciosRestaurante/arca/_MG_8967.webp" data-pswp-width="1200" data-pswp-height="675" aria-label="Abrir foto panorámica del Arca" target="_blank" rel="noopener">
+                    <img src="images/EspaciosRestaurante/arca/_MG_8967.webp" alt="Vista panorámica del salón Arca" loading="lazy" decoding="async" width="1200" height="675">
+                    <span class="gallery-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg></span>
+                </a>
                 <figcaption>Arca · Panorámica</figcaption>
             </figure>
 
             <!-- Almaterra 2 -->
-            <figure class="gallery-item" data-gallery-index="8">
-                <button type="button" class="gallery-trigger" aria-label="Abrir foto de Almaterra">
-                    <img src="images/EspaciosRestaurante/almaterra/_MG_8993.webp"
-                         alt="Almaterra — ambiente ejecutivo"
-                         loading="lazy" decoding="async" width="800" height="600">
-                </button>
+            <figure class="gallery-item" data-aos="fade-up" data-aos-delay="0">
+                <a class="gallery-trigger" href="images/EspaciosRestaurante/almaterra/_MG_8993.webp" data-pswp-width="800" data-pswp-height="600" aria-label="Abrir foto de Almaterra" target="_blank" rel="noopener">
+                    <img src="images/EspaciosRestaurante/almaterra/_MG_8993.webp" alt="Almaterra — ambiente ejecutivo" loading="lazy" decoding="async" width="800" height="600">
+                    <span class="gallery-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg></span>
+                </a>
                 <figcaption>Almaterra · Detalle</figcaption>
             </figure>
 
-            <!-- Rooftop 2 -->
-            <figure class="gallery-item gallery-tall" data-gallery-index="9">
-                <button type="button" class="gallery-trigger" aria-label="Abrir foto del rooftop">
-                    <img src="images/EspaciosRestaurante/rooftop/_MG_9326.webp"
-                         alt="Rooftop con iluminación cálida al atardecer"
-                         loading="lazy" decoding="async" width="800" height="1067">
-                </button>
+            <!-- Rooftop 2 (tall) -->
+            <figure class="gallery-item gallery-tall" data-aos="fade-up" data-aos-delay="80">
+                <a class="gallery-trigger" href="images/EspaciosRestaurante/rooftop/_MG_9326.webp" data-pswp-width="800" data-pswp-height="1067" aria-label="Abrir foto del rooftop" target="_blank" rel="noopener">
+                    <img src="images/EspaciosRestaurante/rooftop/_MG_9326.webp" alt="Rooftop con iluminación cálida al atardecer" loading="lazy" decoding="async" width="800" height="1067">
+                    <span class="gallery-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg></span>
+                </a>
                 <figcaption>Moon Terraza · Atardecer</figcaption>
             </figure>
 
             <!-- Chillout 2 -->
-            <figure class="gallery-item" data-gallery-index="10">
-                <button type="button" class="gallery-trigger" aria-label="Abrir foto del Chillout">
-                    <img src="images/EspaciosRestaurante/Chillout/_MG_9346.webp"
-                         alt="Chillout — cocktail bar al aire libre"
-                         loading="lazy" decoding="async" width="800" height="600">
-                </button>
+            <figure class="gallery-item" data-aos="fade-up" data-aos-delay="160">
+                <a class="gallery-trigger" href="images/EspaciosRestaurante/Chillout/_MG_9346.webp" data-pswp-width="800" data-pswp-height="600" aria-label="Abrir foto del Chillout" target="_blank" rel="noopener">
+                    <img src="images/EspaciosRestaurante/Chillout/_MG_9346.webp" alt="Chillout — cocktail bar al aire libre" loading="lazy" decoding="async" width="800" height="600">
+                    <span class="gallery-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg></span>
+                </a>
                 <figcaption>Chillout · Cocktail bar</figcaption>
             </figure>
 
             <!-- Salón VIP 2 -->
-            <figure class="gallery-item" data-gallery-index="11">
-                <button type="button" class="gallery-trigger" aria-label="Abrir foto del Salón VIP">
-                    <img src="images/EspaciosRestaurante/SalonVIP/_MG_8871.webp"
-                         alt="Golden — mesa privada del salón VIP"
-                         loading="lazy" decoding="async" width="800" height="600">
-                </button>
+            <figure class="gallery-item" data-aos="fade-up" data-aos-delay="240">
+                <a class="gallery-trigger" href="images/EspaciosRestaurante/SalonVIP/_MG_8871.webp" data-pswp-width="800" data-pswp-height="600" aria-label="Abrir foto del Salón VIP" target="_blank" rel="noopener">
+                    <img src="images/EspaciosRestaurante/SalonVIP/_MG_8871.webp" alt="Golden — mesa privada del salón VIP" loading="lazy" decoding="async" width="800" height="600">
+                    <span class="gallery-zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/><path d="M11 8v6"/></svg></span>
+                </a>
                 <figcaption>Golden · Mesa privada</figcaption>
             </figure>
         </div>
@@ -1993,6 +1985,16 @@
     <script src="js/menu-schema.js" defer></script>
     <script src="js/script.js" defer></script>
 
+    <!-- Galeria v2: PhotoSwipe 5 (modulo) + Vanilla-Tilt + init -->
+    <script type="module">
+        import PhotoSwipeLightbox from 'https://unpkg.com/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js';
+        import PhotoSwipe from 'https://unpkg.com/photoswipe@5.4.4/dist/photoswipe.esm.min.js';
+        window.PhotoSwipeLightbox = PhotoSwipeLightbox;
+        window.PhotoSwipe = PhotoSwipe;
+    </script>
+    <script src="https://unpkg.com/vanilla-tilt@1.8.1/dist/vanilla-tilt.min.js" defer></script>
+    <script src="js/gallery-v2.js" defer></script>
+
     <!-- Enhanced Navigation Script -->
     <!-- Nota: el parallax del hero y la función showMenuSection() viven en
          js/script.js + js/enhancements.js. Aquí sólo declaramos los handlers
@@ -2169,7 +2171,8 @@
     <!-- Script de Mejoras Profesionales -->
     <script src="js/enhancements.js" defer></script>
 
-    <!-- Lightbox de la galería -->
-    <script src="js/gallery.js" defer></script>
+    <!-- Lightbox custom (gallery.js) desactivado en favor de PhotoSwipe (gallery-v2.js)
+         Para revertir: descomentar la linea de abajo y quitar gallery-v2.css/js -->
+    <!-- <script src="js/gallery.js" defer></script> -->
 </body>
 </html>
