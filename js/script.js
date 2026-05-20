@@ -450,48 +450,59 @@ class MenuApp {
 
     // Navigation functionality
     showSection(sectionId) {
-        // Get all sections
-        const allSections = document.querySelectorAll('.hero, .categories-section, .menu-section, .contact-section, .reservation-info-section, .instalaciones-section, .gallery-section, .testimonials-section');
+        // Marketing sections que fluyen juntas en el home.
+        // Al navegar a cualquiera de ellas: NO se ocultan las otras,
+        // solo se hace scroll. Esto preserva el flow tipico de landing.
+        const MARKETING = ['hero', 'categories', 'instalaciones', 'galeria', 'testimonios', 'contact'];
+        // Page-mode: secciones que reemplazan al home (deep-link)
+        const PAGE_MODE_SELECTORS = '.menu-section, .reservation-info-section';
+        const MARKETING_SELECTORS = '.hero, .categories-section, .instalaciones-section, .gallery-section, .testimonials-section, .contact-section';
 
-        // Hide all sections first
-        allSections.forEach(section => {
-            section.classList.remove('active');
-            section.style.display = 'none';
-        });
+        const isMarketing = MARKETING.includes(sectionId);
 
-        // Special handling for hero section
-        if (sectionId === 'hero') {
-            const hero = document.querySelector('.hero');
-            if (hero) {
-                hero.style.display = 'flex';
-                hero.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (isMarketing) {
+            // Mostrar TODAS las marketing + ocultar page-mode
+            document.querySelectorAll(PAGE_MODE_SELECTORS).forEach(s => {
+                s.style.display = 'none';
+                s.classList.remove('active');
+            });
+            document.querySelectorAll(MARKETING_SELECTORS).forEach(s => {
+                s.style.display = '';  // reset al CSS default
+                s.classList.remove('active');
+            });
+
+            // Scroll a la seccion objetivo
+            let target;
+            if (sectionId === 'hero') {
+                target = document.querySelector('.hero');
+            } else {
+                target = document.getElementById(sectionId)
+                      || document.getElementById(sectionId + '-section')
+                      || document.querySelector('.' + sectionId + '-section');
+            }
+            if (target) {
+                const headerHeight = document.getElementById('header')?.offsetHeight || 0;
+                const targetPosition = target.offsetTop - headerHeight - 20;
+                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
             }
         } else {
-            // Try to find section by ID first
+            // Page mode: ocultar todo (incluido marketing) y mostrar solo el target
+            const allSections = document.querySelectorAll('.hero, .categories-section, .menu-section, .contact-section, .reservation-info-section, .instalaciones-section, .gallery-section, .testimonials-section');
+            allSections.forEach(section => {
+                section.classList.remove('active');
+                section.style.display = 'none';
+            });
+
             let targetSection = document.getElementById(sectionId);
-
-            // If not found, try with '-section' suffix
-            if (!targetSection) {
-                targetSection = document.getElementById(sectionId + '-section');
-            }
-
-            // If still not found, try as class
-            if (!targetSection) {
-                targetSection = document.querySelector('.' + sectionId + '-section');
-            }
+            if (!targetSection) targetSection = document.getElementById(sectionId + '-section');
+            if (!targetSection) targetSection = document.querySelector('.' + sectionId + '-section');
 
             if (targetSection) {
                 targetSection.style.display = 'block';
                 targetSection.classList.add('active');
-
-                // Smooth scroll with offset for header
                 const headerHeight = document.getElementById('header')?.offsetHeight || 0;
                 const targetPosition = targetSection.offsetTop - headerHeight - 20;
-
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
+                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
             }
         }
 

@@ -547,7 +547,7 @@ nav {
     padding: 200px 0 120px 0;
     background: var(--blanco-perla);
     position: relative;
-    display: none;
+    /* Visible por default en home — marketing flow */
 }
 
 .categories-section.active {
@@ -1065,8 +1065,8 @@ nav {
 .contact-section {
     padding: 200px 0 120px 0;
     background: linear-gradient(135deg, var(--beige-claro) 0%, var(--blanco-perla) 100%);
-    display: none;
     position: relative;
+    /* Visible por default en home — contiene la ubicacion */
 }
 
 .contact-section.active {
