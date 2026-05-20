@@ -102,7 +102,7 @@ class MenuApp {
         const searchInput = document.querySelector('.search-input');
         if (searchInput) {
             searchInput.addEventListener('input', (e) => {
-                this.searchTerm = e.target.value.toLowerCase();
+                this.searchTerm = this.normalizeForSearch(e.target.value);
                 this.filterMenuItems();
             });
         }
@@ -233,7 +233,7 @@ class MenuApp {
 
         if (searchInput) {
             searchInput.addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
+                const searchTerm = this.normalizeForSearch(e.target.value);
                 this.filterMenuItemsInSection(category, searchTerm, this.currentFilter);
             });
         }
@@ -243,9 +243,9 @@ class MenuApp {
                 // Remove active class from buttons in this section only
                 filterButtons.forEach(b => b.classList.remove('active'));
                 e.target.classList.add('active');
-                
+
                 const filter = e.target.dataset.filter;
-                const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+                const searchTerm = searchInput ? this.normalizeForSearch(searchInput.value) : '';
                 this.filterMenuItemsInSection(category, searchTerm, filter);
             });
         });
@@ -256,12 +256,22 @@ class MenuApp {
         // This is now handled by setupSearchAndFilterForSection
     }
 
+    // Normalize text for accent-insensitive search.
+    // "Salmón Robata" -> "salmon robata", "Camarón" -> "camaron".
+    normalizeForSearch(str) {
+        return (str || '')
+            .toString()
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[̀-ͯ]/g, '');
+    }
+
     // Create menu item element - Diseño Premium
     createMenuItem(item) {
         const menuItemEl = document.createElement('div');
         menuItemEl.dataset.tags = item.tags ? item.tags.join(',') : '';
-        menuItemEl.dataset.name = item.name.toLowerCase();
-        menuItemEl.dataset.description = item.description.toLowerCase();
+        menuItemEl.dataset.name = this.normalizeForSearch(item.name);
+        menuItemEl.dataset.description = this.normalizeForSearch(item.description);
 
         // Detectar si el plato tiene imagen o video válido
         const hasImage = item.image && item.image !== '' && item.image !== null;
