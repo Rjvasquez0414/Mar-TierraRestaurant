@@ -1,0 +1,724 @@
+/* ============================================================
+   mobile.css — Adaptación mobile del sitio Mar&Tierra
+   ------------------------------------------------------------
+   Este archivo concentra todos los ajustes responsive para
+   pantallas <= 960px en lugar de dispersarlos por 10 CSS.
+   Carga DESPUÉS de los demás stylesheets (gana especificidad
+   por orden, sin abusar de !important).
+
+   Breakpoints:
+     - TABLET   : <= 960px
+     - MOBILE   : <= 720px
+     - PHONE    : <= 480px
+     - SMALL    : <= 360px (compactación extrema)
+   ============================================================ */
+
+
+/* ============================================================
+   1. SISTEMA BASE — siempre activo
+   ============================================================ */
+
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Evita que medios o iframes desborden el viewport */
+img, video, iframe, svg {
+    max-width: 100%;
+}
+
+/* Touch targets cómodos para acciones primarias.
+   No incluye buttons genéricos para no romper cierres de modal (40x40 circulares). */
+.hero-cta,
+.reservation-btn,
+.nav-link,
+.filter-btn,
+.back-btn,
+.mobile-toggle {
+    min-height: 44px;
+}
+
+
+/* ============================================================
+   2. TABLET (<= 960px)
+   ============================================================ */
+@media (max-width: 960px) {
+
+    /* ---------- Header / Navegación ---------- */
+    .header-container,
+    header.scrolled .header-container {
+        padding: 8px 24px;
+    }
+
+    .navbar-logo {
+        height: 78px;
+        max-width: 200px;
+    }
+
+    header.scrolled .navbar-logo {
+        height: 64px;
+    }
+
+    /* ---------- Containers y padding general ---------- */
+    .categories-grid,
+    .contact-container,
+    .menu-container,
+    .reservation-info-container,
+    .instalaciones-container {
+        padding-left: 28px;
+        padding-right: 28px;
+    }
+
+    /* ---------- Section spacing (sin desperdicio vertical) ---------- */
+    .categories-section,
+    .contact-section,
+    .menu-section,
+    .reservation-info-section {
+        padding-top: 130px;
+        padding-bottom: 80px;
+    }
+
+    .section-header {
+        margin-bottom: 48px;
+    }
+
+    /* ---------- Tipografía de sección ---------- */
+    .section-title {
+        font-size: clamp(2rem, 5vw, 3rem);
+    }
+
+    .section-description {
+        font-size: 1.05rem;
+        padding: 0 8px;
+    }
+}
+
+
+/* ============================================================
+   3. MOBILE (<= 720px)
+   ============================================================ */
+@media (max-width: 720px) {
+
+    /* ---------- HEADER ---------- */
+    .header-container,
+    header.scrolled .header-container {
+        padding: 6px 18px;
+    }
+
+    .navbar-logo {
+        height: 62px;
+        max-width: 160px;
+    }
+
+    header.scrolled .navbar-logo {
+        height: 52px;
+    }
+
+    .mobile-toggle {
+        padding: 10px;
+        min-width: 44px;
+        min-height: 44px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Nav fullscreen overlay (ya existe en styles.css);
+       aseguramos legibilidad y respeto del header */
+    nav {
+        padding: 80px 24px 40px;
+        gap: 28px;
+    }
+
+    nav .nav-link {
+        font-size: 1.05rem;
+        text-align: center;
+    }
+
+    nav .reservation-btn {
+        margin-top: 16px;
+        padding: 14px 28px;
+    }
+
+    /* ---------- HERO ---------- */
+    .hero {
+        height: 100svh;
+        min-height: 560px;
+    }
+
+    .hero-content {
+        padding: 42px 22px;
+        margin: 0 14px;
+        border-radius: 22px;
+        max-width: 100%;
+    }
+
+    .hero-title {
+        font-size: clamp(2.6rem, 11vw, 4.2rem);
+        margin-bottom: 22px;
+        letter-spacing: 1.5px;
+    }
+
+    .hero-title::after {
+        width: 60px;
+        bottom: -10px;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+        letter-spacing: 2.5px;
+        margin-bottom: 20px;
+    }
+
+    .hero-description {
+        font-size: 0.98rem;
+        line-height: 1.65;
+        margin-bottom: 32px;
+    }
+
+    /* Romper el <br> del párrafo para no forzar saltos raros */
+    .hero-description br {
+        display: none;
+    }
+
+    .hero-cta {
+        padding: 14px 32px;
+        font-size: 0.78rem;
+        letter-spacing: 2px;
+    }
+
+    /* ---------- SECTION HEADERS ---------- */
+    section[id] {
+        scroll-margin-top: 96px;
+    }
+
+    .categories-section,
+    .contact-section,
+    .menu-section,
+    .reservation-info-section,
+    .instalaciones-section,
+    .gallery-section,
+    .testimonials-section {
+        padding-top: 110px;
+        padding-bottom: 64px;
+    }
+
+    .section-header {
+        margin-bottom: 36px;
+    }
+
+    .section-overtitle {
+        font-size: 0.7rem;
+        letter-spacing: 3.5px;
+    }
+
+    .section-overtitle::before,
+    .section-overtitle::after {
+        margin: 0 8px;
+    }
+
+    .section-title {
+        font-size: clamp(1.85rem, 7vw, 2.5rem);
+        margin-bottom: 18px;
+        letter-spacing: 0.5px;
+    }
+
+    .section-description {
+        font-size: 0.98rem;
+        line-height: 1.6;
+        padding: 0 6px;
+    }
+
+    .ornament {
+        gap: 12px;
+        margin: 22px 0;
+    }
+
+    .ornament-line {
+        width: 48px;
+    }
+
+    .ornament-center {
+        width: 8px;
+        height: 8px;
+    }
+
+    /* ---------- CATEGORIES (menú bento) ---------- */
+    .categories-grid,
+    .categories-grid.menu-v2 {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    /* ---------- INSTALACIONES ---------- */
+    .instalaciones-container {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .espacios-grid {
+        grid-template-columns: 1fr;
+        gap: 22px;
+        padding: 0;
+        margin-top: 36px;
+    }
+
+    .espacio-card {
+        max-width: 100%;
+        border-radius: 16px;
+    }
+
+    .espacio-image-wrapper {
+        height: 200px;
+    }
+
+    .espacio-content {
+        padding: 22px 22px 24px;
+    }
+
+    .espacio-title {
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+    }
+
+    .espacio-tag {
+        font-size: 0.72rem;
+        padding: 4px 12px;
+        margin-bottom: 12px;
+    }
+
+    .espacio-description {
+        font-size: 0.92rem;
+        line-height: 1.6;
+        margin-bottom: 16px;
+    }
+
+    .espacio-features {
+        gap: 8px;
+        margin-top: 14px;
+    }
+
+    .feature-item {
+        font-size: 0.78rem;
+        padding: 6px 10px;
+    }
+
+    /* ---------- TESTIMONIOS / PILARES ---------- */
+    .testimonials-section {
+        padding: 90px 20px 70px;
+    }
+
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    /* ---------- RESERVATION TYPES ---------- */
+    .reservation-info-section {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    .reservation-types-grid {
+        grid-template-columns: 1fr;
+        gap: 22px;
+        margin: 36px 0;
+    }
+
+    .reservation-type-card {
+        border-radius: 16px;
+    }
+
+    .reservation-type-card .card-image,
+    .card-image {
+        height: 150px;
+    }
+
+    .reservation-type-card .card-header {
+        padding: 22px 22px 18px;
+    }
+
+    .reservation-type-card h3 {
+        font-size: 1.4rem;
+        margin-bottom: 8px;
+    }
+
+    .card-badge {
+        font-size: 0.7rem;
+        padding: 4px 12px;
+    }
+
+    .card-content {
+        padding: 22px 22px 26px;
+    }
+
+    .feature-list li {
+        padding: 11px 0;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .feature-list .icon {
+        font-size: 1rem;
+        margin-right: 10px;
+    }
+
+    /* Etiqueta "RECOMENDADO" — más compacta para no salirse */
+    .reservation-type-card.featured::after {
+        top: 14px;
+        right: -34px;
+        padding: 4px 36px;
+        font-size: 0.6rem;
+    }
+
+    /* ---------- CONTACT ---------- */
+    .contact-section {
+        padding: 110px 0 70px;
+    }
+
+    .contact-container {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding: 0 18px;
+    }
+
+    .contact-info,
+    .hours-grid {
+        padding: 30px 24px;
+        border-radius: 14px;
+    }
+
+    .contact-title {
+        font-size: 1.8rem;
+        margin-bottom: 24px;
+        padding-bottom: 14px;
+    }
+
+    .contact-item {
+        gap: 14px;
+        margin-bottom: 22px;
+    }
+
+    .contact-icon {
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+    }
+
+    .contact-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .contact-label {
+        font-size: 0.7rem;
+        letter-spacing: 1.5px;
+        margin-bottom: 4px;
+    }
+
+    .contact-value {
+        font-size: 1rem;
+        line-height: 1.45;
+    }
+
+    .hours-grid {
+        gap: 14px;
+    }
+
+    .hour-item {
+        padding-bottom: 10px;
+        gap: 12px;
+    }
+
+    .hour-day {
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+
+    .hour-time {
+        font-size: 0.95rem;
+    }
+
+    /* ---------- MAPA ---------- */
+    .map-container {
+        margin-top: 36px;
+        padding: 0 18px;
+    }
+
+    .map-title {
+        font-size: 1.5rem;
+    }
+
+    .map-subtitle {
+        font-size: 0.92rem;
+    }
+
+    .map-wrapper {
+        padding: 10px;
+        border-radius: 14px;
+    }
+
+    .map-frame iframe {
+        height: 320px;
+    }
+
+    .map-corner {
+        width: 28px;
+        height: 28px;
+    }
+
+    /* ---------- MENU (platos individuales) ---------- */
+    .menu-container {
+        padding: 0 18px;
+    }
+
+    .menu-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin-top: 36px;
+        padding: 0;
+    }
+
+    .menu-item-image-wrapper {
+        height: 190px;
+    }
+
+    .menu-item-content {
+        padding: 22px 20px 20px;
+    }
+
+    .menu-item-name {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    .menu-item-desc {
+        font-size: 0.88rem;
+        line-height: 1.6;
+        min-height: 0;
+        margin-bottom: 14px;
+    }
+
+    .menu-item-price {
+        font-size: 1.35rem;
+    }
+
+    .menu-controls {
+        padding: 18px 0;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .search-box {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .filter-buttons {
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .filter-btn {
+        padding: 9px 14px;
+        font-size: 0.75rem;
+    }
+
+    .back-btn {
+        padding: 10px 18px;
+        font-size: 0.78rem;
+    }
+}
+
+
+/* ============================================================
+   4. PHONE (<= 480px) — ajustes finos en teléfonos pequeños
+   ============================================================ */
+@media (max-width: 480px) {
+
+    .header-container,
+    header.scrolled .header-container {
+        padding: 4px 14px;
+    }
+
+    .navbar-logo {
+        height: 56px;
+        max-width: 140px;
+    }
+
+    header.scrolled .navbar-logo {
+        height: 46px;
+    }
+
+    /* Hero más compacto */
+    .hero-content {
+        padding: 36px 18px;
+        margin: 0 10px;
+        border-radius: 18px;
+    }
+
+    .hero-title {
+        font-size: clamp(2.4rem, 12vw, 3.6rem);
+        margin-bottom: 18px;
+    }
+
+    .hero-subtitle {
+        font-size: 0.92rem;
+        letter-spacing: 2px;
+    }
+
+    .hero-description {
+        font-size: 0.92rem;
+    }
+
+    .hero-cta {
+        padding: 13px 26px;
+        font-size: 0.74rem;
+    }
+
+    /* Containers pegados al borde para aprovechar ancho */
+    .categories-grid,
+    .categories-grid.menu-v2,
+    .instalaciones-container,
+    .menu-container,
+    .reservation-info-section,
+    .contact-container,
+    .map-container {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    /* Section spacing comprimido */
+    .categories-section,
+    .contact-section,
+    .menu-section,
+    .reservation-info-section,
+    .instalaciones-section,
+    .gallery-section,
+    .testimonials-section {
+        padding-top: 96px;
+        padding-bottom: 56px;
+    }
+
+    .section-header {
+        margin-bottom: 28px;
+    }
+
+    .section-title {
+        font-size: clamp(1.65rem, 8vw, 2.2rem);
+    }
+
+    .section-description {
+        font-size: 0.92rem;
+    }
+
+    /* Cards más compactas */
+    .espacio-image-wrapper {
+        height: 180px;
+    }
+
+    .espacio-content {
+        padding: 20px 18px 22px;
+    }
+
+    .espacio-title {
+        font-size: 1.35rem;
+    }
+
+    .reservation-type-card .card-image,
+    .card-image {
+        height: 130px;
+    }
+
+    .reservation-type-card .card-header {
+        padding: 20px 18px 16px;
+    }
+
+    .reservation-type-card h3 {
+        font-size: 1.25rem;
+    }
+
+    .card-content {
+        padding: 20px 18px 22px;
+    }
+
+    .contact-info,
+    .hours-grid {
+        padding: 24px 20px;
+    }
+
+    .contact-title {
+        font-size: 1.55rem;
+    }
+
+    .map-frame iframe {
+        height: 280px;
+    }
+
+    /* WhatsApp floating un poco más pequeño en pantallas chicas */
+    .wa-float {
+        width: 54px;
+        height: 54px;
+        right: 14px;
+        bottom: 14px;
+    }
+}
+
+
+/* ============================================================
+   5. SMALL PHONE (<= 360px) — pantallas tipo iPhone SE
+   ============================================================ */
+@media (max-width: 360px) {
+
+    .navbar-logo {
+        height: 50px;
+        max-width: 124px;
+    }
+
+    .hero-title {
+        font-size: 2.2rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+    }
+
+    .hero-content {
+        padding: 30px 14px;
+    }
+
+    .espacio-title {
+        font-size: 1.2rem;
+    }
+
+    .contact-info,
+    .hours-grid {
+        padding: 20px 16px;
+    }
+}
+
+
+/* ============================================================
+   6. LANDSCAPE PHONE — evitar que el hero coma toda la pantalla
+   ============================================================ */
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
+    .hero {
+        min-height: 480px;
+        height: auto;
+        padding: 110px 0 60px;
+    }
+
+    .hero-content {
+        padding: 26px 22px;
+    }
+
+    .hero-title {
+        font-size: 2.4rem;
+        margin-bottom: 12px;
+    }
+
+    .hero-description {
+        margin-bottom: 18px;
+    }
+}
