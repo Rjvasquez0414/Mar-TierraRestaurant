@@ -217,6 +217,7 @@ function initScrollReveal() {
                 setTimeout(() => {
                     entry.target.classList.add('revealed');
                 }, index * 100);
+                revealObserver.unobserve(entry.target);
             }
         });
     }, {
@@ -228,6 +229,22 @@ function initScrollReveal() {
         element.classList.add('reveal-element');
         revealObserver.observe(element);
     });
+
+    // Numeral romano por sección: fade-up suave del data-numeral
+    // y revelado del título cuando la sección entra al viewport.
+    const numeralHeaders = document.querySelectorAll('.section-header[data-numeral]');
+    if (numeralHeaders.length) {
+        const numeralObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('numeral-revealed');
+                    numeralObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.25, rootMargin: '0px 0px -80px 0px' });
+
+        numeralHeaders.forEach(h => numeralObserver.observe(h));
+    }
 }
 
 // Enhance form elements

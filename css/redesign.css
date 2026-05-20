@@ -1,0 +1,645 @@
+/* =====================================================================
+   REDESIGN.CSS — Mar & Tierra · Capa Editorial v2026
+   ---------------------------------------------------------------------
+   Capa de refinamiento estético que se carga DESPUÉS de styles.css y
+   menu-v2.css. Implementa:
+     1. Hero editorial (ampersand dorado oversized, gradient vertical)
+     2. Cards de menú con número outline + borde animado superior
+     3. Dualidad Mar/Tierra (azul como segundo color de marca)
+     4. Numerales romanos entre secciones (estilo libro de cocina)
+     5. Galería con spotlights (3 captions grandes en Valerius)
+     6. Oro restringido (nav hovers en marrón, ornamentos en tinta)
+     7. Cinematic curtain reveals al hacer scroll
+   Cargar antes de mobile.css para que el responsive pueda overridear.
+   ===================================================================== */
+
+
+/* =====================================================================
+   1. ORO RESTRINGIDO — sobreescribimos los acentos dorados genéricos
+   ===================================================================== */
+
+/* Nav links: el hover ahora es tinta cálida en lugar de oro */
+header #nav .nav-link::before,
+header #nav .nav-link::after {
+    background: var(--marron-tinta) !important;
+}
+header #nav .nav-link:hover,
+header #nav .nav-link.active {
+    color: var(--marron-tinta) !important;
+}
+
+/* Section overtitle ◆ pasa a tinta cálida, no oro */
+.section-overtitle {
+    color: var(--marron-tinta) !important;
+    letter-spacing: 6px !important;
+    font-size: 0.7rem !important;
+    opacity: 0.78;
+}
+.section-overtitle::before,
+.section-overtitle::after {
+    color: var(--marron-tinta) !important;
+    opacity: 0.5;
+}
+
+/* Ornament-line + center pasan a marrón sutil */
+.ornament-line {
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(43, 24, 16, 0.4),
+        transparent) !important;
+}
+.ornament-center {
+    background: var(--marron-tinta) !important;
+    box-shadow: none !important;
+    width: 7px !important;
+    height: 7px !important;
+}
+
+/* Section title — tipografía editorial con peso */
+.section-title {
+    font-family: var(--serif-display) !important;
+    font-weight: 400 !important;
+    color: var(--marron-tinta) !important;
+    font-size: clamp(2.6rem, 5vw, 4.2rem) !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.005em !important;
+}
+
+
+/* =====================================================================
+   2. HERO EDITORIAL — tipografía protagonista, ampersand dorado oversized
+   ===================================================================== */
+
+.hero {
+    /* Overlay editorial: vertical dark→transparent en vez del triple-tinted */
+    background:
+        linear-gradient(
+            180deg,
+            rgba(16, 12, 8, 0.10) 0%,
+            rgba(16, 12, 8, 0.18) 35%,
+            rgba(16, 12, 8, 0.55) 78%,
+            rgba(16, 12, 8, 0.85) 100%
+        ),
+        url('https://res.cloudinary.com/dxvl2i2fy/image/upload/v1764181801/_MG_8945_pjgoxy.webp') center/cover !important;
+}
+
+/* Hero content: quitar el contenedor glass, dejar texto suelto */
+.hero-content {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 0 32px !important;
+    max-width: 1200px !important;
+    width: 100%;
+    text-align: center;
+}
+
+/* Eyebrow nuevo — small caps con tracking generoso, encima del título */
+.hero-eyebrow {
+    display: inline-block;
+    font-family: var(--sans-body);
+    font-size: 0.72rem;
+    font-weight: 400;
+    letter-spacing: 0.55em;
+    text-transform: uppercase;
+    color: var(--dorado-brillante);
+    margin-bottom: 28px;
+    padding-bottom: 4px;
+    position: relative;
+    opacity: 0;
+    animation: heroFade 1.2s var(--ease-cinematic) 0.2s forwards;
+}
+.hero-eyebrow::before,
+.hero-eyebrow::after {
+    content: '';
+    display: inline-block;
+    width: 32px;
+    height: 1px;
+    background: var(--dorado-brillante);
+    vertical-align: middle;
+    margin: 0 18px;
+    opacity: 0.6;
+}
+
+/* Hero title: 3 spans (Mar | & | Tierra) */
+.hero-title {
+    font-family: var(--serif-display) !important;
+    font-size: clamp(4.5rem, 13vw, 11rem) !important;
+    line-height: 0.92 !important;
+    letter-spacing: -0.015em !important;
+    color: var(--blanco-perla) !important;
+    text-shadow: 0 6px 40px rgba(0, 0, 0, 0.55);
+    margin: 0 0 38px 0 !important;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    flex-wrap: nowrap;
+    gap: 0.12em;
+}
+.hero-title::after {
+    display: none !important; /* removemos la línea dorada anterior */
+}
+.hero-word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: heroFade 1.4s var(--ease-cinematic) forwards;
+}
+.hero-word--mar    { animation-delay: 0.35s; }
+.hero-word--tierra { animation-delay: 0.65s; }
+
+/* El ampersand — pieza icónica, en Valerius gigante con tinte oro */
+.hero-ampersand {
+    display: inline-block;
+    font-family: var(--serif-display);
+    font-style: italic;
+    font-size: 1.35em;
+    line-height: 0.85;
+    background: linear-gradient(160deg,
+        var(--dorado-brillante) 0%,
+        var(--dorado-premium) 45%,
+        var(--dorado-oscuro) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    transform: translateY(0.08em) rotate(-2deg);
+    text-shadow: none;
+    opacity: 0;
+    animation: heroAmpersand 1.8s var(--ease-cinematic) 0.5s forwards;
+    margin: 0 0.05em;
+    filter: drop-shadow(0 8px 30px rgba(212, 175, 55, 0.25));
+}
+
+.hero-subtitle {
+    font-family: var(--sans-body) !important;
+    font-size: clamp(1rem, 1.6vw, 1.25rem) !important;
+    font-weight: 300 !important;
+    letter-spacing: 0.32em !important;
+    text-transform: uppercase;
+    color: rgba(253, 251, 247, 0.92) !important;
+    margin-bottom: 24px !important;
+    opacity: 0;
+    animation: heroFade 1.4s var(--ease-cinematic) 0.85s forwards;
+}
+
+.hero-description {
+    font-family: var(--serif-display) !important;
+    font-style: italic;
+    font-size: clamp(1.05rem, 1.45vw, 1.35rem) !important;
+    font-weight: 400 !important;
+    color: rgba(253, 251, 247, 0.85) !important;
+    max-width: 680px !important;
+    line-height: 1.6 !important;
+    margin: 0 auto 56px !important;
+    letter-spacing: 0.01em;
+    opacity: 0;
+    animation: heroFade 1.4s var(--ease-cinematic) 1.0s forwards;
+}
+
+.hero-cta {
+    padding: 18px 56px !important;
+    border: 1px solid rgba(253, 251, 247, 0.55) !important;
+    background: transparent !important;
+    color: var(--blanco-perla) !important;
+    font-family: var(--sans-body) !important;
+    font-size: 0.78rem !important;
+    font-weight: 400 !important;
+    letter-spacing: 0.4em !important;
+    border-radius: 0 !important;
+    backdrop-filter: none !important;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    animation: heroFade 1.4s var(--ease-cinematic) 1.2s forwards;
+    transition: color 0.5s var(--ease-cinematic),
+                border-color 0.5s var(--ease-cinematic),
+                transform 0.5s var(--ease-cinematic) !important;
+}
+.hero-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--dorado-premium);
+    transform: translateX(-101%);
+    transition: transform 0.6s var(--ease-cinematic);
+    z-index: -1;
+}
+.hero-cta:hover {
+    color: var(--marron-tinta) !important;
+    border-color: var(--dorado-premium) !important;
+    box-shadow: none !important;
+    transform: translateY(-2px) !important;
+}
+.hero-cta:hover::before {
+    transform: translateX(0);
+}
+
+@keyframes heroFade {
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroAmpersand {
+    0%   { opacity: 0; transform: translateY(0.4em) rotate(-12deg) scale(0.6); }
+    60%  { opacity: 1; transform: translateY(0.05em) rotate(0deg) scale(1.05); }
+    100% { opacity: 1; transform: translateY(0.08em) rotate(-2deg) scale(1); }
+}
+
+/* Wave divider más limpio (más sutil) */
+.hero .wave-divider {
+    z-index: 3;
+}
+
+
+/* =====================================================================
+   3. NUMERALES ROMANOS DE SECCIÓN — markers editoriales tipo libro
+   Aplicar atributo data-numeral="I" etc al .section-header
+   ===================================================================== */
+
+.section-header {
+    position: relative;
+}
+.section-header[data-numeral]::before {
+    content: attr(data-numeral);
+    position: absolute;
+    top: -52px;
+    left: 50%;
+    font-family: var(--serif-display);
+    font-size: clamp(4rem, 8vw, 7rem);
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(43, 24, 16, 0.18);
+    text-stroke: 1px rgba(43, 24, 16, 0.18);
+    letter-spacing: 0.05em;
+    font-style: italic;
+    pointer-events: none;
+    z-index: 0;
+    user-select: none;
+    transform: translate(-50%, 28px);
+    opacity: 0;
+    transition: opacity 1.1s var(--ease-cinematic),
+                transform 1.1s var(--ease-cinematic);
+}
+.section-header[data-numeral].numeral-revealed::before {
+    transform: translate(-50%, 0);
+    opacity: 1;
+}
+
+/* Empujar el contenido un poco hacia abajo para que el numeral respire */
+.categories-section .section-header,
+.instalaciones-section .section-header,
+.gallery-section .section-header {
+    padding-top: 80px;
+}
+
+
+/* =====================================================================
+   4. MENU CARDS — número outline grande + borde animado superior
+   ===================================================================== */
+
+.categories-grid.menu-v2 .category-card {
+    position: relative;
+    border-radius: 6px !important; /* más editorial, menos round */
+    overflow: hidden;
+}
+
+/* Borde superior fino que se "pinta" al cargar */
+.categories-grid.menu-v2 .category-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--dorado-premium);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.7s var(--ease-cinematic);
+    z-index: 4;
+}
+.categories-grid.menu-v2 .category-card:hover::before,
+.categories-grid.menu-v2 .category-card.revealed::before {
+    transform: scaleX(1);
+}
+
+/* Forzamos visibilidad de las cards independiente del observer .revealed:
+   el reveal-element de enhancements.js metía opacity:0 por defecto y
+   en algunas condiciones el observer no añadía .revealed a tiempo.
+   Las cards entran visibles; el efecto editorial es el borde superior
+   y el outline number, no el fade-in. */
+.categories-grid.menu-v2 .category-card.reveal-element {
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+/* Mar usa borde azul, no dorado */
+.categories-grid.menu-v2 .category-card[data-category="mar"]::before {
+    background: var(--azul-mar-claro);
+}
+/* Tierra usa marrón claro */
+.categories-grid.menu-v2 .category-card[data-category="tierra"]::before {
+    background: var(--crema-premium);
+}
+
+/* Número outline — usamos data-number en HTML */
+.categories-grid.menu-v2 .category-card[data-number]::after {
+    content: attr(data-number);
+    position: absolute;
+    bottom: -18px;
+    right: 18px;
+    font-family: var(--serif-display);
+    font-style: italic;
+    font-size: 8.5rem;
+    font-weight: 400;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(228, 212, 168, 0.22);
+    text-stroke: 1px rgba(228, 212, 168, 0.22);
+    pointer-events: none;
+    z-index: 1;
+    transition: transform 0.7s var(--ease-cinematic),
+                opacity 0.7s var(--ease-cinematic);
+}
+
+.categories-grid.menu-v2 .category-card:hover[data-number]::after {
+    transform: translate(-8px, -4px);
+    -webkit-text-stroke-color: rgba(228, 212, 168, 0.38);
+    text-stroke-color: rgba(228, 212, 168, 0.38);
+}
+
+/* Featured card: número más grande y posición diferente */
+.categories-grid.menu-v2 .category-card.featured[data-number]::after {
+    font-size: 14rem;
+    bottom: -30px;
+    right: 30px;
+}
+
+/* Banner: número a la izquierda en horizontal */
+.categories-grid.menu-v2 .category-card.banner[data-number]::after {
+    font-size: 7rem;
+    bottom: -16px;
+    right: 24px;
+}
+
+/* Category name: usar Valerius en vez de Playfair, más editorial */
+.categories-grid.menu-v2 .category-name {
+    font-family: var(--serif-display) !important;
+    letter-spacing: -0.005em !important;
+}
+
+/* Quitar la línea dorada decorativa porque ya tenemos el borde superior */
+.categories-grid.menu-v2 .category-line {
+    background: rgba(253, 251, 247, 0.4) !important;
+    width: 28px !important;
+}
+.categories-grid.menu-v2 .category-card:hover .category-line {
+    background: rgba(253, 251, 247, 0.7) !important;
+    width: 52px !important;
+}
+
+/* Mar card: línea azul */
+.categories-grid.menu-v2 .category-card[data-category="mar"] .category-line {
+    background: var(--azul-mar-claro) !important;
+}
+.categories-grid.menu-v2 .category-card[data-category="mar"] .category-icon svg {
+    stroke: var(--azul-mar-claro);
+}
+.categories-grid.menu-v2 .category-card[data-category="mar"] .category-cta {
+    color: var(--azul-mar-claro);
+}
+
+
+/* =====================================================================
+   5. DUALIDAD MAR/TIERRA — refuerzo cromático de marca
+   ===================================================================== */
+
+/* La card Mar ya tiene gradient azul base — la reforzamos */
+.categories-grid.menu-v2 .category-card[data-category="mar"] {
+    background-image:
+        radial-gradient(circle at 88% 14%, rgba(107, 142, 163, 0.18), transparent 40%),
+        radial-gradient(circle at 5% 95%, rgba(27, 58, 75, 0.6), transparent 55%),
+        linear-gradient(170deg, #2E5567 0%, #1B3A4B 45%, #061018 100%) !important;
+}
+
+/* Featured Mar & Tierra: dualidad mar+tierra explícita */
+.categories-grid.menu-v2 .category-card[data-category="marytierra"] {
+    background-image:
+        radial-gradient(circle at 12% 18%, rgba(27, 58, 75, 0.55), transparent 48%),
+        radial-gradient(circle at 88% 82%, rgba(184, 148, 31, 0.30), transparent 50%),
+        linear-gradient(135deg, #1B3A4B 0%, #2D1810 55%, #120805 100%) !important;
+}
+
+/* Badge "La firma" — mantener dorado (uno de los pocos lugares premium) */
+.category-badge {
+    background: rgba(15, 8, 4, 0.7) !important;
+    border-color: rgba(212, 175, 55, 0.55) !important;
+}
+
+
+/* =====================================================================
+   6. CATEGORIES SECTION — patrón de fondo sutil + acabado
+   ===================================================================== */
+
+.categories-section {
+    background: transparent !important; /* deja ver body texture */
+}
+
+/* Reemplazar el diagonal sutil con líneas verticales finas tipo papel pautado */
+.categories-section::before {
+    background-image:
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 119px,
+            rgba(43, 24, 16, 0.04) 119px,
+            rgba(43, 24, 16, 0.04) 120px
+        ) !important;
+    opacity: 0.6;
+}
+
+
+/* =====================================================================
+   7. GALLERY — spotlights con captions grandes en Valerius
+   ===================================================================== */
+
+/* Spotlight: captions visibles SIEMPRE (no solo en hover) y más grandes */
+.gallery-v2 .gallery-item.gallery-spotlight figcaption {
+    transform: translateY(0);
+    opacity: 1;
+    font-family: var(--serif-display) !important;
+    font-size: clamp(1.4rem, 2.2vw, 2rem);
+    letter-spacing: 0.02em;
+    padding: 30px 32px 26px;
+    background: linear-gradient(180deg,
+        transparent 0%,
+        rgba(15, 8, 4, 0.30) 25%,
+        rgba(15, 8, 4, 0.85) 75%,
+        rgba(15, 8, 4, 0.92) 100%);
+}
+
+.gallery-v2 .gallery-item.gallery-spotlight figcaption::before {
+    content: attr(data-subtitle);
+    display: block;
+    font-family: var(--sans-body);
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--dorado-brillante);
+    margin-bottom: 8px;
+    opacity: 0.85;
+}
+
+/* Frame editorial sobre las imágenes spotlight (border interno) */
+.gallery-v2 .gallery-item.gallery-spotlight::after {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgba(253, 251, 247, 0.18);
+    pointer-events: none;
+    z-index: 2;
+    transition: inset 0.6s var(--ease-cinematic),
+                border-color 0.6s var(--ease-cinematic);
+}
+.gallery-v2 .gallery-item.gallery-spotlight:hover::after {
+    inset: 18px;
+    border-color: rgba(253, 251, 247, 0.32);
+}
+
+/* Section gallery: padding superior para el numeral */
+.gallery-section {
+    background: transparent !important;
+}
+
+
+/* =====================================================================
+   8. RESERVATION BUTTON (HEADER) — mantener dorado, refinar peso
+   El CTA principal es uno de los pocos lugares donde el oro SE GANA.
+   ===================================================================== */
+
+.reservation-btn {
+    background: var(--marron-tinta) !important;
+    color: var(--blanco-perla) !important;
+    border: 1px solid var(--marron-tinta) !important;
+    border-radius: 2px !important;
+    padding: 13px 30px !important;
+    letter-spacing: 0.18em !important;
+    font-size: 0.78rem !important;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.45s var(--ease-cinematic),
+                border-color 0.45s var(--ease-cinematic);
+}
+.reservation-btn::before {
+    background: linear-gradient(120deg,
+        transparent 20%,
+        rgba(228, 212, 168, 0.18) 50%,
+        transparent 80%) !important;
+}
+.reservation-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--dorado-premium);
+    transform: scaleY(0);
+    transform-origin: bottom center;
+    transition: transform 0.5s var(--ease-cinematic);
+    z-index: -1;
+}
+.reservation-btn:hover {
+    color: var(--marron-tinta) !important;
+    border-color: var(--dorado-premium) !important;
+}
+.reservation-btn:hover::after {
+    transform: scaleY(1);
+}
+
+
+/* =====================================================================
+   9. CINEMATIC SCROLL REVEALS — lenguaje del preloader extendido
+   ===================================================================== */
+
+/* Curtain reveal: container que cuando entra al viewport desliza
+   una cortina vertical hacia arriba revelando el contenido */
+.curtain-reveal {
+    position: relative;
+    overflow: hidden;
+}
+.curtain-reveal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, var(--marron-tinta) 0%, var(--marron-oscuro) 100%);
+    transform: translateY(0);
+    transition: transform 1.4s var(--ease-curtain);
+    z-index: 5;
+    pointer-events: none;
+}
+.curtain-reveal.revealed::before {
+    transform: translateY(-100%);
+}
+
+
+/* =====================================================================
+   10. INSTALACIONES — refinamientos sutiles
+   ===================================================================== */
+
+.instalaciones-section {
+    background: transparent !important;
+}
+
+.espacio-card {
+    border-radius: 4px !important;
+    border: 1px solid rgba(43, 24, 16, 0.08);
+    transition: transform 0.6s var(--ease-cinematic),
+                box-shadow 0.6s var(--ease-cinematic),
+                border-color 0.6s var(--ease-cinematic) !important;
+}
+.espacio-card:hover {
+    border-color: rgba(43, 24, 16, 0.20);
+}
+
+.espacio-title {
+    font-family: var(--serif-display) !important;
+    font-size: 1.6rem !important;
+    letter-spacing: -0.005em !important;
+}
+
+
+/* =====================================================================
+   11. FOCUS STATES (accesibilidad cohesiva con la nueva estética)
+   ===================================================================== */
+
+a:focus-visible,
+button:focus-visible,
+.nav-link:focus-visible,
+.category-card:focus-visible,
+.espacio-card:focus-visible {
+    outline: 2px solid var(--dorado-premium);
+    outline-offset: 4px;
+}
+
+
+/* =====================================================================
+   12. REDUCED MOTION — respetar preferencia del usuario
+   ===================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-eyebrow,
+    .hero-word,
+    .hero-ampersand,
+    .hero-subtitle,
+    .hero-description,
+    .hero-cta {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+    .curtain-reveal::before {
+        transition: none !important;
+        transform: translateY(-100%) !important;
+    }
+}
