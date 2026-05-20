@@ -1,0 +1,425 @@
+/* ===============================================
+   MENU V2 — Renovación visual del menú (Editorial Premium)
+   ===============================================
+   Estilos aislados que solo aplican cuando .menu-v2 está presente
+   en .categories-grid. Quitar el <link> o la clase revierte al diseño anterior.
+   =============================================== */
+
+/* Layout bento asimétrico: 4 cols × 3 rows
+   - Featured (Mar & Tierra) ocupa 2×2 a la izquierda
+   - 4 cards medianas a la derecha (2×2)
+   - 1 card banner full-width abajo (Infantil)
+*/
+.categories-grid.menu-v2 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 280px;
+    gap: 22px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 60px;
+}
+
+.categories-grid.menu-v2 .category-card {
+    height: auto;
+    min-height: 280px;
+    border-radius: 18px;
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 32px var(--sombra-media);
+    background-color: var(--marron-oscuro);
+}
+
+/* Hero featured */
+.categories-grid.menu-v2 .category-card.featured {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+/* Banner full-width (Infantil) */
+.categories-grid.menu-v2 .category-card.banner {
+    grid-column: span 4;
+    min-height: 180px;
+}
+
+/* Hover sofisticado — más sutil que el actual */
+.categories-grid.menu-v2 .category-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px var(--sombra-intensa);
+}
+
+/* Overlay editorial — más oscuro abajo, totalmente transparente arriba */
+.categories-grid.menu-v2 .category-overlay {
+    background: linear-gradient(
+        to top,
+        rgba(35, 24, 18, 0.92) 0%,
+        rgba(35, 24, 18, 0.78) 30%,
+        rgba(35, 24, 18, 0.35) 65%,
+        rgba(35, 24, 18, 0.05) 100%
+    );
+}
+
+.categories-grid.menu-v2 .category-card:hover .category-overlay {
+    background: linear-gradient(
+        to top,
+        rgba(35, 24, 18, 0.88) 0%,
+        rgba(35, 24, 18, 0.65) 30%,
+        rgba(35, 24, 18, 0.25) 65%,
+        rgba(35, 24, 18, 0.02) 100%
+    );
+}
+
+/* Contenido reorganizado: icon arriba, nombre + desc, footer con count + CTA */
+.categories-grid.menu-v2 .category-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 28px 30px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    justify-content: flex-end;
+}
+
+/* Featured tiene más padding y el badge ✦ */
+.categories-grid.menu-v2 .category-card.featured .category-content {
+    padding: 40px 42px;
+}
+
+/* Icono dorado SVG arriba */
+.category-icon {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 14px;
+    opacity: 0.85;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.category-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: var(--dorado-brillante);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.categories-grid.menu-v2 .category-card:hover .category-icon {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+.categories-grid.menu-v2 .category-card.featured .category-icon {
+    width: 44px;
+    height: 44px;
+}
+
+/* Badge "La firma" para featured */
+.category-badge {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    z-index: 3;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--dorado-brillante);
+    background: rgba(35, 24, 18, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(228, 212, 168, 0.4);
+    padding: 6px 12px;
+    border-radius: 999px;
+}
+
+.category-badge::before {
+    content: '✦';
+    margin-right: 6px;
+    color: var(--dorado-brillante);
+}
+
+/* Línea decorativa más fina y elegante */
+.categories-grid.menu-v2 .category-line {
+    width: 36px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--dorado-sutil), var(--dorado-brillante));
+    margin-bottom: 14px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 1px;
+    box-shadow: none;
+}
+
+.categories-grid.menu-v2 .category-card:hover .category-line {
+    width: 64px;
+}
+
+/* Tipografía mejorada */
+.categories-grid.menu-v2 .category-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: 0.5px;
+    color: #fff;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
+}
+
+.categories-grid.menu-v2 .category-card.featured .category-name {
+    font-size: 2.4rem;
+    margin-bottom: 12px;
+}
+
+.categories-grid.menu-v2 .category-card:hover .category-name {
+    transform: none;
+    color: #fff;
+}
+
+.categories-grid.menu-v2 .category-desc {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 300;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.82);
+    margin-bottom: 18px;
+}
+
+.categories-grid.menu-v2 .category-card.featured .category-desc {
+    font-size: 1.05rem;
+    max-width: 90%;
+    margin-bottom: 22px;
+}
+
+/* Footer: count + CTA "Ver →" */
+.category-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-top: 14px;
+    border-top: 1px solid rgba(228, 212, 168, 0.22);
+}
+
+.category-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: var(--dorado-brillante);
+    transition: color 0.3s ease;
+}
+
+.category-cta-arrow {
+    display: inline-block;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 1rem;
+}
+
+.categories-grid.menu-v2 .category-card:hover .category-cta-arrow {
+    transform: translateX(6px);
+}
+
+.categories-grid.menu-v2 .category-card:hover .category-cta {
+    color: #fff;
+}
+
+/* Featured: overlay con tinte cálido pero sin saturar */
+.categories-grid.menu-v2 .category-card.featured .category-overlay {
+    background: linear-gradient(
+        135deg,
+        rgba(184, 148, 31, 0.55) 0%,
+        rgba(74, 52, 41, 0.85) 50%,
+        rgba(35, 24, 18, 0.92) 100%
+    );
+}
+
+.categories-grid.menu-v2 .category-card.featured:hover .category-overlay {
+    background: linear-gradient(
+        135deg,
+        rgba(184, 148, 31, 0.45) 0%,
+        rgba(74, 52, 41, 0.7) 50%,
+        rgba(35, 24, 18, 0.85) 100%
+    );
+}
+
+/* Banner Infantil: contenido horizontal */
+.categories-grid.menu-v2 .category-card.banner .category-content {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 42px;
+}
+
+.categories-grid.menu-v2 .category-card.banner .category-line {
+    display: none;
+}
+
+.categories-grid.menu-v2 .category-card.banner .category-icon {
+    margin-bottom: 0;
+    margin-right: 22px;
+    flex-shrink: 0;
+}
+
+.categories-grid.menu-v2 .category-card.banner .banner-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.categories-grid.menu-v2 .category-card.banner .category-name {
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+}
+
+.categories-grid.menu-v2 .category-card.banner .category-desc {
+    margin-bottom: 0;
+    font-size: 0.9rem;
+}
+
+.categories-grid.menu-v2 .category-card.banner .category-footer {
+    border: none;
+    padding: 0;
+    margin-left: 30px;
+    flex-shrink: 0;
+    gap: 24px;
+}
+
+/* ============= CARDS SIN IMAGEN (paletas de color) =============
+   Las cards con clase .solid usan gradientes en lugar de fotos.
+   Cada categoría tiene su propia paleta dentro de la identidad de marca
+   (browns + acento dorado en esquina superior derecha).
+*/
+.categories-grid.menu-v2 .category-card.solid .category-overlay {
+    display: none;
+}
+
+.categories-grid.menu-v2 .category-card[data-category="compartir"] {
+    background-image:
+        radial-gradient(circle at 88% 14%, rgba(228, 212, 168, 0.12), transparent 38%),
+        linear-gradient(180deg, #5A3320 0%, #2D1810 55%, #110805 100%);
+}
+
+.categories-grid.menu-v2 .category-card[data-category="mar"] {
+    background-image:
+        radial-gradient(circle at 88% 14%, rgba(212, 220, 228, 0.10), transparent 38%),
+        linear-gradient(180deg, #1F3540 0%, #122530 55%, #061018 100%);
+}
+
+.categories-grid.menu-v2 .category-card[data-category="tierra"] {
+    background-image:
+        radial-gradient(circle at 88% 14%, rgba(228, 212, 168, 0.12), transparent 38%),
+        linear-gradient(180deg, #5A3525 0%, #2D1A0F 55%, #120805 100%);
+}
+
+.categories-grid.menu-v2 .category-card[data-category="grill"] {
+    background-image:
+        radial-gradient(circle at 88% 14%, rgba(228, 130, 60, 0.14), transparent 38%),
+        linear-gradient(180deg, #3A1F12 0%, #1F0E08 55%, #0A0402 100%);
+}
+
+/* Featured Mar & Tierra (hero) — paleta premium: dorado + fusion mar+tierra */
+.categories-grid.menu-v2 .category-card[data-category="marytierra"] {
+    background-image:
+        radial-gradient(circle at 85% 15%, rgba(212, 175, 55, 0.28), transparent 48%),
+        radial-gradient(circle at 12% 85%, rgba(31, 53, 64, 0.32), transparent 52%),
+        linear-gradient(135deg, #5A3525 0%, #2D1810 50%, #120805 100%);
+}
+
+/* Banner Menú Infantil — paleta cálida y acogedora */
+.categories-grid.menu-v2 .category-card[data-category="infantil"] {
+    background-image:
+        radial-gradient(circle at 92% 50%, rgba(228, 150, 70, 0.16), transparent 45%),
+        radial-gradient(circle at 8% 50%, rgba(228, 212, 168, 0.10), transparent 45%),
+        linear-gradient(135deg, #4A2D18 0%, #2D1A0F 100%);
+}
+
+/* Hover en cards solid: el brillo dorado se intensifica sutilmente */
+.categories-grid.menu-v2 .category-card.solid:hover {
+    filter: brightness(1.08);
+}
+
+/* ============= RESPONSIVE ============= */
+
+/* Tablet — 2 columnas, todo flujo */
+@media (max-width: 1024px) {
+    .categories-grid.menu-v2 {
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 260px;
+        padding: 0 40px;
+    }
+
+    .categories-grid.menu-v2 .category-card.featured {
+        grid-column: span 2;
+        grid-row: span 1;
+        min-height: 320px;
+    }
+
+    .categories-grid.menu-v2 .category-card.banner {
+        grid-column: span 2;
+    }
+
+    .categories-grid.menu-v2 .category-card.featured .category-name {
+        font-size: 2rem;
+    }
+}
+
+/* Mobile — 1 columna */
+@media (max-width: 640px) {
+    .categories-grid.menu-v2 {
+        grid-template-columns: 1fr;
+        grid-auto-rows: 230px;
+        padding: 0 20px;
+        gap: 16px;
+    }
+
+    .categories-grid.menu-v2 .category-card.featured,
+    .categories-grid.menu-v2 .category-card.banner {
+        grid-column: span 1;
+    }
+
+    .categories-grid.menu-v2 .category-card.featured {
+        min-height: 300px;
+    }
+
+    .categories-grid.menu-v2 .category-content,
+    .categories-grid.menu-v2 .category-card.featured .category-content,
+    .categories-grid.menu-v2 .category-card.banner .category-content {
+        padding: 24px 22px;
+    }
+
+    .categories-grid.menu-v2 .category-name {
+        font-size: 1.4rem;
+    }
+
+    .categories-grid.menu-v2 .category-card.featured .category-name {
+        font-size: 1.85rem;
+    }
+
+    .categories-grid.menu-v2 .category-card.banner .category-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .categories-grid.menu-v2 .category-card.banner .category-icon {
+        margin-right: 0;
+    }
+
+    .categories-grid.menu-v2 .category-card.banner .category-footer {
+        margin-left: 0;
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .category-badge {
+        top: 16px;
+        right: 16px;
+        font-size: 0.65rem;
+        padding: 4px 10px;
+    }
+}

@@ -77,6 +77,7 @@
     <link rel="stylesheet" href="css/site-shell.css">
     <link rel="stylesheet" href="css/gallery.css">
     <link rel="stylesheet" href="css/testimonials.css">
+    <link rel="stylesheet" href="css/menu-v2.css">
 
     <!-- Tipografías Personalizadas - DEBE CARGAR AL FINAL -->
     <link rel="stylesheet" href="css/custom-fonts.css">
@@ -232,64 +233,102 @@
             </p>
         </div>
         
-        <div class="categories-grid">
+        <div class="categories-grid menu-v2">
+            <!-- HERO: Mar y Tierra (la firma) -->
+            <button type="button" class="category-card featured solid" data-category="marytierra" onclick="showMenuSection('marytierra')" aria-label="Ver platos Mar y Tierra">
+                <div class="category-overlay"></div>
+                <span class="category-badge">La firma</span>
+                <div class="category-content">
+                    <span class="category-icon" aria-hidden="true">
+                        <svg viewBox="0 0 32 32"><path d="M4 18c3 0 3-4 6-4s3 4 6 4 3-4 6-4 3 4 6 4"/><path d="M4 22c3 0 3-4 6-4s3 4 6 4 3-4 6-4 3 4 6 4"/><circle cx="16" cy="9" r="2"/></svg>
+                    </span>
+                    <div class="category-line"></div>
+                    <h3 class="category-name">Mar &amp; Tierra</h3>
+                    <p class="category-desc">Fusión perfecta de sabores del mar y la tierra — el corazón de nuestra carta</p>
+                    <div class="category-footer">
+                        <span class="category-cta">Ver carta <span class="category-cta-arrow">→</span></span>
+                    </div>
+                </div>
+            </button>
+
             <!-- Para Compartir -->
-            <button type="button" class="category-card" style="background-image: url('https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?w=800&q=80')" onclick="showMenuSection('compartir')">
+            <button type="button" class="category-card solid" data-category="compartir" onclick="showMenuSection('compartir')" aria-label="Ver platos Para Compartir">
                 <div class="category-overlay"></div>
                 <div class="category-content">
+                    <span class="category-icon" aria-hidden="true">
+                        <svg viewBox="0 0 32 32"><circle cx="8" cy="16" r="3"/><circle cx="16" cy="16" r="3"/><circle cx="24" cy="16" r="3"/></svg>
+                    </span>
                     <div class="category-line"></div>
                     <h3 class="category-name">Para Compartir</h3>
-                    <p class="category-desc">Ceviches, tartares y entradas para iniciar la experiencia</p>
+                    <p class="category-desc">Ceviches, tartares y entradas para iniciar</p>
+                    <div class="category-footer">
+                        <span class="category-cta">Ver <span class="category-cta-arrow">→</span></span>
+                    </div>
                 </div>
             </button>
 
             <!-- Ritual de Mar -->
-            <button type="button" class="category-card" style="background-image: url('https://images.unsplash.com/photo-1559737558-2f5a35f4523b?w=800&q=80')" onclick="showMenuSection('mar')">
+            <button type="button" class="category-card solid" data-category="mar" onclick="showMenuSection('mar')" aria-label="Ver platos Ritual de Mar">
                 <div class="category-overlay"></div>
                 <div class="category-content">
+                    <span class="category-icon" aria-hidden="true">
+                        <svg viewBox="0 0 32 32"><path d="M3 14c2.5 0 2.5-3 5-3s2.5 3 5 3 2.5-3 5-3 2.5 3 5 3 2.5-3 5-3"/><path d="M3 20c2.5 0 2.5-3 5-3s2.5 3 5 3 2.5-3 5-3 2.5 3 5 3 2.5-3 5-3"/></svg>
+                    </span>
                     <div class="category-line"></div>
                     <h3 class="category-name">Ritual de Mar</h3>
-                    <p class="category-desc">Pescados y mariscos frescos con técnicas de autor</p>
+                    <p class="category-desc">Pescados y mariscos con técnicas de autor</p>
+                    <div class="category-footer">
+                        <span class="category-cta">Ver <span class="category-cta-arrow">→</span></span>
+                    </div>
                 </div>
             </button>
 
             <!-- Ritual de Tierra -->
-            <button type="button" class="category-card" style="background-image: url('https://images.unsplash.com/photo-1546833998-877b37c2e5c6?w=800&q=80')" onclick="showMenuSection('tierra')">
+            <button type="button" class="category-card solid" data-category="tierra" onclick="showMenuSection('tierra')" aria-label="Ver platos Ritual de Tierra">
                 <div class="category-overlay"></div>
                 <div class="category-content">
+                    <span class="category-icon" aria-hidden="true">
+                        <svg viewBox="0 0 32 32"><path d="M16 5C10 5 6 11 6 17c0 6 4 10 10 10 6 0 10-4 10-10 0-6-4-12-10-12z"/><path d="M16 27V11"/><path d="M11 16l5 5 5-5"/></svg>
+                    </span>
                     <div class="category-line"></div>
                     <h3 class="category-name">Ritual de Tierra</h3>
                     <p class="category-desc">Carnes selectas y platos de tradición</p>
-                </div>
-            </button>
-
-            <!-- Mar y Tierra -->
-            <button type="button" class="category-card featured" style="background-image: url('https://images.unsplash.com/photo-1544025162-d76694265947?w=800&q=80')" onclick="showMenuSection('marytierra')">
-                <div class="category-overlay"></div>
-                <div class="category-content">
-                    <div class="category-line"></div>
-                    <h3 class="category-name">Mar y Tierra</h3>
-                    <p class="category-desc">Fusión perfecta de sabores del mar y la tierra</p>
+                    <div class="category-footer">
+                        <span class="category-cta">Ver <span class="category-cta-arrow">→</span></span>
+                    </div>
                 </div>
             </button>
 
             <!-- Grill -->
-            <button type="button" class="category-card" style="background-image: url('https://images.unsplash.com/photo-1558030006-450675393462?w=800&q=80')" onclick="showMenuSection('grill')">
+            <button type="button" class="category-card solid" data-category="grill" onclick="showMenuSection('grill')" aria-label="Ver platos Grill">
                 <div class="category-overlay"></div>
                 <div class="category-content">
+                    <span class="category-icon" aria-hidden="true">
+                        <svg viewBox="0 0 32 32"><path d="M16 27c-5 0-8-3-8-8 0-3 2-5 3-7 1 2 2 3 2 5 1-3 3-6 3-10 4 3 8 7 8 12 0 5-3 8-8 8z"/></svg>
+                    </span>
                     <div class="category-line"></div>
                     <h3 class="category-name">Grill</h3>
-                    <p class="category-desc">Cortes selectos a la parrilla con chimichurri de la casa</p>
+                    <p class="category-desc">Cortes a la parrilla con chimichurri de la casa</p>
+                    <div class="category-footer">
+                        <span class="category-cta">Ver <span class="category-cta-arrow">→</span></span>
+                    </div>
                 </div>
             </button>
 
-            <!-- Menu Infantil -->
-            <button type="button" class="category-card" style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80')" onclick="showMenuSection('infantil')">
+            <!-- Menu Infantil (banner full-width) -->
+            <button type="button" class="category-card banner solid" data-category="infantil" onclick="showMenuSection('infantil')" aria-label="Ver Menú Infantil">
                 <div class="category-overlay"></div>
                 <div class="category-content">
-                    <div class="category-line"></div>
-                    <h3 class="category-name">Menú Infantil</h3>
-                    <p class="category-desc">Platos especiales para los más jóvenes</p>
+                    <span class="category-icon" aria-hidden="true">
+                        <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="11"/><circle cx="12" cy="14" r="1.2" fill="currentColor"/><circle cx="20" cy="14" r="1.2" fill="currentColor"/><path d="M11 19c1.5 2 3 3 5 3s3.5-1 5-3"/></svg>
+                    </span>
+                    <div class="banner-text">
+                        <h3 class="category-name">Menú Infantil</h3>
+                        <p class="category-desc">Platos especiales para los más jóvenes</p>
+                    </div>
+                    <div class="category-footer">
+                        <span class="category-cta">Ver <span class="category-cta-arrow">→</span></span>
+                    </div>
                 </div>
             </button>
         </div>
