@@ -96,6 +96,10 @@
     <!-- Mobile responsive overrides — DEBE CARGAR ÚLTIMO -->
     <link rel="stylesheet" href="css/mobile.css">
 
+    <!-- Mobile Premium Pass — capa editorial específica para mobile
+         (nav drawer editorial, modal fullscreen, sticky CTA, oro restringido) -->
+    <link rel="stylesheet" href="css/redesign-mobile.css">
+
     <!-- Schema.org JSON-LD: Restaurant + LocalBusiness para SEO local -->
     <script type="application/ld+json">
     {
@@ -210,6 +214,21 @@
                 <button type="button" class="reservation-btn" onclick="reservarPorWhatsApp('mesa')" aria-label="Reservar mesa por WhatsApp">
                     <span>Reservar Mesa</span>
                 </button>
+                <!-- Footer del drawer mobile: contacto + horarios + IG -->
+                <div class="nav-footer" aria-hidden="true">
+                    <div class="nav-footer-row">
+                        <span class="nav-footer-label">Visítanos</span>
+                        <a href="https://maps.google.com/?q=Cra+35a+%2346-102+Bucaramanga" target="_blank" rel="noopener">Cra 35a #46-102, Bucaramanga</a>
+                    </div>
+                    <div class="nav-footer-row">
+                        <span class="nav-footer-label">Reservas</span>
+                        <a href="tel:+573008263403">+57 300 826 3403</a>
+                    </div>
+                    <div class="nav-footer-row">
+                        <span class="nav-footer-label">Instagram</span>
+                        <a href="https://instagram.com/marytierrarestaurantbga" target="_blank" rel="noopener">@marytierrarestaurantbga</a>
+                    </div>
+                </div>
             </nav>
 
             <button type="button" class="mobile-toggle" id="mobileToggle" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="nav">
@@ -2202,5 +2221,48 @@
     <!-- Lightbox custom (gallery.js) desactivado en favor de PhotoSwipe (gallery-v2.js)
          Para revertir: descomentar la linea de abajo y quitar gallery-v2.css/js -->
     <!-- <script src="js/gallery.js" defer></script> -->
+
+    <!-- Sticky CTA bar mobile + comportamiento (visible al hacer scroll
+         más allá del hero; se oculta cuando el drawer está abierto) -->
+    <a class="mobile-cta-bar" href="javascript:void(0)" onclick="reservarPorWhatsApp('mesa'); return false;" aria-label="Reservar mesa por WhatsApp">
+        <span class="mcb-quote">Donde el mar y la tierra se complementan.</span>
+        <span class="mcb-cta">Reservar</span>
+    </a>
+    <script>
+        (function () {
+            const bar = document.querySelector('.mobile-cta-bar');
+            const hero = document.querySelector('#hero');
+            const nav = document.querySelector('#nav');
+            if (!bar) return;
+
+            const isMobile = () => window.matchMedia('(max-width: 720px)').matches;
+
+            function update() {
+                if (!isMobile()) {
+                    bar.classList.remove('visible');
+                    document.body.classList.remove('has-mcb-visible');
+                    return;
+                }
+                const heroBottom = hero ? hero.getBoundingClientRect().bottom : 0;
+                const past = heroBottom < 120;
+                const drawerOpen = nav && nav.classList.contains('active');
+                if (past && !drawerOpen) {
+                    bar.classList.add('visible');
+                    document.body.classList.add('has-mcb-visible');
+                } else {
+                    bar.classList.remove('visible');
+                    document.body.classList.remove('has-mcb-visible');
+                }
+            }
+
+            window.addEventListener('scroll', update, { passive: true });
+            window.addEventListener('resize', update);
+            if (nav) {
+                const obs = new MutationObserver(update);
+                obs.observe(nav, { attributes: true, attributeFilter: ['class'] });
+            }
+            update();
+        })();
+    </script>
 </body>
 </html>
