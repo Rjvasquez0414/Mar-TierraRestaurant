@@ -243,111 +243,101 @@ img, video, iframe, svg {
         height: 8px;
     }
 
-    /* ---------- CATEGORIES (menú bento) — compactar para que no se sienta apilado ---------- */
+    /* ---------- CATEGORIES (menú bento) — 1 columna con cards bajitas ---------- */
     .categories-grid,
     .categories-grid.menu-v2 {
-        padding-left: 16px;
-        padding-right: 16px;
+        padding-left: 18px;
+        padding-right: 18px;
         gap: 12px;
     }
 
-    /* Layout compacto: featured full-width, luego 2x2 con cards pequeñas, banner full-width */
+    /* Override del min-height: 280px de menu-v2.css que dejaba cards gigantes.
+       Se usa auto-rows para que cada tipo de card tome la altura que necesita. */
     .categories-grid.menu-v2 {
-        grid-template-columns: repeat(2, 1fr);
-        grid-auto-rows: 138px;
+        grid-template-columns: 1fr;
+        grid-auto-rows: auto;
+    }
+
+    .categories-grid.menu-v2 .category-card {
+        min-height: 0;
     }
 
     .categories-grid.menu-v2 .category-card.featured {
         grid-column: 1 / -1;
-        grid-row: span 1;
-        min-height: 188px;
+        min-height: 180px;
+    }
+
+    .categories-grid.menu-v2 .category-card:not(.featured):not(.banner) {
+        min-height: 130px;
     }
 
     .categories-grid.menu-v2 .category-card.banner {
         grid-column: 1 / -1;
-        min-height: 108px;
+        min-height: 100px;
     }
 
-    /* Contenido más denso en cards pequeñas */
+    /* Contenido más denso */
     .categories-grid.menu-v2 .category-content {
-        padding: 14px 14px;
+        padding: 18px 20px;
     }
 
     .categories-grid.menu-v2 .category-card.featured .category-content {
-        padding: 22px 22px;
+        padding: 24px 24px;
     }
 
-    /* Icono más chico y línea reducida */
+    /* Icono más chico */
     .categories-grid.menu-v2 .category-icon {
-        width: 26px;
-        height: 26px;
+        width: 28px;
+        height: 28px;
         margin-bottom: 8px;
     }
 
     .categories-grid.menu-v2 .category-card.featured .category-icon {
         width: 36px;
         height: 36px;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
     }
 
     .categories-grid.menu-v2 .category-line {
-        width: 24px;
+        width: 28px;
         margin-bottom: 8px;
     }
 
-    .categories-grid.menu-v2 .category-card.featured .category-line {
-        width: 36px;
-    }
-
-    /* Tipografía compacta */
+    /* Tipografía compacta pero legible */
     .categories-grid.menu-v2 .category-name {
-        font-size: 1.05rem;
+        font-size: 1.18rem;
         margin-bottom: 4px;
-        line-height: 1.1;
+        line-height: 1.2;
     }
 
     .categories-grid.menu-v2 .category-card.featured .category-name {
-        font-size: 1.65rem;
+        font-size: 1.7rem;
         margin-bottom: 8px;
     }
 
-    /* Descripción solo en featured y banner; ocultar en las cards 2-col chicas */
-    .categories-grid.menu-v2 .category-card:not(.featured):not(.banner) .category-desc {
-        display: none;
+    .categories-grid.menu-v2 .category-desc {
+        font-size: 0.85rem;
+        line-height: 1.45;
+        margin-bottom: 10px;
     }
 
     .categories-grid.menu-v2 .category-card.featured .category-desc {
-        font-size: 0.92rem;
-        line-height: 1.45;
-        margin-bottom: 12px;
+        font-size: 0.95rem;
+        margin-bottom: 14px;
         max-width: 100%;
     }
 
-    .categories-grid.menu-v2 .category-card.banner .category-desc {
-        font-size: 0.82rem;
-        margin-bottom: 0;
+    /* Footer compacto sin separador prominente */
+    .categories-grid.menu-v2 .category-footer {
+        padding-top: 8px;
     }
 
-    /* Footer simplificado en cards pequeñas: solo flecha sin línea superior */
-    .categories-grid.menu-v2 .category-card:not(.featured):not(.banner) .category-footer {
-        border-top: none;
-        padding-top: 4px;
-    }
-
-    .categories-grid.menu-v2 .category-cta {
-        font-size: 0.74rem;
-    }
-
-    .categories-grid.menu-v2 .category-card.featured .category-cta {
-        font-size: 0.85rem;
-    }
-
-    /* Banner: layout más limpio, sin volver a stack */
+    /* Banner: layout horizontal limpio */
     .categories-grid.menu-v2 .category-card.banner .category-content {
         flex-direction: row;
         align-items: center;
         gap: 12px;
-        padding: 16px 18px;
+        padding: 16px 20px;
     }
 
     .categories-grid.menu-v2 .category-card.banner .category-icon {
@@ -363,7 +353,13 @@ img, video, iframe, svg {
     }
 
     .categories-grid.menu-v2 .category-card.banner .category-name {
-        font-size: 1.1rem;
+        font-size: 1.15rem;
+        margin-bottom: 2px;
+    }
+
+    .categories-grid.menu-v2 .category-card.banner .category-desc {
+        font-size: 0.82rem;
+        margin-bottom: 0;
     }
 
     .categories-grid.menu-v2 .category-card.banner .category-footer {
@@ -379,8 +375,8 @@ img, video, iframe, svg {
     .category-badge {
         top: 14px;
         right: 14px;
-        font-size: 0.6rem;
-        padding: 3px 9px;
+        font-size: 0.62rem;
+        padding: 3px 10px;
         letter-spacing: 1px;
     }
 
@@ -861,28 +857,32 @@ img, video, iframe, svg {
     }
 
     /* Cards de menú aún más compactas en phone pequeño */
-    .categories-grid.menu-v2 {
-        grid-auto-rows: 124px;
+    .categories-grid.menu-v2 .category-card.featured {
+        min-height: 168px;
     }
 
-    .categories-grid.menu-v2 .category-card.featured {
-        min-height: 170px;
+    .categories-grid.menu-v2 .category-card:not(.featured):not(.banner) {
+        min-height: 120px;
     }
 
     .categories-grid.menu-v2 .category-card.banner {
-        min-height: 96px;
-    }
-
-    .categories-grid.menu-v2 .category-name {
-        font-size: 0.98rem;
+        min-height: 92px;
     }
 
     .categories-grid.menu-v2 .category-card.featured .category-name {
-        font-size: 1.5rem;
+        font-size: 1.55rem;
+    }
+
+    .categories-grid.menu-v2 .category-name {
+        font-size: 1.1rem;
     }
 
     .categories-grid.menu-v2 .category-content {
-        padding: 12px;
+        padding: 16px 18px;
+    }
+
+    .categories-grid.menu-v2 .category-card.featured .category-content {
+        padding: 20px 20px;
     }
 
     /* Dish modal aún más compacto */
