@@ -55,36 +55,6 @@ window.menuData = {
             category: "compartir"
         },
         {
-            id: "oshi-panceta-trufada",
-            name: "OSHI DE PANCETA TRUFADA",
-            description: "Arroz de sushi crocante, suero, tierra de aceituna negra y panceta acevichada en alioli de trufa. (x2 und)",
-            price: "$34.000",
-            image: "https://res.cloudinary.com/dxvl2i2fy/image/upload/v1768570219/Oshi_De_Panceta_Trufado_uhsued.jpg",
-            tags: ["nuevo"],
-            available: true,
-            category: "compartir"
-        },
-        {
-            id: "oshi-salmon-spicy",
-            name: "OSHI DE SALMÓN SPICY",
-            description: "Arroz de sushi crocante, tartar de salmón en salsa spicy, cilantro y aguacate. (x2 und)",
-            price: "$32.000",
-            image: "https://res.cloudinary.com/dxvl2i2fy/image/upload/v1768570218/Oshi_De_Salmón_Spicy_JPG_bp5dqp.jpg",
-            tags: [],
-            available: true,
-            category: "compartir"
-        },
-        {
-            id: "brumas-pacificas",
-            name: "BRUMAS PACÍFICAS",
-            description: "Aborrajados de plátano maduro, salmón curado crocante, queso trufado, cebolla acevichada y salsa roja cítrica. (x2 und)",
-            price: "$38.000",
-            image: "",
-            tags: ["nuevo"],
-            available: true,
-            category: "compartir"
-        },
-        {
             id: "empanadas-de-mar",
             name: "EMPANADAS DE MAR",
             description: "Empanadas rellenas de pulpo, camarón, salmón, hogao y queso, en salsa spicy, polvo de rosas y mango encurtido. (x3 und)",
@@ -330,16 +300,6 @@ window.menuData = {
             price: "$105.000",
             image: "",
             tags: ["popular"],
-            available: true,
-            category: "tierra"
-        },
-        {
-            id: "brasa-y-fermento",
-            name: "BRASA Y FERMENTO",
-            description: "Lomo al trapo (300 gr) macerado en chicha con corozo y vino, asado al carbón, con demi-glase de corozo. Acompañamiento a elección.",
-            price: "$120.000",
-            image: "",
-            tags: ["nuevo"],
             available: true,
             category: "tierra"
         },
