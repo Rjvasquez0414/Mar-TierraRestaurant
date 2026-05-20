@@ -243,11 +243,207 @@ img, video, iframe, svg {
         height: 8px;
     }
 
-    /* ---------- CATEGORIES (menú bento) ---------- */
+    /* ---------- CATEGORIES (menú bento) — compactar para que no se sienta apilado ---------- */
     .categories-grid,
     .categories-grid.menu-v2 {
-        padding-left: 18px;
-        padding-right: 18px;
+        padding-left: 16px;
+        padding-right: 16px;
+        gap: 12px;
+    }
+
+    /* Layout compacto: featured full-width, luego 2x2 con cards pequeñas, banner full-width */
+    .categories-grid.menu-v2 {
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 138px;
+    }
+
+    .categories-grid.menu-v2 .category-card.featured {
+        grid-column: 1 / -1;
+        grid-row: span 1;
+        min-height: 188px;
+    }
+
+    .categories-grid.menu-v2 .category-card.banner {
+        grid-column: 1 / -1;
+        min-height: 108px;
+    }
+
+    /* Contenido más denso en cards pequeñas */
+    .categories-grid.menu-v2 .category-content {
+        padding: 14px 14px;
+    }
+
+    .categories-grid.menu-v2 .category-card.featured .category-content {
+        padding: 22px 22px;
+    }
+
+    /* Icono más chico y línea reducida */
+    .categories-grid.menu-v2 .category-icon {
+        width: 26px;
+        height: 26px;
+        margin-bottom: 8px;
+    }
+
+    .categories-grid.menu-v2 .category-card.featured .category-icon {
+        width: 36px;
+        height: 36px;
+        margin-bottom: 12px;
+    }
+
+    .categories-grid.menu-v2 .category-line {
+        width: 24px;
+        margin-bottom: 8px;
+    }
+
+    .categories-grid.menu-v2 .category-card.featured .category-line {
+        width: 36px;
+    }
+
+    /* Tipografía compacta */
+    .categories-grid.menu-v2 .category-name {
+        font-size: 1.05rem;
+        margin-bottom: 4px;
+        line-height: 1.1;
+    }
+
+    .categories-grid.menu-v2 .category-card.featured .category-name {
+        font-size: 1.65rem;
+        margin-bottom: 8px;
+    }
+
+    /* Descripción solo en featured y banner; ocultar en las cards 2-col chicas */
+    .categories-grid.menu-v2 .category-card:not(.featured):not(.banner) .category-desc {
+        display: none;
+    }
+
+    .categories-grid.menu-v2 .category-card.featured .category-desc {
+        font-size: 0.92rem;
+        line-height: 1.45;
+        margin-bottom: 12px;
+        max-width: 100%;
+    }
+
+    .categories-grid.menu-v2 .category-card.banner .category-desc {
+        font-size: 0.82rem;
+        margin-bottom: 0;
+    }
+
+    /* Footer simplificado en cards pequeñas: solo flecha sin línea superior */
+    .categories-grid.menu-v2 .category-card:not(.featured):not(.banner) .category-footer {
+        border-top: none;
+        padding-top: 4px;
+    }
+
+    .categories-grid.menu-v2 .category-cta {
+        font-size: 0.74rem;
+    }
+
+    .categories-grid.menu-v2 .category-card.featured .category-cta {
+        font-size: 0.85rem;
+    }
+
+    /* Banner: layout más limpio, sin volver a stack */
+    .categories-grid.menu-v2 .category-card.banner .category-content {
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 18px;
+    }
+
+    .categories-grid.menu-v2 .category-card.banner .category-icon {
+        margin: 0;
+        flex-shrink: 0;
+        width: 30px;
+        height: 30px;
+    }
+
+    .categories-grid.menu-v2 .category-card.banner .banner-text {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .categories-grid.menu-v2 .category-card.banner .category-name {
+        font-size: 1.1rem;
+    }
+
+    .categories-grid.menu-v2 .category-card.banner .category-footer {
+        margin-left: 0;
+        padding: 0;
+        border: none;
+        gap: 0;
+        width: auto;
+        flex-shrink: 0;
+    }
+
+    /* Badge "✦ LA FIRMA" más compacto */
+    .category-badge {
+        top: 14px;
+        right: 14px;
+        font-size: 0.6rem;
+        padding: 3px 9px;
+        letter-spacing: 1px;
+    }
+
+    /* ---------- DISH MODAL — fix overflow y texto cortado ---------- */
+    .dish-modal-overlay {
+        padding: 14px;
+    }
+
+    .dish-modal-container {
+        border-radius: 18px;
+        max-width: 100%;
+    }
+
+    .dish-modal-content {
+        grid-template-columns: 1fr;
+        min-height: 0;
+    }
+
+    .dish-modal-image {
+        height: 220px;
+    }
+
+    .dish-modal-info {
+        padding: 24px 22px 22px;
+        gap: 18px;
+    }
+
+    /* Header: stack vertical para que el precio no se corte */
+    .dish-modal-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding-bottom: 16px;
+    }
+
+    .dish-modal-title {
+        font-size: 1.55rem;
+        line-height: 1.18;
+        word-break: break-word;
+    }
+
+    .dish-modal-price {
+        font-size: 1.5rem;
+        letter-spacing: 0.5px;
+    }
+
+    .dish-modal-description p {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    .dish-modal-details h4 {
+        font-size: 0.95rem;
+    }
+
+    .dish-modal-actions {
+        padding-top: 18px;
+    }
+
+    .modal-btn.elegant-close {
+        padding: 13px 36px;
+        font-size: 0.88rem;
+        width: 100%;
     }
 
     /* ---------- INSTALACIONES ---------- */
@@ -658,10 +854,57 @@ img, video, iframe, svg {
 
     /* WhatsApp floating un poco más pequeño en pantallas chicas */
     .wa-float {
-        width: 54px;
-        height: 54px;
-        right: 14px;
-        bottom: 14px;
+        width: 52px;
+        height: 52px;
+        right: 12px;
+        bottom: 12px;
+    }
+
+    /* Cards de menú aún más compactas en phone pequeño */
+    .categories-grid.menu-v2 {
+        grid-auto-rows: 124px;
+    }
+
+    .categories-grid.menu-v2 .category-card.featured {
+        min-height: 170px;
+    }
+
+    .categories-grid.menu-v2 .category-card.banner {
+        min-height: 96px;
+    }
+
+    .categories-grid.menu-v2 .category-name {
+        font-size: 0.98rem;
+    }
+
+    .categories-grid.menu-v2 .category-card.featured .category-name {
+        font-size: 1.5rem;
+    }
+
+    .categories-grid.menu-v2 .category-content {
+        padding: 12px;
+    }
+
+    /* Dish modal aún más compacto */
+    .dish-modal-image {
+        height: 190px;
+    }
+
+    .dish-modal-info {
+        padding: 20px 18px 18px;
+        gap: 14px;
+    }
+
+    .dish-modal-title {
+        font-size: 1.35rem;
+    }
+
+    .dish-modal-price {
+        font-size: 1.35rem;
+    }
+
+    .dish-modal-description p {
+        font-size: 0.95rem;
     }
 }
 
