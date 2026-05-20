@@ -1,4 +1,18 @@
 /* =====================================================================
+   0. Nav footer (contacto en drawer mobile): ocultar siempre en desktop.
+   Si no, aparece como bloque suelto en la esquina del header.
+   ===================================================================== */
+.nav-footer {
+    display: none;
+}
+@media (max-width: 960px) {
+    nav.active .nav-footer {
+        display: flex;
+    }
+}
+
+
+/* =====================================================================
    REDESIGN-MOBILE.CSS — Mar & Tierra · Mobile Premium Pass
    ---------------------------------------------------------------------
    Capa de premium mobile que se carga DESPUÉS de mobile.css.

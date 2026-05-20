@@ -1,0 +1,1060 @@
+/* =====================================================================
+   REDESIGN-MENU.CSS — Mar & Tierra · Menú Interior Editorial
+   ---------------------------------------------------------------------
+   Reinventa la vista interior del menú (lo que se ve al hacer clic en
+   "Ritual de Mar", "Para Compartir", etc.). De un grid genérico de
+   cards pasamos a un SPREAD EDITORIAL tipo recetario de autor:
+
+     · "Chapter opener" con título + epígrafe
+     · Single-column de platos con layout alternado (foto izq/der)
+     · Numerales romanos "Plato I, II, III..." vía CSS counter
+     · Tipografía Valerius para nombres + italic Cormorant/Valerius
+       para descripciones (estilo manuscrito)
+     · Precio en tabular nums sin shouty
+     · Search + filters minimalistas (underline + chips)
+     · Botón "Volver" rediseñado como navegación editorial
+
+   Carga después de redesign.css. Funciona en desktop ≥961px.
+   El responsive a mobile vive en la sección final de este mismo file.
+   ===================================================================== */
+
+
+/* =====================================================================
+   1. MENU SECTION CONTAINER — chapter opener
+   ===================================================================== */
+
+.menu-section {
+    background: transparent !important; /* deja ver textura del body */
+    padding: 150px 0 140px !important;
+    position: relative;
+}
+
+.menu-section.active {
+    animation: chapterReveal 1.1s var(--ease-cinematic);
+}
+
+@keyframes chapterReveal {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.menu-container {
+    max-width: 1180px !important;
+    margin: 0 auto !important;
+    padding: 0 60px !important;
+    position: relative;
+}
+
+
+/* =====================================================================
+   2. BACK BUTTON — editorial, no pill genérico
+   ===================================================================== */
+
+.menu-section .back-btn,
+.back-btn {
+    background: transparent !important;
+    border: none !important;
+    color: var(--marron-tinta) !important;
+    font-family: var(--sans-body) !important;
+    font-size: 0.72rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.34em !important;
+    text-transform: uppercase;
+    padding: 0 !important;
+    margin: 0 0 80px 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    cursor: pointer;
+    box-shadow: none !important;
+    transition: gap 0.4s var(--ease-cinematic),
+                color 0.3s ease !important;
+    position: relative;
+}
+
+.menu-section .back-btn svg,
+.back-btn svg {
+    width: 22px !important;
+    height: 22px !important;
+    stroke: var(--marron-tinta) !important;
+    fill: none !important;
+    stroke-width: 1.4 !important;
+    transition: transform 0.4s var(--ease-cinematic);
+}
+
+.menu-section .back-btn:hover,
+.back-btn:hover {
+    gap: 22px !important;
+    color: var(--marron-oscuro) !important;
+}
+.menu-section .back-btn:hover svg,
+.back-btn:hover svg {
+    transform: translateX(-4px);
+}
+
+
+/* =====================================================================
+   3. SECTION HEADER (chapter opener) — generoso y editorial
+   ===================================================================== */
+
+.menu-section .section-header {
+    max-width: 760px;
+    margin: 0 auto 90px !important;
+    text-align: center;
+    position: relative;
+    padding-top: 50px;
+}
+
+/* Numeral romano de capítulo: PI (= Para Compartir → no aplica),
+   pero podemos usar el data-numeral si lo seteamos por categoría.
+   Por defecto sólo mostramos el numeral si el section-header tiene
+   atributo data-numeral. Esto NO interfiere con la home. */
+.menu-section .section-header[data-numeral]::before {
+    top: -10px !important;
+    font-size: clamp(3rem, 5vw, 4.5rem) !important;
+    opacity: 0.5;
+}
+
+.menu-section .section-overtitle {
+    font-size: 0.7rem !important;
+    letter-spacing: 0.5em !important;
+}
+
+.menu-section .section-title {
+    font-size: clamp(3rem, 6vw, 5rem) !important;
+    line-height: 0.95 !important;
+    margin-bottom: 22px !important;
+    color: var(--marron-tinta) !important;
+}
+
+.menu-section .section-description {
+    font-family: var(--serif-display) !important;
+    font-style: italic;
+    font-size: clamp(1.05rem, 1.4vw, 1.2rem) !important;
+    color: var(--gris-tinta) !important;
+    line-height: 1.7 !important;
+    max-width: 520px;
+    margin: 0 auto !important;
+    font-weight: 400 !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+/* Quitar el borde lateral / fondo que venía del CSS antiguo */
+.menu-section .section-description {
+    box-shadow: none !important;
+    border-left: none !important;
+}
+
+/* Línea decorativa fina debajo del header */
+.menu-section .section-header::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 1px;
+    background: rgba(43, 24, 16, 0.35);
+    margin: 60px auto 0;
+}
+
+
+/* =====================================================================
+   4. MENU CONTROLS — search underline + filter chips
+   ===================================================================== */
+
+.menu-section .menu-controls {
+    max-width: 920px;
+    margin: 0 auto 110px !important;
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    background: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.menu-section .search-box {
+    position: relative;
+    width: 100%;
+    max-width: 460px;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+.menu-section .search-input {
+    width: 100%;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(43, 24, 16, 0.25) !important;
+    border-radius: 0 !important;
+    padding: 12px 36px 12px 0 !important;
+    font-family: var(--serif-display) !important;
+    font-style: italic;
+    font-size: 1.1rem !important;
+    color: var(--marron-tinta) !important;
+    text-align: center;
+    transition: border-color 0.4s var(--ease-cinematic) !important;
+    box-shadow: none !important;
+}
+
+.menu-section .search-input::placeholder {
+    color: rgba(43, 24, 16, 0.45) !important;
+    font-style: italic;
+    letter-spacing: 0.01em;
+}
+
+.menu-section .search-input:focus {
+    outline: none;
+    border-bottom-color: var(--marron-tinta) !important;
+}
+
+.menu-section .search-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    stroke: rgba(43, 24, 16, 0.4) !important;
+    fill: none !important;
+    stroke-width: 1.4 !important;
+}
+
+.menu-section .filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 0;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+.menu-section .filter-btn {
+    background: transparent !important;
+    color: rgba(43, 24, 16, 0.6) !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 8px 22px !important;
+    font-family: var(--sans-body) !important;
+    font-size: 0.68rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.38em !important;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.35s var(--ease-cinematic) !important;
+    box-shadow: none !important;
+    min-height: 0 !important;
+}
+
+.menu-section .filter-btn::before {
+    content: '·';
+    position: absolute;
+    left: -2px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(43, 24, 16, 0.25);
+    font-size: 1rem;
+    line-height: 0;
+}
+.menu-section .filter-btn:first-of-type::before {
+    display: none;
+}
+
+.menu-section .filter-btn:hover {
+    color: var(--marron-tinta) !important;
+}
+
+.menu-section .filter-btn.active {
+    color: var(--marron-tinta) !important;
+}
+.menu-section .filter-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 22px;
+    right: 22px;
+    height: 1px;
+    background: var(--marron-tinta);
+}
+
+
+/* =====================================================================
+   5. MENU GRID — single column editorial spread
+   ===================================================================== */
+
+.menu-section .menu-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    grid-template-columns: none !important;
+    gap: 0 !important;
+    max-width: 1080px;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    counter-reset: dish;
+}
+
+
+/* =====================================================================
+   6. MENU ITEM — editorial spread with alternating layout
+   ===================================================================== */
+
+.menu-section .menu-item {
+    counter-increment: dish;
+    display: grid !important;
+    grid-template-columns: 1.15fr 0.85fr !important;
+    gap: 80px !important;
+    align-items: center !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 90px 0 !important;
+    border-top: 1px solid rgba(43, 24, 16, 0.10) !important;
+    transform: none !important;
+    transition: opacity 0.5s var(--ease-cinematic) !important;
+    cursor: pointer;
+    position: relative !important;
+    overflow: visible !important;
+    margin: 0 !important;
+}
+
+.menu-section .menu-item:first-child {
+    border-top: none !important;
+    padding-top: 30px !important;
+}
+
+.menu-section .menu-item:last-child {
+    border-bottom: 1px solid rgba(43, 24, 16, 0.10);
+}
+
+/* Alternar: pares cambian de orden */
+.menu-section .menu-item:nth-child(even) .menu-item-image-wrapper {
+    order: 2;
+}
+.menu-section .menu-item:nth-child(even) .menu-item-content {
+    order: 1;
+    text-align: right;
+}
+.menu-section .menu-item:nth-child(even) .menu-item-line {
+    margin-left: auto;
+}
+.menu-section .menu-item:nth-child(even) .menu-item-tags {
+    justify-content: flex-end;
+}
+.menu-section .menu-item:nth-child(even) .menu-item-footer {
+    justify-content: flex-end;
+}
+
+/* Hover sutil — el item entero "respira" un poquito */
+.menu-section .menu-item:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+.menu-section .menu-item:hover .menu-item-image-wrapper {
+    transform: translateY(-4px);
+}
+.menu-section .menu-item:hover .menu-item-image-wrapper img {
+    transform: scale(1.04);
+    filter: brightness(1.04);
+}
+
+/* Plato N label arriba del item — pequeño "rótulo de capítulo" */
+.menu-section .menu-item::before {
+    content: 'Plato — ' counter(dish, upper-roman);
+    position: absolute;
+    top: 30px;
+    left: 0;
+    font-family: var(--serif-display);
+    font-style: italic;
+    font-size: 0.9rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--marron-tinta);
+    opacity: 0.65;
+    z-index: 3;
+}
+.menu-section .menu-item:nth-child(even)::before {
+    left: auto;
+    right: 0;
+}
+.menu-section .menu-item:first-child::before {
+    top: 0;
+}
+
+/* Numeral romano outline GIGANTE detrás de la info (decoración) */
+.menu-section .menu-item::after {
+    content: counter(dish, upper-roman);
+    position: absolute;
+    font-family: var(--serif-display);
+    font-style: italic;
+    font-size: clamp(10rem, 18vw, 18rem);
+    line-height: 0.85;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(43, 24, 16, 0.07);
+    text-stroke: 1px rgba(43, 24, 16, 0.07);
+    pointer-events: none;
+    z-index: 0;
+    user-select: none;
+    /* Posicionado del lado del CONTENT (no del image) */
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.menu-section .menu-item:nth-child(even)::after {
+    right: auto;
+    left: -20px;
+}
+
+
+/* =====================================================================
+   7. DISH IMAGE WRAPPER — frame editorial
+   ===================================================================== */
+
+.menu-section .menu-item-image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 5 / 4;
+    height: auto !important;
+    overflow: hidden;
+    border-radius: 2px !important;
+    background: var(--beige-papel);
+    box-shadow:
+        0 30px 60px -25px rgba(43, 24, 16, 0.35),
+        0 8px 20px -10px rgba(43, 24, 16, 0.15);
+    transition: transform 0.7s var(--ease-cinematic);
+    z-index: 1;
+}
+
+.menu-section .menu-item-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s var(--ease-cinematic),
+                filter 0.5s ease;
+}
+
+/* Marco interno fino editorial */
+.menu-section .menu-item-image-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: 14px;
+    border: 1px solid rgba(253, 251, 247, 0.18);
+    pointer-events: none;
+    z-index: 2;
+    transition: inset 0.6s var(--ease-cinematic);
+}
+.menu-section .menu-item:hover .menu-item-image-wrapper::after {
+    inset: 20px;
+    border-color: rgba(253, 251, 247, 0.28);
+}
+
+/* Para platos sin imagen: marco con tipografía */
+.menu-section .menu-item.no-image .menu-item-image-wrapper {
+    background: linear-gradient(135deg, var(--beige-papel) 0%, var(--crema-premium) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.menu-section .menu-item.no-image .no-image-icon {
+    width: 80px !important;
+    height: 80px !important;
+    stroke: rgba(43, 24, 16, 0.25) !important;
+    stroke-width: 1 !important;
+}
+
+
+/* =====================================================================
+   8. DISH TAGS — sutiles, no shouty
+   ===================================================================== */
+
+.menu-section .menu-item-tags {
+    position: absolute;
+    top: 22px;
+    left: 22px;
+    z-index: 3;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.menu-section .menu-tag {
+    background: rgba(43, 24, 16, 0.85) !important;
+    color: var(--blanco-perla) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(253, 251, 247, 0.15) !important;
+    padding: 5px 10px !important;
+    font-family: var(--sans-body) !important;
+    font-size: 0.56rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.32em !important;
+    text-transform: uppercase;
+    border-radius: 2px !important;
+    line-height: 1 !important;
+}
+
+/* Tag "popular" mantiene un toque de oro sutil — uno de los pocos
+   lugares premium donde el oro se merece. */
+.menu-section .menu-tag.popular {
+    background: rgba(43, 24, 16, 0.9) !important;
+    color: var(--dorado-brillante) !important;
+    border-color: rgba(212, 175, 55, 0.4) !important;
+}
+
+.menu-section .menu-tag.nuevo {
+    background: rgba(27, 58, 75, 0.92) !important;
+    color: var(--blanco-perla) !important;
+    border-color: rgba(107, 142, 163, 0.4) !important;
+}
+
+.menu-section .menu-tag.vegano {
+    background: rgba(74, 110, 90, 0.92) !important;
+    color: var(--blanco-perla) !important;
+    border-color: rgba(74, 110, 90, 0.4) !important;
+}
+
+
+/* =====================================================================
+   9. DISH CONTENT — name, description, price
+   ===================================================================== */
+
+.menu-section .menu-item-content {
+    padding: 0 !important;
+    background: transparent !important;
+    text-align: left;
+    position: relative;
+    z-index: 1;
+}
+
+/* Línea decorativa antes del nombre */
+.menu-section .menu-item-line {
+    width: 36px !important;
+    height: 1px !important;
+    background: var(--marron-tinta) !important;
+    margin: 0 0 22px 0 !important;
+    opacity: 0.6;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    transition: width 0.6s var(--ease-cinematic);
+}
+.menu-section .menu-item:hover .menu-item-line {
+    width: 64px !important;
+}
+
+/* Dish name: Valerius display, sin uppercase forzado */
+.menu-section .menu-item-name {
+    font-family: var(--serif-display) !important;
+    font-size: clamp(1.9rem, 2.6vw, 2.6rem) !important;
+    font-weight: 400 !important;
+    line-height: 1.05 !important;
+    color: var(--marron-tinta) !important;
+    text-transform: none !important;
+    letter-spacing: -0.005em !important;
+    margin: 0 0 22px 0 !important;
+    text-align: inherit !important;
+}
+
+/* Description: italic editorial */
+.menu-section .menu-item-desc {
+    font-family: var(--serif-display) !important;
+    font-style: italic !important;
+    font-size: 1.05rem !important;
+    line-height: 1.65 !important;
+    color: var(--gris-tinta) !important;
+    margin: 0 0 32px 0 !important;
+    font-weight: 400 !important;
+    max-width: 100%;
+    letter-spacing: 0.005em;
+    text-align: inherit !important;
+}
+
+/* Footer: solo el precio, sin botones extras */
+.menu-section .menu-item-footer {
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    margin: 0 !important;
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+}
+
+.menu-section .menu-item-price {
+    font-family: var(--sans-body) !important;
+    font-size: 1.05rem !important;
+    font-weight: 500 !important;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+    color: var(--marron-tinta) !important;
+    background: none !important;
+    -webkit-text-fill-color: var(--marron-tinta) !important;
+    -webkit-background-clip: initial !important;
+    padding: 0 !important;
+    border: none !important;
+}
+
+/* Pequeño "Ver detalle →" sólo aparece en hover (item entero) */
+.menu-section .menu-item-footer::after {
+    content: 'Ver detalle';
+    font-family: var(--sans-body);
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+    color: var(--marron-tinta);
+    opacity: 0.55;
+    transition: opacity 0.4s ease, transform 0.4s var(--ease-cinematic);
+    display: inline-block;
+    border-bottom: 1px solid rgba(43, 24, 16, 0.3);
+    padding-bottom: 4px;
+}
+.menu-section .menu-item:hover .menu-item-footer::after {
+    opacity: 1;
+    transform: translateX(6px);
+}
+
+
+/* =====================================================================
+   10. VIDEO PLAY OVERLAY (para platos con video)
+   ===================================================================== */
+
+.menu-section .menu-item .video-play-overlay {
+    background: linear-gradient(135deg,
+        rgba(15, 8, 4, 0.25) 0%,
+        rgba(15, 8, 4, 0.55) 100%);
+}
+
+.menu-section .menu-item .video-play-btn {
+    background: rgba(253, 251, 247, 0.92) !important;
+    color: var(--marron-tinta) !important;
+    border: 1px solid rgba(43, 24, 16, 0.18) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+.menu-section .menu-item .video-label {
+    font-family: var(--sans-body) !important;
+    font-size: 0.68rem !important;
+    letter-spacing: 0.4em !important;
+    text-transform: uppercase;
+    color: var(--blanco-perla) !important;
+}
+
+
+/* =====================================================================
+   11. EMPTY / NO RESULTS STATE
+   ===================================================================== */
+
+.menu-section .menu-grid:empty::after,
+.menu-section .no-results {
+    content: 'Sin resultados para tu búsqueda.';
+    display: block;
+    text-align: center;
+    padding: 80px 0;
+    font-family: var(--serif-display);
+    font-style: italic;
+    color: rgba(43, 24, 16, 0.5);
+    font-size: 1.1rem;
+}
+
+
+/* =====================================================================
+   12. RESPONSIVE — TABLET
+   ===================================================================== */
+
+@media (max-width: 1024px) {
+    .menu-container {
+        padding: 0 40px !important;
+    }
+    .menu-section .menu-item {
+        gap: 50px !important;
+        padding: 70px 0 !important;
+    }
+    .menu-section .menu-item-name {
+        font-size: clamp(1.7rem, 3vw, 2.2rem) !important;
+    }
+    .menu-section .menu-item::after {
+        font-size: clamp(8rem, 16vw, 14rem) !important;
+    }
+}
+
+
+/* =====================================================================
+   13. RESPONSIVE — MOBILE
+   En mobile el spread alternado no funciona (muy poco ancho).
+   Pasa a single column con imagen arriba, info abajo.
+   Mantenemos los "Plato I, II..." y la tipografía editorial.
+   ===================================================================== */
+
+@media (max-width: 720px) {
+
+    .menu-section {
+        padding: 90px 0 120px !important;
+    }
+
+    .menu-container {
+        padding: 0 26px !important;
+    }
+
+    .menu-section .back-btn {
+        margin: 0 0 48px 0 !important;
+        font-size: 0.66rem !important;
+        letter-spacing: 0.3em !important;
+    }
+
+    .menu-section .section-header {
+        margin-bottom: 60px !important;
+        padding-top: 30px;
+    }
+
+    .menu-section .section-title {
+        font-size: clamp(2.4rem, 9vw, 3.4rem) !important;
+    }
+    .menu-section .section-description {
+        font-size: 1rem !important;
+        max-width: 100%;
+    }
+
+    .menu-section .menu-controls {
+        margin-bottom: 70px !important;
+        gap: 22px;
+    }
+
+    .menu-section .search-input {
+        font-size: 1rem !important;
+        padding-bottom: 10px !important;
+    }
+
+    .menu-section .filter-buttons {
+        gap: 0;
+    }
+    .menu-section .filter-btn {
+        padding: 6px 14px !important;
+        font-size: 0.58rem !important;
+        letter-spacing: 0.32em !important;
+    }
+    .menu-section .filter-btn::before {
+        left: -1px;
+        font-size: 0.85rem;
+    }
+
+    /* Menu items en mobile: flujo vertical */
+    .menu-section .menu-item {
+        grid-template-columns: 1fr !important;
+        gap: 28px !important;
+        padding: 60px 0 !important;
+    }
+
+    /* No alternar en mobile — siempre imagen arriba, contenido abajo */
+    .menu-section .menu-item:nth-child(even) .menu-item-image-wrapper {
+        order: 0;
+    }
+    .menu-section .menu-item:nth-child(even) .menu-item-content {
+        order: 1;
+        text-align: left;
+    }
+    .menu-section .menu-item:nth-child(even) .menu-item-line {
+        margin-left: 0;
+    }
+    .menu-section .menu-item:nth-child(even) .menu-item-tags,
+    .menu-section .menu-item:nth-child(even) .menu-item-footer {
+        justify-content: flex-start;
+    }
+
+    /* Plato label re-posicionado */
+    .menu-section .menu-item::before {
+        top: 18px;
+        left: 0 !important;
+        right: auto !important;
+        font-size: 0.58rem !important;
+    }
+    .menu-section .menu-item:first-child::before {
+        top: -8px;
+    }
+
+    /* Numeral romano outline mucho más sutil en mobile */
+    .menu-section .menu-item::after {
+        font-size: clamp(5rem, 22vw, 8rem) !important;
+        right: -8px !important;
+        left: auto !important;
+        top: 38px;
+        transform: none;
+        -webkit-text-stroke-color: rgba(43, 24, 16, 0.08) !important;
+        text-stroke-color: rgba(43, 24, 16, 0.08) !important;
+    }
+    .menu-section .menu-item:nth-child(even)::after {
+        right: -8px !important;
+        left: auto !important;
+    }
+
+    .menu-section .menu-item-image-wrapper {
+        aspect-ratio: 4 / 3;
+    }
+    .menu-section .menu-item-image-wrapper::after {
+        inset: 8px;
+    }
+
+    .menu-section .menu-item-name {
+        font-size: clamp(1.65rem, 7vw, 2rem) !important;
+        margin-bottom: 16px !important;
+    }
+    .menu-section .menu-item-desc {
+        font-size: 0.98rem !important;
+        line-height: 1.6 !important;
+        margin-bottom: 24px !important;
+    }
+    .menu-section .menu-item-price {
+        font-size: 1rem !important;
+    }
+
+    /* "Ver detalle →" siempre visible en mobile (no hay hover) */
+    .menu-section .menu-item-footer::after {
+        opacity: 0.85;
+    }
+
+    .menu-section .menu-item:active .menu-item-image-wrapper {
+        transform: scale(0.99);
+    }
+}
+
+
+/* =====================================================================
+   14. DISH MODAL — refinamiento editorial cuando se hace clic en plato
+   ===================================================================== */
+
+.dish-modal-overlay {
+    background: linear-gradient(180deg,
+        rgba(43, 24, 16, 0.85) 0%,
+        rgba(15, 8, 4, 0.94) 100%) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+}
+
+.dish-modal-container {
+    background: var(--blanco-perla) !important;
+    border-radius: 4px !important;
+    border: 1px solid rgba(43, 24, 16, 0.12) !important;
+    box-shadow:
+        0 40px 80px rgba(15, 8, 4, 0.5),
+        inset 0 1px 0 rgba(253, 251, 247, 0.6) !important;
+    overflow: hidden !important;
+}
+
+.dish-modal-image {
+    background: var(--beige-papel) !important;
+}
+.dish-modal-image::after {
+    content: '';
+    position: absolute;
+    inset: 16px;
+    border: 1px solid rgba(253, 251, 247, 0.18);
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Close button refinado */
+.dish-modal-close {
+    background: rgba(43, 24, 16, 0.92) !important;
+    color: var(--blanco-perla) !important;
+    border: none !important;
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 50% !important;
+    transition: transform 0.4s var(--ease-cinematic),
+                background 0.3s ease !important;
+}
+.dish-modal-close:hover {
+    background: var(--marron-tinta) !important;
+    transform: rotate(90deg) scale(1.05) !important;
+}
+.dish-modal-close svg {
+    stroke: var(--blanco-perla) !important;
+    fill: none !important;
+    stroke-width: 1.5 !important;
+    width: 16px !important;
+    height: 16px !important;
+}
+
+/* Header del modal — editorial */
+.dish-modal-info {
+    background: transparent !important;
+    padding: 50px 50px 36px !important;
+}
+
+.dish-modal-header {
+    border-bottom: 1px solid rgba(43, 24, 16, 0.15) !important;
+    padding-bottom: 24px !important;
+    margin-bottom: 28px !important;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 28px;
+}
+
+.dish-modal-title {
+    font-family: var(--serif-display) !important;
+    font-size: clamp(1.8rem, 2.4vw, 2.4rem) !important;
+    font-weight: 400 !important;
+    color: var(--marron-tinta) !important;
+    text-transform: none !important;
+    letter-spacing: -0.005em !important;
+    line-height: 1.05 !important;
+    margin: 0 !important;
+    background: none !important;
+    -webkit-text-fill-color: var(--marron-tinta) !important;
+    -webkit-background-clip: initial !important;
+}
+
+.dish-modal-price {
+    font-family: var(--sans-body) !important;
+    font-size: 1.15rem !important;
+    font-weight: 500 !important;
+    font-variant-numeric: tabular-nums;
+    color: var(--marron-tinta) !important;
+    background: none !important;
+    -webkit-text-fill-color: var(--marron-tinta) !important;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+.dish-modal-description p {
+    font-family: var(--serif-display) !important;
+    font-style: italic;
+    font-size: 1.05rem !important;
+    line-height: 1.75 !important;
+    color: var(--gris-tinta) !important;
+    margin: 0 0 20px 0 !important;
+}
+
+/* Sección "Características" si existe — small caps marrón */
+.dish-modal-info h3,
+.dish-modal-info h4,
+.dish-modal-info .dish-features-title {
+    font-family: var(--sans-body) !important;
+    font-size: 0.68rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.4em !important;
+    text-transform: uppercase;
+    color: var(--marron-tinta) !important;
+    opacity: 0.7;
+    margin-top: 28px !important;
+    margin-bottom: 14px !important;
+}
+
+/* Acciones del modal — botones rediseñados */
+.dish-modal-actions {
+    padding: 0 50px 40px !important;
+    background: transparent !important;
+    display: flex;
+    gap: 14px;
+    border-top: none !important;
+}
+
+.modal-btn,
+.modal-btn.elegant-close,
+.modal-btn.secondary {
+    background: transparent !important;
+    color: var(--marron-tinta) !important;
+    border: 1px solid rgba(43, 24, 16, 0.4) !important;
+    border-radius: 2px !important;
+    padding: 14px 28px !important;
+    font-family: var(--sans-body) !important;
+    font-size: 0.7rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.34em !important;
+    text-transform: uppercase;
+    box-shadow: none !important;
+    transition: background 0.4s var(--ease-cinematic),
+                color 0.4s var(--ease-cinematic),
+                border-color 0.4s var(--ease-cinematic) !important;
+    flex: 1;
+    min-height: 0 !important;
+}
+.modal-btn:hover,
+.modal-btn.elegant-close:hover,
+.modal-btn.secondary:hover {
+    background: var(--marron-tinta) !important;
+    color: var(--blanco-perla) !important;
+    border-color: var(--marron-tinta) !important;
+    transform: none !important;
+}
+
+/* CTA principal (Reservar): destaca con dorado */
+.modal-btn.primary,
+.modal-btn.modal-btn-primary,
+.premium-cta {
+    background: var(--dorado-premium) !important;
+    color: var(--marron-tinta) !important;
+    border: 1px solid var(--dorado-premium) !important;
+    flex: 1.4 !important;
+}
+.modal-btn.primary:hover,
+.modal-btn.modal-btn-primary:hover,
+.premium-cta:hover {
+    background: var(--dorado-oscuro) !important;
+    border-color: var(--dorado-oscuro) !important;
+    color: var(--marron-tinta) !important;
+}
+
+/* Tags dentro del modal */
+.dish-modal-info .menu-item-tags,
+.dish-modal-container .menu-item-tags {
+    margin-bottom: 18px;
+    position: static !important;
+}
+
+/* Mobile dish modal: fullscreen-ish */
+@media (max-width: 720px) {
+    .dish-modal-container {
+        width: 94vw !important;
+        max-width: 94vw !important;
+        max-height: 92vh !important;
+        max-height: 92dvh !important;
+    }
+    .dish-modal-content {
+        flex-direction: column !important;
+    }
+    .dish-modal-image {
+        height: 240px !important;
+        flex: 0 0 auto !important;
+    }
+    .dish-modal-info {
+        padding: 28px 26px 20px !important;
+    }
+    .dish-modal-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .dish-modal-actions {
+        padding: 0 26px 26px !important;
+        flex-direction: column;
+    }
+    .modal-btn {
+        width: 100%;
+    }
+    .dish-modal-close {
+        width: 38px !important;
+        height: 38px !important;
+    }
+}
+
+
+/* =====================================================================
+   15. REDUCED MOTION
+   ===================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .menu-section .menu-item,
+    .menu-section .menu-item-image-wrapper,
+    .menu-section .menu-item-image-wrapper img,
+    .menu-section .menu-item-image-wrapper::after,
+    .menu-section .menu-item-line,
+    .menu-section .menu-item-footer::after {
+        transition: none !important;
+        animation: none !important;
+    }
+}
