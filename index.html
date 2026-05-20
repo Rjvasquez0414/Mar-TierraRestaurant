@@ -83,6 +83,9 @@
     <link rel="stylesheet" href="https://unpkg.com/photoswipe@5.4.4/dist/photoswipe.css">
     <link rel="stylesheet" href="css/gallery-v2.css">
 
+    <!-- Preloader v2: Editorial Cinematic Reveal -->
+    <link rel="stylesheet" href="css/preloader-v2.css">
+
     <!-- Tipografías Personalizadas - DEBE CARGAR AL FINAL -->
     <link rel="stylesheet" href="css/custom-fonts.css">
 
@@ -163,16 +166,22 @@
 
     <!-- Preloader -->
     <div class="preloader" id="preloader" aria-hidden="true">
-        <div class="loader-content">
-            <div class="loader-logo">
-                <div class="logo-main">
-                    <img src="contextocolores/Logomartierraconcolores.png" alt="Mar&Tierra Logo" class="main-logo" width="320" height="320"
+        <!-- Cortinas que se separan al final revelando el sitio -->
+        <div class="pre-curtain pre-curtain--top"></div>
+        <div class="pre-curtain pre-curtain--bottom"></div>
+
+        <!-- Stage: contenido del preloader -->
+        <div class="pre-stage">
+            <div class="pre-frame">
+                <span class="pre-edge--bottom"></span>
+                <span class="pre-edge--left"></span>
+                <div class="pre-logo">
+                    <img src="contextocolores/Logomartierraconcolores.png" alt="Mar&Tierra Logo" width="320" height="320"
                          onerror="this.src='contextocolores/logomartierra3solologo.jpg';">
                 </div>
-                <div class="pulse-ring"></div>
-                <div class="pulse-ring-2"></div>
             </div>
-            <div class="loader-subtitle">Cargando experiencia...</div>
+            <p class="pre-tagline">Cocina de Autor</p>
+            <p class="pre-location">Bucaramanga · Colombia</p>
         </div>
     </div>
     
