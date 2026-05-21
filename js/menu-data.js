@@ -59,7 +59,7 @@ window.menuData = {
             name: "EMPANADAS DE MAR",
             description: "Empanadas rellenas de pulpo, camarón, salmón, hogao y queso, en salsa spicy, polvo de rosas y mango encurtido. (x3 und)",
             price: "$40.000",
-            image: "",
+            image: "https://res.cloudinary.com/dxvl2i2fy/image/upload/v1779332959/empanadas-de-mar_ddzo8q.jpg",
             tags: [],
             available: true,
             category: "compartir"
@@ -79,7 +79,7 @@ window.menuData = {
             name: "FUEGO MARINO",
             description: "Mixtura de mariscos salteada al ajillo y servido tipo pannecook, acompañado de bísquet con suero.",
             price: "$50.000",
-            image: "",
+            image: "https://res.cloudinary.com/dxvl2i2fy/image/upload/v1779332960/fuego-marino_dq9xu3.jpg",
             tags: [],
             available: true,
             category: "compartir"
@@ -99,7 +99,7 @@ window.menuData = {
             name: "TUÉTANOS ROSTIZADOS",
             description: "Hueso de res rostizado al rayo, reducción de balsámico, carpaccio de res y ensaladilla cítrica, acompañado de focaccia.",
             price: "$50.000",
-            image: "",
+            image: "https://res.cloudinary.com/dxvl2i2fy/image/upload/v1779332961/tuetanos-rostizados_s9gdbw.jpg",
             tags: ["popular"],
             available: true,
             category: "compartir"
@@ -133,7 +133,7 @@ window.menuData = {
             name: "TAGLIATELLE MARINO",
             description: "Tagliatelle en salsa a base de bisquet atomatada, mixtura de mar al ajillo, parmesano y pan focaccia.",
             price: "$72.000",
-            image: "",
+            image: "https://res.cloudinary.com/dxvl2i2fy/image/upload/v1779332960/tagliatelle-marino_jqwak2.jpg",
             tags: [],
             available: true,
             category: "mar"
@@ -163,7 +163,7 @@ window.menuData = {
             name: "TRUCHA ROSTIZADA",
             description: "Trucha marinada en ajo, mostaza, soya y hierbas de azotea, con mix de mariscos al ajillo, salsa a base de bísquet y crema de coco, acompañado de patacón.",
             price: "$80.000",
-            image: "",
+            image: "https://res.cloudinary.com/dxvl2i2fy/image/upload/v1779332961/trucha-rostizada_axde4s.jpg",
             tags: [],
             available: true,
             category: "mar"
@@ -203,7 +203,7 @@ window.menuData = {
             name: "CREMOSO MARINO",
             description: "Risotto cremoso en bísquet y cúrcuma, con mix de mariscos y mejillón verde, acompañado de focaccia.",
             price: "$80.000",
-            image: "",
+            image: "https://res.cloudinary.com/dxvl2i2fy/image/upload/v1779332959/cremoso-marino_emiuxg.jpg",
             tags: [],
             available: true,
             category: "mar"
@@ -213,7 +213,7 @@ window.menuData = {
             name: "CAZUELA DI MARE",
             description: "Cazuela a base de bísquet y parmesano, con mix de mariscos al ajillo, acompañado de arroz de coco y patacones.",
             price: "$68.000",
-            image: "",
+            image: "https://res.cloudinary.com/dxvl2i2fy/image/upload/v1779332959/cazuela-di-mare_v1cfce.jpg",
             tags: [],
             available: true,
             category: "mar"
@@ -227,7 +227,7 @@ window.menuData = {
             name: "TAGLIATELLE CON SETAS",
             description: "Tagliatelle salteado en soya y duxelle, setas, zanahoria, cebolla caramelizada, tomates asados, suero y kale crocante. Acompañado de pan focaccia.",
             price: "$40.000",
-            image: "",
+            image: "https://res.cloudinary.com/dxvl2i2fy/image/upload/v1779332960/tagliatelle-con-setas_pcrqse.jpg",
             tags: ["vegano"],
             available: true,
             category: "tierra"
@@ -257,7 +257,7 @@ window.menuData = {
             name: "CARBONARA",
             description: "Tagliatelle en emulsión con guancciale, pimienta y parmesano, acompañado de pan focaccia.",
             price: "$55.000",
-            image: "",
+            image: "https://res.cloudinary.com/dxvl2i2fy/image/upload/v1779332959/carbonara_di64jn.jpg",
             tags: [],
             available: true,
             category: "tierra"
@@ -342,7 +342,7 @@ window.menuData = {
             name: "ENTRECOT MAR Y TIERRA",
             description: "Rib eye rostizado (200 gr), camarón apanado (80 gr), salsa asiática, aguacate, alioli trufada y mil hoja de papa gratinada.",
             price: "$90.000",
-            image: "",
+            image: "https://res.cloudinary.com/dxvl2i2fy/image/upload/v1779332960/entrecot-mar-y-tierra-jpg_tmse55.jpg",
             tags: ["popular"],
             available: true,
             category: "marytierra"
@@ -382,7 +382,7 @@ window.menuData = {
             name: "RISOTTO MAR Y TIERRA",
             description: "Arroz cremoso trufado, con parmesano y duxelle, entraña de res, pulpo al carbón y chimichurri, acompañado de pan focaccia.",
             price: "$90.000",
-            image: "",
+            image: "https://res.cloudinary.com/dxvl2i2fy/image/upload/v1779332960/risotto-mar-y-tierra_xjrhdq.jpg",
             tags: ["popular"],
             available: true,
             category: "marytierra"
@@ -453,7 +453,7 @@ window.menuData = {
             name: "NEW YORK ANGUS",
             description: "Corte importado Angus Certified de 400 gr. Viene con un acompañamiento a elección y chimichurri de la casa.",
             price: "$220.000",
-            image: "",
+            image: "https://res.cloudinary.com/dxvl2i2fy/image/upload/v1779332960/new-york-400gr-importado-angus-certified_m0hlvl.jpg",
             tags: ["popular"],
             available: true,
             category: "grill",
