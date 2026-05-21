@@ -30,3 +30,8 @@ propuesta-*.html
 propuesta-*.pdf
 cotizacion-*.html
 cotizacion-*.pdf
+
+# Fotos originales pesadas + sus versiones comprimidas — van a Cloudinary, no al repo.
+# Los scripts python de la carpeta sí son útiles, pero los conservamos solo localmente
+# para no inflar el repo. Si se necesitan reusar, viven en esta carpeta de scratch.
+fotoscomprimir/
