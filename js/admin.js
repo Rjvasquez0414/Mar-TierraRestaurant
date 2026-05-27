@@ -463,7 +463,7 @@ class AdminPanel {
             html += `<button class="adm-btn adm-btn-sm adm-btn-confirm" data-action="confirm">Confirmar pago</button>`;
             html += `<button class="adm-btn adm-btn-sm adm-btn-reject" data-action="cancel">Rechazar</button>`;
             const reminderMsg = encodeURIComponent(`Hola ${name}, te recordamos que tu reserva *${code}* requiere el anticipo de *${deposit}* para ser confirmada.\n\nBancolombia Cta. Corriente: 30200003995\nNIT: 901857854\nTitular: MYT RESTAURANT SAS\n\nEnvia tu comprobante a este chat. Gracias!`);
-            html += `<a class="adm-btn adm-btn-sm adm-btn-warn" href="https://wa.me/${phone}?text=${reminderMsg}" target="_blank" rel="noopener">Recordar pago</a>`;
+            html += `<button class="adm-btn adm-btn-sm adm-btn-warn" data-action="remind" data-phone="${phone}" data-wa-msg="${reminderMsg}" data-email="${r.customer?.email || ''}" data-customer-name="${escapeHtml(name)}" data-code="${code}" data-deposit="${deposit}" data-date="${date}" data-time="${time}" data-party="${r.party_size}" data-salon="${escapeHtml(r.salon?.name || '')}">Recordar pago</button>`;
         }
 
         if (r.status === 'confirmed') {
@@ -486,7 +486,13 @@ class AdminPanel {
         container.innerHTML = html;
 
         container.querySelectorAll('[data-action]').forEach(btn => {
-            btn.addEventListener('click', () => this.updateReservation(r.id, btn.dataset.action));
+            btn.addEventListener('click', () => {
+                if (btn.dataset.action === 'remind') {
+                    this.sendPaymentReminder(btn);
+                } else {
+                    this.updateReservation(r.id, btn.dataset.action);
+                }
+            });
         });
     }
 
@@ -545,6 +551,52 @@ class AdminPanel {
     }
 
     // ================================================================
+    // PAYMENT REMINDER (WhatsApp + Email)
+    // ================================================================
+
+    async sendPaymentReminder(btn) {
+        const phone = btn.dataset.phone;
+        const waMsg = btn.dataset.waMsg;
+        const email = btn.dataset.email;
+        const name = btn.dataset.customerName;
+        const code = btn.dataset.code;
+        const deposit = btn.dataset.deposit;
+        const date = btn.dataset.date;
+        const time = btn.dataset.time;
+        const party = btn.dataset.party;
+        const salon = btn.dataset.salon;
+
+        // Open WhatsApp
+        window.open(`https://wa.me/${phone}?text=${waMsg}`, '_blank', 'noopener,noreferrer');
+
+        // Send email reminder
+        if (email) {
+            btn.textContent = 'Enviando...';
+            btn.disabled = true;
+            try {
+                await sb.functions.invoke('send-reservation-email', {
+                    body: {
+                        type: 'payment_reminder',
+                        customerName: name,
+                        customerEmail: email,
+                        reservationCode: code,
+                        depositAmount: deposit,
+                        date: date,
+                        time: time,
+                        partySize: parseInt(party) || 0,
+                        salonName: salon
+                    }
+                });
+                btn.textContent = 'Enviado';
+                setTimeout(() => { btn.textContent = 'Recordar pago'; btn.disabled = false; }, 3000);
+            } catch (e) {
+                btn.textContent = 'Email fallo';
+                btn.disabled = false;
+                console.warn('Reminder email failed:', e);
+            }
+        }
+    }
+
     // CUSTOMERS
     // ================================================================
 
