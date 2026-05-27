@@ -472,7 +472,22 @@ class ReservationWizard {
 
         if (dateInput) {
             dateInput.addEventListener('change', () => {
-                this.data.date = dateInput.value;
+                const selected = dateInput.value;
+                const min = this.getMinDate();
+                const max = this.getMaxDate();
+                if (selected < min) {
+                    dateInput.value = '';
+                    this.data.date = null;
+                    alert('La fecha debe ser a partir de manana (' + min + ')');
+                    return;
+                }
+                if (selected > max) {
+                    dateInput.value = '';
+                    this.data.date = null;
+                    alert('La fecha no puede ser mayor a 3 meses');
+                    return;
+                }
+                this.data.date = selected;
                 this.data.time = null;
                 this.data.salonId = null;
                 this.updateTimeSlots();
