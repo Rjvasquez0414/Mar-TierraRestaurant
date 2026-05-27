@@ -83,11 +83,24 @@ class AdminPanel {
             if (error) {
                 errorEl.textContent = 'Email o contraseña incorrectos';
                 errorEl.style.display = 'block';
+                this.logAccess(email, false);
                 return;
             }
             this.user = data.user;
+            this.logAccess(email, true);
             this.showDashboard();
         });
+    }
+
+    async logAccess(email, success) {
+        try {
+            await sb.from('access_logs').insert({
+                email: email,
+                success: success,
+                ip: null,
+                user_agent: navigator.userAgent.slice(0, 200)
+            });
+        } catch (e) {}
     }
 
     async logout() {
@@ -872,6 +885,7 @@ class AdminPanel {
         }
 
         this.loadBlockedSlots();
+        this.loadAccessLogs();
     }
 
     async blockSlot() {
@@ -921,6 +935,37 @@ class AdminPanel {
     async removeBlock(id) {
         await sb.from('blocked_slots').delete().eq('id', id);
         this.loadBlockedSlots();
+    }
+
+    async loadAccessLogs() {
+        const container = document.getElementById('access-logs-list');
+        if (!container) return;
+
+        const { data } = await sb.from('access_logs')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(20);
+
+        if (!data || data.length === 0) {
+            container.innerHTML = '<p style="color:var(--adm-text-muted);font-size:0.85rem">No hay registros de acceso.</p>';
+            return;
+        }
+
+        container.innerHTML = data.map(log => {
+            const date = new Date(log.created_at).toLocaleString('es-CO');
+            const status = log.success
+                ? '<span style="color:var(--adm-green)">Exitoso</span>'
+                : '<span style="color:var(--adm-red)">Fallido</span>';
+            const device = log.user_agent
+                ? (log.user_agent.includes('Mobile') ? 'Movil' : log.user_agent.includes('Tablet') ? 'Tablet' : 'Desktop')
+                : '—';
+            return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--adm-border);font-size:0.82rem">
+                <span>${escapeHtml(log.email)}</span>
+                <span style="color:var(--adm-text-muted)">${device}</span>
+                <span style="color:var(--adm-text-muted);font-variant-numeric:tabular-nums">${date}</span>
+                ${status}
+            </div>`;
+        }).join('');
     }
 
     // ================================================================
