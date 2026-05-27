@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Reserva — Mar&Tierra Restaurant</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" href="images/logos/logo-sin-fondo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="fonts/Valerius.otf" as="font" type="font/otf" crossorigin>
+    <link rel="preload" href="fonts/causten-light.otf" as="font" type="font/otf" crossorigin>
+    <link rel="stylesheet" href="css/custom-fonts.css">
+    <style>
+        :root {
+            --mr-bg: #F5F0E8;
+            --mr-surface: #FDFBF7;
+            --mr-border: rgba(43,24,16,0.08);
+            --mr-text: #2B1810;
+            --mr-muted: rgba(43,24,16,0.50);
+            --mr-gold: #8B6914;
+            --mr-green: #4A6E5A;
+            --mr-red: #9B3B3B;
+            --mr-yellow: #B8941F;
+            --mr-blue: #6B8EA3;
+            --mr-serif: 'Valerius','Playfair Display',serif;
+            --mr-sans: 'Causten','Outfit',sans-serif;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: var(--mr-sans);
+            background: var(--mr-bg);
+            color: var(--mr-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        .mr-logo { width: 140px; margin-bottom: 8px; opacity: 0.85; }
+        .mr-brand { font-size: 0.58rem; letter-spacing: 0.36em; text-transform: uppercase; color: var(--mr-muted); margin-bottom: 40px; }
+        .mr-card {
+            background: var(--mr-surface);
+            border: 1px solid var(--mr-border);
+            border-radius: 6px;
+            width: 100%;
+            max-width: 520px;
+            padding: 40px;
+            box-shadow: 0 8px 30px rgba(43,24,16,0.05);
+        }
+        .mr-title {
+            font-family: var(--mr-serif);
+            font-weight: 400;
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .mr-subtitle {
+            font-family: var(--mr-serif);
+            font-style: italic;
+            font-size: 0.92rem;
+            color: var(--mr-muted);
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .mr-field { margin-bottom: 20px; }
+        .mr-label {
+            display: block;
+            font-size: 0.56rem;
+            font-weight: 500;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--mr-muted);
+            margin-bottom: 8px;
+        }
+        .mr-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1.5px solid rgba(43,24,16,0.18);
+            padding: 12px 0;
+            font-family: var(--mr-serif);
+            font-size: 1.1rem;
+            color: var(--mr-text);
+            text-align: center;
+            letter-spacing: 0.08em;
+        }
+        .mr-input:focus { outline: none; border-color: var(--mr-text); }
+        .mr-input::placeholder { color: rgba(43,24,16,0.3); font-style: italic; letter-spacing: 0; }
+        .mr-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 3px;
+            font-family: var(--mr-sans);
+            font-size: 0.68rem;
+            font-weight: 500;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .mr-btn-primary { background: var(--mr-text); color: var(--mr-surface); }
+        .mr-btn-primary:hover { background: #0F0908; }
+        .mr-btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+        .mr-btn-outline { background: transparent; color: var(--mr-text); border: 1px solid rgba(43,24,16,0.25); margin-top: 10px; }
+        .mr-btn-outline:hover { border-color: var(--mr-text); }
+        .mr-btn-danger { background: rgba(155,59,59,0.08); color: var(--mr-red); border: 1px solid rgba(155,59,59,0.2); margin-top: 10px; }
+        .mr-btn-danger:hover { background: var(--mr-red); color: #fff; }
+        .mr-error {
+            background: rgba(155,59,59,0.06);
+            border: 1px solid rgba(155,59,59,0.15);
+            border-radius: 4px;
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            color: var(--mr-red);
+            margin-bottom: 16px;
+            text-align: center;
+            display: none;
+        }
+        .mr-success {
+            background: rgba(74,110,90,0.06);
+            border: 1px solid rgba(74,110,90,0.15);
+            border-radius: 4px;
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            color: var(--mr-green);
+            margin-bottom: 16px;
+            text-align: center;
+            display: none;
+        }
+
+        /* Reservation detail */
+        .mr-detail { display: none; }
+        .mr-status-bar {
+            text-align: center;
+            padding: 14px;
+            border-radius: 4px;
+            font-size: 0.62rem;
+            font-weight: 500;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+        .mr-status-pending { background: rgba(184,148,31,0.08); color: var(--mr-yellow); }
+        .mr-status-confirmed { background: rgba(74,110,90,0.08); color: var(--mr-green); }
+        .mr-status-seated { background: rgba(107,142,163,0.08); color: var(--mr-blue); }
+        .mr-status-completed { background: rgba(43,24,16,0.04); color: var(--mr-muted); }
+        .mr-status-cancelled, .mr-status-no_show { background: rgba(155,59,59,0.06); color: var(--mr-red); }
+
+        .mr-code {
+            text-align: center;
+            font-size: 0.72rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            color: var(--mr-gold);
+            margin-bottom: 20px;
+        }
+        .mr-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .mr-item-label {
+            font-size: 0.52rem;
+            font-weight: 500;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            color: var(--mr-muted);
+            margin-bottom: 4px;
+        }
+        .mr-item-value { font-size: 0.92rem; color: var(--mr-text); }
+        .mr-item-full { grid-column: 1 / -1; }
+        .mr-divider { border: none; border-top: 1px solid var(--mr-border); margin: 20px 0; }
+        .mr-section-title {
+            font-size: 0.56rem;
+            font-weight: 500;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--mr-muted);
+            margin-bottom: 14px;
+        }
+        .mr-actions { display: flex; flex-direction: column; gap: 0; }
+        .mr-back { text-align: center; margin-top: 20px; }
+        .mr-back a { font-size: 0.82rem; color: var(--mr-muted); text-decoration: underline; text-underline-offset: 3px; }
+
+        /* Modify form */
+        .mr-modify { display: none; }
+        .mr-modify-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+        .mr-modify-fields input, .mr-modify-fields select {
+            width: 100%;
+            background: transparent;
+            border: 1px solid rgba(43,24,16,0.15);
+            border-radius: 4px;
+            padding: 12px 14px;
+            font-family: var(--mr-sans);
+            font-size: 0.88rem;
+            color: var(--mr-text);
+        }
+        .mr-modify-fields input:focus, .mr-modify-fields select:focus { outline: none; border-color: var(--mr-gold); }
+
+        .mr-footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.78rem;
+            color: var(--mr-muted);
+        }
+        .mr-footer a { color: var(--mr-text); }
+
+        @media (max-width: 560px) {
+            body { padding: 24px 16px; }
+            .mr-card { padding: 28px 22px; }
+            .mr-title { font-size: 1.5rem; }
+            .mr-grid { grid-template-columns: 1fr; }
+            .mr-modify-fields { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <img src="contextocolores/LogoMartierra2.png" alt="Mar&Tierra" class="mr-logo">
+    <p class="mr-brand">Consulta tu reserva</p>
+
+    <div class="mr-card">
+        <!-- Search form -->
+        <div id="mr-search">
+            <h1 class="mr-title">Mi Reserva</h1>
+            <p class="mr-subtitle">Ingresa tu codigo de reserva para consultar el estado</p>
+            <div id="mr-error" class="mr-error"></div>
+            <div class="mr-field">
+                <label class="mr-label">Codigo de reserva</label>
+                <input type="text" class="mr-input" id="mr-code" placeholder="MT-20260527-0001" autocomplete="off" spellcheck="false">
+            </div>
+            <button class="mr-btn mr-btn-primary" id="mr-search-btn">Consultar</button>
+        </div>
+
+        <!-- Reservation detail -->
+        <div id="mr-detail" class="mr-detail">
+            <div id="mr-status-bar" class="mr-status-bar"></div>
+            <div id="mr-code-display" class="mr-code"></div>
+            <div id="mr-success-msg" class="mr-success"></div>
+            <div id="mr-error-detail" class="mr-error"></div>
+
+            <div id="mr-info-grid" class="mr-grid"></div>
+
+            <div id="mr-actions-section">
+                <hr class="mr-divider">
+                <p class="mr-section-title">Acciones</p>
+                <div class="mr-actions">
+                    <button class="mr-btn mr-btn-outline" id="mr-modify-btn">Modificar fecha u hora</button>
+                    <button class="mr-btn mr-btn-danger" id="mr-cancel-btn">Cancelar reserva</button>
+                </div>
+            </div>
+
+            <!-- Modify form (hidden) -->
+            <div id="mr-modify" class="mr-modify">
+                <hr class="mr-divider">
+                <p class="mr-section-title">Nueva fecha y hora</p>
+                <div class="mr-modify-fields">
+                    <div>
+                        <label class="mr-label">Fecha</label>
+                        <input type="date" id="mr-new-date">
+                    </div>
+                    <div>
+                        <label class="mr-label">Hora</label>
+                        <select id="mr-new-time"><option value="">Selecciona fecha primero</option></select>
+                    </div>
+                </div>
+                <div class="mr-field">
+                    <label class="mr-label">Ultimos 4 digitos de tu telefono</label>
+                    <input type="text" class="mr-input" id="mr-modify-phone" placeholder="3403" maxlength="4" inputmode="numeric">
+                </div>
+                <button class="mr-btn mr-btn-primary" id="mr-confirm-modify">Confirmar cambio</button>
+                <button class="mr-btn mr-btn-outline" id="mr-cancel-modify">Cancelar</button>
+            </div>
+
+            <!-- Cancel confirmation (hidden) -->
+            <div id="mr-cancel-confirm" style="display:none">
+                <hr class="mr-divider">
+                <p class="mr-section-title">Confirmar cancelacion</p>
+                <p style="font-size:0.85rem;color:var(--mr-muted);margin-bottom:16px;line-height:1.6">
+                    El anticipo <strong>no es reembolsable</strong>. Solo puedes cancelar con al menos 48 horas de anticipacion.
+                </p>
+                <div class="mr-field">
+                    <label class="mr-label">Ultimos 4 digitos de tu telefono</label>
+                    <input type="text" class="mr-input" id="mr-cancel-phone" placeholder="3403" maxlength="4" inputmode="numeric">
+                </div>
+                <button class="mr-btn mr-btn-danger" id="mr-confirm-cancel">Si, cancelar mi reserva</button>
+                <button class="mr-btn mr-btn-outline" id="mr-abort-cancel">Volver</button>
+            </div>
+
+            <div class="mr-back">
+                <a href="#" id="mr-back-link">Consultar otra reserva</a>
+            </div>
+        </div>
+    </div>
+
+    <p class="mr-footer">
+        <a href="index.html">Volver a Mar&Tierra</a> · <a href="https://wa.me/573008263403">WhatsApp</a>
+    </p>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/mi-reserva.js"></script>
+</body>
+</html>

@@ -440,6 +440,9 @@ class ReservationWizard {
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.52 3.48A11.93 11.93 0 0 0 12 0C5.37 0 .02 5.37 0 12c0 2.12.55 4.18 1.6 6.01L0 24l6.18-1.62A11.94 11.94 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.2-1.25-6.21-3.48-8.52z"/></svg>
                         Enviar comprobante
                     </a>
+                    <a href="mi-reserva.html?code=${this.escapeHtml(this.data.reservationCode)}" class="rw-btn rw-btn-back" style="text-decoration:none;text-align:center">
+                        Consultar mi reserva
+                    </a>
                     <button type="button" class="rw-btn rw-btn-back" id="rw-new-reservation">
                         Nueva reserva
                     </button>

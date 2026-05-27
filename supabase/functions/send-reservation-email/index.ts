@@ -93,6 +93,12 @@ function buildCustomerEmail(data: ReservationEmail): string {
           </table>
         </td></tr>
 
+        <!-- Self-service link -->
+        <tr><td style="padding:20px 40px;text-align:center;">
+          <a href="https://marytierrarestaurantbga.com/mi-reserva.html?code=${data.reservationCode}" style="display:inline-block;padding:12px 28px;background:#2B1810;color:#FDFBF7;text-decoration:none;border-radius:3px;font-family:Arial,sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;">Consultar mi reserva</a>
+          <p style="margin:10px 0 0;font-size:12px;color:#8B8680;">Modifica o cancela tu reserva desde este enlace</p>
+        </td></tr>
+
         <!-- Footer -->
         <tr><td style="padding:24px 40px;border-top:1px solid rgba(43,24,16,0.08);text-align:center;">
           <p style="margin:0 0 8px;font-size:13px;font-style:italic;color:#8B8680;">Donde el mar y la tierra se complementan.</p>
