@@ -107,6 +107,7 @@ class ReservationWizard {
     // ================================================================
 
     render() {
+        this.el.scrollIntoView({ behavior: 'smooth', block: 'start' });
         this.el.innerHTML = `
             <div class="rw-container">
                 ${this.renderProgress()}
