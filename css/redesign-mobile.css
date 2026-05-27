@@ -1071,3 +1071,211 @@
         animation: none !important;
     }
 }
+
+
+/* =====================================================================
+   12. RESERVATION + CONTACT + EXPERIENCE — mobile editorial
+   ===================================================================== */
+
+@media (max-width: 720px) {
+
+    /* Reservation types: stack */
+    .reservation-types-grid {
+        grid-template-columns: 1fr !important;
+        gap: 18px !important;
+    }
+
+    .reservation-type-card .card-header h3 {
+        font-size: 1.35rem !important;
+    }
+
+    /* Decoration plans: stack */
+    .decoration-plans-vertical {
+        flex-direction: column !important;
+        gap: 18px !important;
+    }
+
+    .decoration-plan-card .plan-header h4,
+    .decoration-plan-card .plan-header.premium h4 {
+        font-size: 1.2rem !important;
+    }
+
+    /* Services: 2-col on mobile, 1-col on tiny */
+    .additional-services-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 14px !important;
+    }
+
+    .service-card h4 {
+        font-size: 1rem !important;
+    }
+
+    /* Policies: stack */
+    .policies-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+
+    /* Experience cards: single column */
+    .testimonials-grid {
+        grid-template-columns: 1fr !important;
+        gap: 0 !important;
+    }
+    .experience-card {
+        padding: 28px 0 !important;
+    }
+
+    /* Contact */
+    .contact-container {
+        flex-direction: column !important;
+        gap: 32px !important;
+    }
+
+    /* Numeral spacing for new sections */
+    .reservation-info-section .section-header,
+    .contact-section .section-header {
+        padding-top: 50px !important;
+    }
+
+    /* Sub-section spacing inside reservations */
+    .reservation-info-container .section-header ~ .section-header {
+        margin-top: 72px !important;
+    }
+
+    /* Reservation cards: tap state */
+    .reservation-type-card:active {
+        transform: scale(0.985) !important;
+    }
+
+    .decoration-plan-card:active {
+        transform: scale(0.985) !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .additional-services-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+
+/* =====================================================================
+   13. RESERVATION WIZARD — mobile overrides
+   ===================================================================== */
+
+@media (max-width: 720px) {
+
+    .rw-container {
+        padding: 0 16px;
+    }
+
+    .rw-progress {
+        margin-bottom: 40px;
+    }
+    .rw-step-line {
+        flex: 0 0 28px;
+        margin: 0 8px;
+    }
+    .rw-step-num {
+        width: 32px;
+        height: 32px;
+        font-size: 0.72rem;
+    }
+    .rw-step-label {
+        font-size: 0.52rem;
+        letter-spacing: 0.18em;
+    }
+
+    .rw-title {
+        font-size: clamp(1.5rem, 7vw, 2rem) !important;
+    }
+
+    .rw-fields {
+        grid-template-columns: 1fr !important;
+        gap: 16px;
+    }
+    .rw-fields-contact {
+        grid-template-columns: 1fr !important;
+    }
+
+    .rw-salons-grid {
+        grid-template-columns: 1fr !important;
+    }
+    .rw-salon-card {
+        display: flex;
+        flex-direction: row;
+    }
+    .rw-salon-img {
+        width: 100px;
+        height: auto;
+        min-height: 90px;
+        flex-shrink: 0;
+    }
+    .rw-salon-info {
+        padding: 12px 14px;
+    }
+    .rw-salon-name {
+        font-size: 1rem;
+    }
+    .rw-salon-desc {
+        font-size: 0.72rem;
+        -webkit-line-clamp: 1;
+    }
+
+    .rw-types-grid {
+        grid-template-columns: 1fr !important;
+        gap: 14px;
+    }
+    .rw-type-card {
+        padding: 22px 20px;
+    }
+    .rw-type-name {
+        font-size: 1.15rem;
+    }
+
+    .rw-personalized-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+    }
+
+    .rw-summary {
+        padding: 22px 20px;
+    }
+
+    .rw-payment-info {
+        padding: 20px 18px;
+    }
+
+    .rw-actions {
+        flex-direction: column-reverse;
+    }
+    .rw-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 16px 24px;
+    }
+
+    .rw-success-title {
+        font-size: 1.7rem;
+    }
+    .rw-success-steps {
+        padding: 22px 20px;
+    }
+    .rw-success-actions {
+        flex-direction: column;
+    }
+    .rw-success-actions .rw-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .rw-modal {
+        padding: 28px 22px;
+        max-height: 85vh;
+    }
+
+    .rw-large-group-content {
+        padding: 22px 18px;
+    }
+}
