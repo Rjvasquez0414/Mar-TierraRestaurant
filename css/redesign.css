@@ -124,21 +124,41 @@ header #nav .nav-link.active {
     opacity: 0.6;
 }
 
-/* Hero title: stacked layout replicating logo structure */
+/* Hero title: logo layout — anchor left, stacked text right */
 .hero-title {
     font-family: var(--serif-display) !important;
     color: var(--blanco-perla) !important;
     text-shadow: 0 6px 40px rgba(0, 0, 0, 0.55);
     margin: 0 0 38px 0 !important;
     display: inline-flex;
-    flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    gap: 0.15em;
     line-height: 0.92 !important;
     letter-spacing: -0.015em !important;
     font-size: clamp(5rem, 14vw, 12rem) !important;
 }
 .hero-title::after {
     display: none !important;
+}
+
+/* Anchor icon */
+.hero-anchor {
+    width: 0.75em;
+    height: 0.75em;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: heroFade 1.2s var(--ease-cinematic) 0.2s forwards;
+    flex-shrink: 0;
+    filter: brightness(0) invert(1) drop-shadow(0 4px 20px rgba(0,0,0,0.3));
+}
+
+/* Text column: Mar& top, Tierra bottom */
+.hero-title-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 /* Top row: "Mar" + small "&" as superscript */
