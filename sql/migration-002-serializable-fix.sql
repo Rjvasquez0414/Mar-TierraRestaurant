@@ -1,6 +1,7 @@
 -- =====================================================================
--- MIGRATION 002: SERIALIZABLE isolation for create_reservation
+-- MIGRATION 002: Advisory lock for create_reservation
 -- Fixes: race condition where two concurrent requests can double-book
+-- Uses pg_advisory_xact_lock(hash(salon+date)) to serialize bookings
 -- =====================================================================
 
 CREATE OR REPLACE FUNCTION create_reservation(
@@ -18,7 +19,6 @@ RETURNS JSONB
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET statement_timeout = '10s'
-SET transaction_isolation = 'serializable'
 AS $$
 DECLARE
     v_customer_id UUID;
@@ -32,6 +32,7 @@ DECLARE
     v_max_simultaneous INT;
     v_allows_shared BOOLEAN;
     v_capacity INT;
+    v_lock_key BIGINT;
 BEGIN
     IF p_party_size < 1 OR p_party_size > 14 THEN
         RETURN jsonb_build_object('success', false, 'error', 'El numero de personas debe ser entre 1 y 14');
@@ -43,10 +44,15 @@ BEGIN
         RETURN jsonb_build_object('success', false, 'error', 'El telefono debe tener al menos 10 digitos');
     END IF;
 
-    -- Lock salon row
+    -- Advisory lock: unique key per salon+date combination
+    -- Serializes ALL reservations for the same salon on the same date
+    v_lock_key := abs(hashtext(p_salon_id::text || p_date::text));
+    PERFORM pg_advisory_xact_lock(v_lock_key);
+
+    -- Now safe: only one transaction at a time per salon+date
     SELECT s.name, s.is_active, s.max_simultaneous, s.allows_shared, s.capacity
     INTO v_salon_name, v_salon_active, v_max_simultaneous, v_allows_shared, v_capacity
-    FROM salons s WHERE s.id = p_salon_id FOR UPDATE;
+    FROM salons s WHERE s.id = p_salon_id;
 
     IF v_salon_name IS NULL THEN
         RETURN jsonb_build_object('success', false, 'error', 'Salon no encontrado');
@@ -57,14 +63,6 @@ BEGIN
     IF p_party_size > v_capacity THEN
         RETURN jsonb_build_object('success', false, 'error', 'El salon no tiene capacidad para ' || p_party_size || ' personas');
     END IF;
-
-    -- Lock conflicting reservation rows, then count
-    PERFORM 1 FROM reservations r
-    WHERE r.salon_id = p_salon_id
-    AND r.reservation_date = p_date
-    AND r.reservation_time BETWEEN p_time - INTERVAL '2 hours' AND p_time + INTERVAL '2 hours'
-    AND r.status IN ('pending', 'confirmed', 'seated')
-    FOR UPDATE;
 
     SELECT COUNT(*) INTO v_current_bookings
     FROM reservations r
@@ -141,9 +139,7 @@ BEGIN
         'salon_name', v_salon_name
     );
 
-EXCEPTION WHEN serialization_failure THEN
-    RETURN jsonb_build_object('success', false, 'error', 'Otro cliente esta reservando al mismo tiempo. Intenta de nuevo.');
-WHEN unique_violation THEN
+EXCEPTION WHEN unique_violation THEN
     RETURN jsonb_build_object('success', false, 'error', 'Error al generar la reserva. Intenta de nuevo.');
 WHEN OTHERS THEN
     RETURN jsonb_build_object('success', false, 'error', 'Error interno. Intenta de nuevo.');
