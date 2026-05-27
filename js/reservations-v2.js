@@ -83,16 +83,23 @@ class ReservationWizard {
         return '$' + amount.toLocaleString('es-CO');
     }
 
+    toLocalDate(d) {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+    }
+
     getMinDate() {
         const d = new Date();
         d.setDate(d.getDate() + 1);
-        return d.toISOString().split('T')[0];
+        return this.toLocalDate(d);
     }
 
     getMaxDate() {
         const d = new Date();
         d.setMonth(d.getMonth() + 3);
-        return d.toISOString().split('T')[0];
+        return this.toLocalDate(d);
     }
 
     // ================================================================
@@ -410,12 +417,12 @@ class ReservationWizard {
                     </svg>
                 </div>
                 <h3 class="rw-success-title">¡Reserva registrada!</h3>
-                <p class="rw-success-code">${this.data.reservationCode}</p>
+                <p class="rw-success-code">${this.escapeHtml(this.data.reservationCode)}</p>
 
                 <div class="rw-success-summary">
-                    <p>${dateStr} · ${this.formatTime(this.data.time)}</p>
-                    <p>${this.data.partySize} personas · ${this.data.salonName}</p>
-                    <p>${this.data.typeName} · Anticipo: ${this.formatPrice(this.data.deposit)}</p>
+                    <p>${this.escapeHtml(dateStr)} · ${this.escapeHtml(this.formatTime(this.data.time))}</p>
+                    <p>${this.data.partySize} personas · ${this.escapeHtml(this.data.salonName)}</p>
+                    <p>${this.escapeHtml(this.data.typeName)} · Anticipo: ${this.formatPrice(this.data.deposit)}</p>
                 </div>
 
                 <div class="rw-success-steps">

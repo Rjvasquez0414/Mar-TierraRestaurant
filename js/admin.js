@@ -304,10 +304,10 @@ class AdminPanel {
     }
 
     updateCounters(reservations) {
-        const today = new Date().toISOString().split('T')[0];
+        const today = getLocalDateString(new Date());
         const weekFromNow = new Date();
         weekFromNow.setDate(weekFromNow.getDate() + 7);
-        const weekStr = weekFromNow.toISOString().split('T')[0];
+        const weekStr = getLocalDateString(weekFromNow);
 
         const todayRes = reservations.filter(r => r.reservation_date === today);
         document.getElementById('cnt-pending').textContent = todayRes.filter(r => r.status === 'pending').length;
@@ -399,7 +399,7 @@ class AdminPanel {
                     ${logs.map(l => `
                         <div class="adm-log-entry">
                             ${new Date(l.created_at).toLocaleString('es-CO')} — <strong>${l.action}</strong>
-                            ${l.details ? ` — ${JSON.stringify(l.details)}` : ''}
+                            ${l.details ? ` — ${escapeHtml(JSON.stringify(l.details))}` : ''}
                         </div>
                     `).join('')}
                 </div>
@@ -565,7 +565,7 @@ class AdminPanel {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `clientes-martierra-${new Date().toISOString().split('T')[0]}.csv`;
+        a.download = `clientes-martierra-${getLocalDateString()}.csv`;
         a.click();
         URL.revokeObjectURL(url);
     }
@@ -576,8 +576,8 @@ class AdminPanel {
 
     async loadStats() {
         const now = new Date();
-        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
-        const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+        const monthStart = getLocalDateString(new Date(now.getFullYear(), now.getMonth(), 1));
+        const monthEnd = getLocalDateString(new Date(now.getFullYear(), now.getMonth() + 1, 0));
 
         const { data: monthRes } = await sb.from('reservations')
             .select('status, deposit_amount, payment_status, salon_id')
@@ -684,7 +684,7 @@ class AdminPanel {
     async loadBlockedSlots() {
         const { data } = await sb.from('blocked_slots')
             .select('*, salon:salons(name)')
-            .gte('blocked_date', new Date().toISOString().split('T')[0])
+            .gte('blocked_date', getLocalDateString())
             .order('blocked_date');
 
         const container = document.getElementById('blocked-slots-list');
