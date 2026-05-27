@@ -131,7 +131,7 @@ function showDetail() {
         <div><div class="mr-item-label">Experiencia</div><div class="mr-item-value">${TYPE_LABELS[r.type] || r.type}</div></div>
         <div><div class="mr-item-label">Anticipo</div><div class="mr-item-value">${formatPrice(r.deposit_amount)} ${r.is_consumable ? '(consumible)' : '(no consumible)'}</div></div>
         <div><div class="mr-item-label">Cliente</div><div class="mr-item-value">${escapeHtml(r.customer_name)}</div></div>
-        <div><div class="mr-item-label">Telefono</div><div class="mr-item-value">****${escapeHtml(r.customer_phone)}</div></div>
+        <div><div class="mr-item-label">Telefono</div><div class="mr-item-value">Registrado</div></div>
     `;
     if (r.special_requests) {
         gridHtml += `<div class="mr-item-full"><div class="mr-item-label">Solicitudes</div><div class="mr-item-value">${escapeHtml(r.special_requests)}</div></div>`;

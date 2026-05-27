@@ -29,7 +29,6 @@ BEGIN
             'salon_name', s.name,
             'salon_image', s.image_url,
             'customer_name', c.name,
-            'customer_phone', substring(c.phone from '.{4}$'),
             'customer_email', regexp_replace(c.email, '(^.).*(.)(@.*)', '\1***\2\3'),
             'created_at', r.created_at,
             'cancellation_reason', r.cancellation_reason
