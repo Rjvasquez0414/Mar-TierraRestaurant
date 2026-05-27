@@ -668,8 +668,9 @@ class AdminPanel {
         const monthStart = getLocalDateString(new Date(now.getFullYear(), now.getMonth(), 1));
         const monthEnd = getLocalDateString(new Date(now.getFullYear(), now.getMonth() + 1, 0));
 
+        // Fetch this month's data
         const { data: monthRes } = await sb.from('reservations')
-            .select('status, deposit_amount, payment_status, salon_id')
+            .select('status, deposit_amount, payment_status, salon_id, reservation_type')
             .gte('reservation_date', monthStart)
             .lte('reservation_date', monthEnd);
 
@@ -685,21 +686,35 @@ class AdminPanel {
             document.getElementById('stat-noshow-rate').textContent = total ? Math.round(noShow / total * 100) + '%' : '0%';
             document.getElementById('stat-revenue').textContent = '$' + revenue.toLocaleString('es-CO');
 
-            const salonCounts = {};
-            monthRes.forEach(r => {
-                salonCounts[r.salon_id] = (salonCounts[r.salon_id] || 0) + 1;
-            });
-            const occEl = document.getElementById('stat-salon-occupancy');
-            if (occEl) {
-                occEl.innerHTML = this.salons.map(s => {
-                    const cnt = salonCounts[s.id] || 0;
-                    return `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--adm-border)">
-                        <span>${s.name}</span><span style="color:var(--adm-gold)">${cnt} reservas</span>
-                    </div>`;
-                }).join('');
-            }
+            // Type distribution
+            this.renderTypeDistribution(monthRes);
+
+            // Salon occupancy
+            this.renderSalonOccupancy(monthRes);
         }
 
+        // Fetch last 30 days for daily chart
+        const thirtyAgo = new Date(now);
+        thirtyAgo.setDate(thirtyAgo.getDate() - 30);
+        const { data: dailyRes } = await sb.from('reservations')
+            .select('reservation_date, status')
+            .gte('reservation_date', getLocalDateString(thirtyAgo))
+            .lte('reservation_date', getLocalDateString(now))
+            .in('status', ['pending', 'confirmed', 'seated', 'completed']);
+
+        if (dailyRes) this.renderDailyChart(dailyRes, thirtyAgo, now);
+
+        // Fetch last 90 days for heatmap
+        const ninetyAgo = new Date(now);
+        ninetyAgo.setDate(ninetyAgo.getDate() - 90);
+        const { data: heatRes } = await sb.from('reservations')
+            .select('reservation_date, reservation_time')
+            .gte('reservation_date', getLocalDateString(ninetyAgo))
+            .in('status', ['pending', 'confirmed', 'seated', 'completed']);
+
+        if (heatRes) this.renderHeatmap(heatRes);
+
+        // Top customers
         const { data: topCust } = await sb.from('customers')
             .select('name, phone, total_reservations, no_show_count')
             .order('total_reservations', { ascending: false })
@@ -708,12 +723,123 @@ class AdminPanel {
         const topEl = document.getElementById('stat-top-customers');
         if (topEl && topCust) {
             topEl.innerHTML = topCust.map((c, i) => `
-                <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--adm-border)">
-                    <span>${i + 1}. ${escapeHtml(c.name)} <span style="color:var(--adm-text-muted);font-size:0.75rem">${escapeHtml(c.phone)}</span></span>
-                    <span style="color:var(--adm-gold)">${c.total_reservations} reservas</span>
+                <div class="stat-hbar">
+                    <span class="stat-hbar-label">${i + 1}. ${escapeHtml(c.name)}</span>
+                    <div class="stat-hbar-track"><div class="stat-hbar-fill" style="width:${topCust[0]?.total_reservations ? (c.total_reservations / topCust[0].total_reservations * 100) : 0}%;background:#8B6914"></div></div>
+                    <span class="stat-hbar-value">${c.total_reservations}</span>
                 </div>
             `).join('');
         }
+    }
+
+    renderDailyChart(data, startDate, endDate) {
+        const el = document.getElementById('stat-daily-chart');
+        if (!el) return;
+
+        const counts = {};
+        data.forEach(r => { counts[r.reservation_date] = (counts[r.reservation_date] || 0) + 1; });
+
+        const days = [];
+        const d = new Date(startDate);
+        while (d <= endDate) {
+            days.push(getLocalDateString(d));
+            d.setDate(d.getDate() + 1);
+        }
+
+        const max = Math.max(...days.map(d => counts[d] || 0), 1);
+        const dayLabels = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
+
+        el.innerHTML = days.map(day => {
+            const cnt = counts[day] || 0;
+            const pct = (cnt / max * 100);
+            const dt = new Date(day + 'T12:00:00');
+            const isToday = day === getLocalDateString();
+            const color = isToday ? '#8B6914' : (cnt > 0 ? 'rgba(43,24,16,0.25)' : 'rgba(43,24,16,0.06)');
+            return `<div class="stat-bar-wrap">
+                <div class="stat-bar" style="height:${Math.max(pct, 3)}%;background:${color}" data-count="${cnt} reservas · ${dt.getDate()}/${dt.getMonth()+1}"></div>
+                <span class="stat-bar-label">${dayLabels[dt.getDay()]}</span>
+            </div>`;
+        }).join('');
+    }
+
+    renderHeatmap(data) {
+        const el = document.getElementById('stat-heatmap');
+        if (!el) return;
+
+        const counts = {};
+        data.forEach(r => {
+            const dt = new Date(r.reservation_date + 'T12:00:00');
+            const day = dt.getDay();
+            const hour = r.reservation_time?.slice(0, 5);
+            if (!hour) return;
+            const key = `${day}-${hour}`;
+            counts[key] = (counts[key] || 0) + 1;
+        });
+
+        const max = Math.max(...Object.values(counts), 1);
+        const hours = [];
+        for (let h = 11; h <= 22; h++) {
+            hours.push(`${String(h).padStart(2, '0')}:00`);
+            if (h < 22) hours.push(`${String(h).padStart(2, '0')}:30`);
+        }
+        const dayNames = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'];
+
+        el.style.gridTemplateColumns = `50px repeat(7, 1fr)`;
+
+        let html = '<div class="stat-hm-header"></div>';
+        dayNames.forEach(d => { html += `<div class="stat-hm-header">${d}</div>`; });
+
+        hours.forEach(hour => {
+            html += `<div class="stat-hm-label">${hour}</div>`;
+            for (let day = 0; day < 7; day++) {
+                const cnt = counts[`${day}-${hour}`] || 0;
+                const intensity = cnt / max;
+                const bg = cnt === 0
+                    ? 'rgba(43,24,16,0.02)'
+                    : `rgba(139, 105, 20, ${0.1 + intensity * 0.6})`;
+                html += `<div class="stat-hm-cell" style="background:${bg}" data-tip="${hour} ${dayNames[day]}: ${cnt} reservas"></div>`;
+            }
+        });
+
+        el.innerHTML = html;
+    }
+
+    renderTypeDistribution(data) {
+        const el = document.getElementById('stat-type-dist');
+        if (!el) return;
+
+        const counts = { free: 0, plata: 0, oro: 0, luxury: 0 };
+        data.forEach(r => { if (counts.hasOwnProperty(r.reservation_type)) counts[r.reservation_type]++; });
+        const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
+
+        const colors = { free: 'rgba(43,24,16,0.3)', plata: '#8B8680', oro: '#8B6914', luxury: '#4A6E5A' };
+        const labels = { free: 'Free', plata: 'Plata', oro: 'Oro', luxury: 'Luxury' };
+
+        el.innerHTML = Object.entries(counts).map(([type, cnt]) => `
+            <div class="stat-hbar">
+                <span class="stat-hbar-label">${labels[type]}</span>
+                <div class="stat-hbar-track"><div class="stat-hbar-fill" style="width:${cnt / total * 100}%;background:${colors[type]}"></div></div>
+                <span class="stat-hbar-value">${cnt}</span>
+            </div>
+        `).join('');
+    }
+
+    renderSalonOccupancy(data) {
+        const el = document.getElementById('stat-salon-occupancy');
+        if (!el) return;
+
+        const counts = {};
+        data.forEach(r => { counts[r.salon_id] = (counts[r.salon_id] || 0) + 1; });
+        const max = Math.max(...Object.values(counts), 1);
+
+        el.innerHTML = this.salons.map(s => {
+            const cnt = counts[s.id] || 0;
+            return `<div class="stat-hbar">
+                <span class="stat-hbar-label">${escapeHtml(s.name)}</span>
+                <div class="stat-hbar-track"><div class="stat-hbar-fill" style="width:${cnt / max * 100}%;background:rgba(107,142,163,0.5)"></div></div>
+                <span class="stat-hbar-value">${cnt}</span>
+            </div>`;
+        }).join('');
     }
 
     // ================================================================
