@@ -47,6 +47,9 @@ class AdminPanel {
         this.actionInProgress = false;
         this.currentView = 'reservations';
         this.realtimeChannel = null;
+        this.calOffset = 0;
+        this.calView = 'week';
+        this.calReservations = [];
         this.init();
     }
 
@@ -119,6 +122,40 @@ class AdminPanel {
                 document.querySelectorAll('.adm-tab').forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
                 this.switchView(tab.dataset.view);
+            });
+        });
+
+        // View toggle (List / Calendar)
+        document.querySelectorAll('.adm-toggle-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.adm-toggle-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const mode = btn.dataset.mode;
+                document.getElementById('list-mode').style.display = mode === 'list' ? 'block' : 'none';
+                document.getElementById('calendar-mode').style.display = mode === 'calendar' ? 'block' : 'none';
+                if (mode === 'calendar') this.loadCalendar();
+            });
+        });
+
+        // Calendar navigation
+        document.getElementById('cal-prev')?.addEventListener('click', () => {
+            this.calOffset += (this.calView === 'week' ? -7 : -1);
+            this.loadCalendar();
+        });
+        document.getElementById('cal-next')?.addEventListener('click', () => {
+            this.calOffset += (this.calView === 'week' ? 7 : 1);
+            this.loadCalendar();
+        });
+        document.getElementById('cal-today')?.addEventListener('click', () => {
+            this.calOffset = 0;
+            this.loadCalendar();
+        });
+        document.querySelectorAll('.cal-view-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.cal-view-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.calView = btn.dataset.calView;
+                this.loadCalendar();
             });
         });
 
@@ -726,6 +763,9 @@ class AdminPanel {
             }, () => {
                 if (this.currentView === 'reservations') {
                     this.loadReservations();
+                    if (document.getElementById('calendar-mode')?.style.display !== 'none') {
+                        this.loadCalendar();
+                    }
                 }
             })
             .subscribe((status) => {
@@ -737,6 +777,172 @@ class AdminPanel {
                     setTimeout(() => this.setupRealtime(), 5000);
                 }
             });
+    }
+
+    // ================================================================
+    // CALENDAR VIEW
+    // ================================================================
+
+    getCalendarRange() {
+        const today = new Date();
+        if (this.calView === 'day') {
+            const d = new Date(today);
+            d.setDate(d.getDate() + this.calOffset);
+            const str = getLocalDateString(d);
+            return { from: str, to: str, dates: [d] };
+        }
+        // Week view: start from Monday
+        const start = new Date(today);
+        start.setDate(start.getDate() + this.calOffset - ((start.getDay() + 6) % 7));
+        const dates = [];
+        for (let i = 0; i < 7; i++) {
+            const d = new Date(start);
+            d.setDate(d.getDate() + i);
+            dates.push(d);
+        }
+        return {
+            from: getLocalDateString(dates[0]),
+            to: getLocalDateString(dates[6]),
+            dates
+        };
+    }
+
+    async loadCalendar() {
+        const grid = document.getElementById('cal-grid');
+        const title = document.getElementById('cal-title');
+        const loading = document.getElementById('cal-loading');
+        if (!grid) return;
+
+        loading.style.display = 'flex';
+        const range = this.getCalendarRange();
+
+        // Update title
+        if (this.calView === 'day') {
+            title.textContent = range.dates[0].toLocaleDateString('es-CO', {
+                weekday: 'long', day: 'numeric', month: 'long'
+            });
+        } else {
+            const d0 = range.dates[0];
+            const d6 = range.dates[6];
+            const monthSame = d0.getMonth() === d6.getMonth();
+            title.textContent = d0.toLocaleDateString('es-CO', { day: 'numeric', month: 'short' }) +
+                ' - ' + d6.toLocaleDateString('es-CO', { day: 'numeric', month: monthSame ? undefined : 'short', year: 'numeric' });
+        }
+
+        // Fetch reservations + blocked slots
+        const { data: reservations } = await sb.from('reservations')
+            .select('*, customer:customers(name, phone), salon:salons(name, slug)')
+            .gte('reservation_date', range.from)
+            .lte('reservation_date', range.to)
+            .in('status', ['pending', 'confirmed', 'seated', 'completed']);
+
+        const { data: blocked } = await sb.from('blocked_slots')
+            .select('*, salon:salons(name)')
+            .gte('blocked_date', range.from)
+            .lte('blocked_date', range.to);
+
+        this.calReservations = reservations || [];
+        loading.style.display = 'none';
+
+        this.renderCalendar(range, reservations || [], blocked || []);
+    }
+
+    renderCalendar(range, reservations, blocked) {
+        const grid = document.getElementById('cal-grid');
+        const todayStr = getLocalDateString();
+
+        // Time slots: 11:00 to 23:30 (30-min increments)
+        const slots = [];
+        for (let h = 11; h <= 23; h++) {
+            slots.push(`${String(h).padStart(2,'0')}:00`);
+            slots.push(`${String(h).padStart(2,'0')}:30`);
+        }
+
+        const dayNames = ['dom', 'lun', 'mar', 'mie', 'jue', 'vie', 'sab'];
+
+        if (this.calView === 'week') {
+            grid.className = 'cal-grid cal-week';
+
+            let html = '<div class="cal-col-header"></div>';
+            range.dates.forEach(d => {
+                const ds = getLocalDateString(d);
+                const isToday = ds === todayStr;
+                html += `<div class="cal-col-header ${isToday ? 'today' : ''}">
+                    ${dayNames[d.getDay()]}
+                    <span class="cal-col-header-day">${d.getDate()}</span>
+                </div>`;
+            });
+
+            slots.forEach(slot => {
+                html += `<div class="cal-time-label">${slot}</div>`;
+                range.dates.forEach(d => {
+                    const ds = getLocalDateString(d);
+                    const isToday = ds === todayStr;
+                    const isBlocked = blocked.some(b =>
+                        b.blocked_date === ds && (b.is_full_day || (slot >= b.start_time && slot < b.end_time))
+                    );
+                    html += `<div class="cal-cell ${isToday ? 'today-col' : ''} ${isBlocked ? 'blocked' : ''}" data-date="${ds}" data-time="${slot}">`;
+
+                    const cellRes = reservations.filter(r =>
+                        r.reservation_date === ds && r.reservation_time?.slice(0, 5) === slot
+                    );
+                    cellRes.forEach(r => {
+                        html += `<div class="cal-event status-${r.status}" data-id="${r.id}" title="${escapeHtml(r.customer?.name)} - ${escapeHtml(r.salon?.name)} - ${r.party_size} pers.">
+                            <span class="cal-event-name">${escapeHtml(r.customer?.name)}</span>
+                            <span class="cal-event-meta">${escapeHtml(r.salon?.name)} · ${r.party_size}p</span>
+                        </div>`;
+                    });
+                    html += '</div>';
+                });
+            });
+
+            grid.innerHTML = html;
+
+        } else {
+            // Day view: columns = salons
+            const activeSalons = this.salons.filter(s => s.is_active);
+            grid.className = 'cal-grid cal-day';
+            grid.style.setProperty('--salon-count', activeSalons.length);
+
+            let html = '<div class="cal-col-header"></div>';
+            activeSalons.forEach(s => {
+                html += `<div class="cal-col-header">${escapeHtml(s.name)}<br><span style="font-size:0.5rem;opacity:0.6">Cap: ${s.capacity}</span></div>`;
+            });
+
+            const dateStr = getLocalDateString(range.dates[0]);
+            slots.forEach(slot => {
+                html += `<div class="cal-time-label">${slot}</div>`;
+                activeSalons.forEach(s => {
+                    const isBlocked = blocked.some(b =>
+                        b.blocked_date === dateStr &&
+                        (b.salon_id === s.id || !b.salon_id) &&
+                        (b.is_full_day || (slot >= b.start_time && slot < b.end_time))
+                    );
+                    html += `<div class="cal-cell ${isBlocked ? 'blocked' : ''}" data-date="${dateStr}" data-time="${slot}" data-salon="${s.id}">`;
+
+                    const cellRes = reservations.filter(r =>
+                        r.salon_id === s.id && r.reservation_time?.slice(0, 5) === slot
+                    );
+                    cellRes.forEach(r => {
+                        html += `<div class="cal-event status-${r.status}" data-id="${r.id}" title="${escapeHtml(r.customer?.name)} - ${r.party_size} pers.">
+                            <span class="cal-event-name">${escapeHtml(r.customer?.name)}</span>
+                            <span class="cal-event-meta">${r.party_size}p · ${r.reservation_type}</span>
+                        </div>`;
+                    });
+                    html += '</div>';
+                });
+            });
+
+            grid.innerHTML = html;
+        }
+
+        // Click on calendar events opens detail modal
+        grid.querySelectorAll('.cal-event').forEach(ev => {
+            ev.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.showReservationDetail(ev.dataset.id, this.calReservations);
+            });
+        });
     }
 }
 

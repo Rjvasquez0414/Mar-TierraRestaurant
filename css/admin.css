@@ -736,6 +736,273 @@ body {
     font-size: 0.92rem;
 }
 
+/* =================== VIEW TOGGLE =================== */
+
+.adm-view-toggle {
+    display: flex;
+    gap: 0;
+    margin-bottom: 20px;
+    border: 1px solid var(--adm-border);
+    border-radius: 4px;
+    overflow: hidden;
+    width: fit-content;
+}
+.adm-toggle-btn {
+    background: transparent;
+    border: none;
+    color: var(--adm-text-muted);
+    font-family: var(--adm-sans);
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.adm-toggle-btn.active {
+    background: var(--adm-text);
+    color: var(--adm-surface);
+}
+.adm-toggle-btn:hover:not(.active) {
+    background: var(--adm-border);
+}
+
+/* =================== CALENDAR =================== */
+
+.cal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+.cal-title {
+    font-family: var(--adm-serif);
+    font-weight: 400;
+    font-size: 1.3rem;
+    color: var(--adm-text);
+    min-width: 200px;
+}
+.cal-nav-btn {
+    background: var(--adm-surface);
+    border: 1px solid var(--adm-border);
+    border-radius: 4px;
+    color: var(--adm-text);
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s ease;
+}
+.cal-nav-btn:hover { border-color: var(--adm-border-hover); }
+.cal-today-btn {
+    background: transparent;
+    border: 1px solid var(--adm-border);
+    border-radius: 4px;
+    color: var(--adm-text-muted);
+    font-family: var(--adm-sans);
+    font-size: 0.6rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.cal-today-btn:hover { border-color: #8B6914; color: #8B6914; }
+.cal-view-btns {
+    display: flex;
+    gap: 0;
+    margin-left: auto;
+    border: 1px solid var(--adm-border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.cal-view-btn {
+    background: transparent;
+    border: none;
+    color: var(--adm-text-muted);
+    font-family: var(--adm-sans);
+    font-size: 0.56rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.cal-view-btn.active { background: var(--adm-text); color: var(--adm-surface); }
+
+.cal-legend {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+.cal-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.68rem;
+    color: var(--adm-text-muted);
+    letter-spacing: 0.1em;
+}
+.cal-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+}
+.cal-dot-pending { background: var(--adm-yellow); }
+.cal-dot-confirmed { background: var(--adm-green); }
+.cal-dot-seated { background: var(--adm-blue); }
+.cal-dot-blocked { background: var(--adm-red); opacity: 0.5; }
+
+.cal-grid-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--adm-border);
+    border-radius: 4px;
+}
+
+.cal-grid {
+    display: grid;
+    min-width: 700px;
+}
+
+/* Week view: time column + 7 day columns */
+.cal-grid.cal-week {
+    grid-template-columns: 60px repeat(7, 1fr);
+}
+/* Day view: time column + salon columns */
+.cal-grid.cal-day {
+    grid-template-columns: 60px repeat(var(--salon-count, 5), 1fr);
+}
+
+.cal-col-header {
+    background: var(--adm-surface);
+    border-bottom: 1px solid var(--adm-border);
+    border-right: 1px solid var(--adm-border);
+    padding: 10px 8px;
+    text-align: center;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--adm-text-muted);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+.cal-col-header.today {
+    color: #8B6914;
+    background: rgba(212, 175, 55, 0.04);
+}
+.cal-col-header-day {
+    display: block;
+    font-size: 1.2rem;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--adm-text);
+    margin-top: 2px;
+}
+
+.cal-time-label {
+    padding: 0 8px;
+    font-size: 0.65rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--adm-text-muted);
+    border-right: 1px solid var(--adm-border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding-top: 4px;
+    height: 48px;
+    background: var(--adm-bg);
+}
+
+.cal-cell {
+    border-right: 1px solid var(--adm-border);
+    border-bottom: 1px solid rgba(43, 24, 16, 0.04);
+    height: 48px;
+    position: relative;
+    padding: 2px;
+}
+.cal-cell:hover {
+    background: rgba(212, 175, 55, 0.02);
+}
+.cal-cell.today-col {
+    background: rgba(212, 175, 55, 0.015);
+}
+.cal-cell.blocked {
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 4px,
+        rgba(155, 59, 59, 0.06) 4px,
+        rgba(155, 59, 59, 0.06) 8px
+    );
+}
+
+.cal-event {
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    border-radius: 3px;
+    padding: 3px 6px;
+    font-size: 0.6rem;
+    line-height: 1.3;
+    cursor: pointer;
+    overflow: hidden;
+    z-index: 1;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-left: 3px solid;
+}
+.cal-event:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    z-index: 5;
+}
+.cal-event-name {
+    font-weight: 500;
+    color: var(--adm-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.cal-event-meta {
+    color: var(--adm-text-muted);
+    font-size: 0.54rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cal-event.status-pending {
+    background: rgba(184, 148, 31, 0.08);
+    border-left-color: var(--adm-yellow);
+}
+.cal-event.status-confirmed {
+    background: rgba(74, 110, 90, 0.08);
+    border-left-color: var(--adm-green);
+}
+.cal-event.status-seated {
+    background: rgba(107, 142, 163, 0.08);
+    border-left-color: var(--adm-blue);
+}
+.cal-event.status-completed {
+    background: rgba(43, 24, 16, 0.04);
+    border-left-color: var(--adm-text-muted);
+    opacity: 0.6;
+}
+.cal-event.status-cancelled, .cal-event.status-no_show {
+    background: rgba(155, 59, 59, 0.06);
+    border-left-color: var(--adm-red);
+    opacity: 0.4;
+}
+
 /* =================== REALTIME INDICATOR =================== */
 
 .adm-realtime-on, .adm-realtime-off {

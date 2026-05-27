@@ -87,6 +87,14 @@
                     </div>
                 </div>
 
+                <!-- View toggle: List vs Calendar -->
+                <div class="adm-view-toggle">
+                    <button class="adm-toggle-btn active" data-mode="list">Lista</button>
+                    <button class="adm-toggle-btn" data-mode="calendar">Calendario</button>
+                </div>
+
+                <!-- ===== LIST MODE ===== -->
+                <div id="list-mode">
                 <!-- Filters -->
                 <div class="adm-filters">
                     <div class="adm-filter-group">
@@ -132,6 +140,34 @@
                     <div class="adm-spinner"></div>
                     <span>Cargando reservas...</span>
                 </div>
+                </div><!-- /list-mode -->
+
+                <!-- ===== CALENDAR MODE ===== -->
+                <div id="calendar-mode" style="display:none">
+                    <div class="cal-header">
+                        <button type="button" class="cal-nav-btn" id="cal-prev" aria-label="Semana anterior">&larr;</button>
+                        <h3 class="cal-title" id="cal-title"></h3>
+                        <button type="button" class="cal-nav-btn" id="cal-next" aria-label="Semana siguiente">&rarr;</button>
+                        <button type="button" class="cal-today-btn" id="cal-today">Hoy</button>
+                        <div class="cal-view-btns">
+                            <button class="cal-view-btn active" data-cal-view="week">Semana</button>
+                            <button class="cal-view-btn" data-cal-view="day">Dia</button>
+                        </div>
+                    </div>
+                    <div class="cal-legend">
+                        <span class="cal-legend-item"><span class="cal-dot cal-dot-pending"></span> Pendiente</span>
+                        <span class="cal-legend-item"><span class="cal-dot cal-dot-confirmed"></span> Confirmada</span>
+                        <span class="cal-legend-item"><span class="cal-dot cal-dot-seated"></span> En mesa</span>
+                        <span class="cal-legend-item"><span class="cal-dot cal-dot-blocked"></span> Bloqueado</span>
+                    </div>
+                    <div class="cal-grid-wrapper">
+                        <div class="cal-grid" id="cal-grid"></div>
+                    </div>
+                    <div id="cal-loading" class="adm-loading" style="display:none">
+                        <div class="adm-spinner"></div>
+                        <span>Cargando calendario...</span>
+                    </div>
+                </div><!-- /calendar-mode -->
             </section>
 
             <!-- ============================================
