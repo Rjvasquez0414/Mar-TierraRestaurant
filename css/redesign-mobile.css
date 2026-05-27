@@ -350,12 +350,12 @@
         opacity: 0.7;
     }
 
-    /* Title: forzar línea única con ampersand inline */
+    /* Title: cabe en una línea sin overflow */
     .hero-title {
-        font-size: clamp(3.4rem, 17vw, 5.4rem) !important;
-        letter-spacing: -0.015em !important;
-        margin-bottom: 28px !important;
-        gap: 0.05em !important;
+        font-size: clamp(2.8rem, 14vw, 4.2rem) !important;
+        letter-spacing: -0.02em !important;
+        margin-bottom: 22px !important;
+        gap: 0.04em !important;
         line-height: 0.95 !important;
     }
     .hero-ampersand {
@@ -412,36 +412,36 @@
 @media (max-width: 720px) {
 
     .categories-grid.menu-v2 {
-        grid-auto-rows: 300px !important;
-        gap: 18px !important;
-        padding: 0 24px !important;
+        grid-auto-rows: auto !important;
+        gap: 14px !important;
+        padding: 0 20px !important;
     }
 
     .categories-grid.menu-v2 .category-card {
-        min-height: 300px !important;
+        min-height: 220px !important;
         border-radius: 4px !important;
     }
 
     .categories-grid.menu-v2 .category-card.featured {
-        min-height: 360px !important;
+        min-height: 260px !important;
     }
 
     .categories-grid.menu-v2 .category-card.banner {
-        min-height: 200px !important;
+        min-height: 140px !important;
     }
 
-    /* Outline number: más pequeño y bien posicionado */
+    /* Outline number: compacto */
     .categories-grid.menu-v2 .category-card[data-number]::after {
-        font-size: 6.2rem !important;
-        bottom: -12px !important;
-        right: 16px !important;
+        font-size: 4.5rem !important;
+        bottom: -8px !important;
+        right: 12px !important;
         -webkit-text-stroke-color: rgba(228, 212, 168, 0.28) !important;
         text-stroke-color: rgba(228, 212, 168, 0.28) !important;
     }
     .categories-grid.menu-v2 .category-card.featured[data-number]::after {
-        font-size: 10rem !important;
-        bottom: -18px !important;
-        right: 22px !important;
+        font-size: 7rem !important;
+        bottom: -12px !important;
+        right: 16px !important;
     }
     .categories-grid.menu-v2 .category-card.banner[data-number]::after {
         font-size: 5.5rem !important;
@@ -451,22 +451,22 @@
 
     /* Card content: tipografía generosa */
     .categories-grid.menu-v2 .category-content {
-        padding: 24px 22px !important;
+        padding: 20px 18px !important;
     }
     .categories-grid.menu-v2 .category-card.featured .category-content {
-        padding: 30px 26px !important;
+        padding: 24px 22px !important;
     }
     .categories-grid.menu-v2 .category-name {
-        font-size: 1.5rem !important;
+        font-size: 1.25rem !important;
         line-height: 1.1 !important;
-        margin-bottom: 10px !important;
+        margin-bottom: 6px !important;
     }
     .categories-grid.menu-v2 .category-card.featured .category-name {
-        font-size: 2rem !important;
+        font-size: 1.6rem !important;
     }
     .categories-grid.menu-v2 .category-desc {
-        font-size: 0.92rem !important;
-        line-height: 1.5 !important;
+        font-size: 0.82rem !important;
+        line-height: 1.45 !important;
     }
 
     /* Borde superior animado se muestra siempre en mobile (no hay hover) */
@@ -935,43 +935,46 @@
 
 @media (max-width: 720px) {
 
-    /* Secciones con padding vertical generoso (premium = aire) */
+    /* Secciones: padding compacto en mobile */
     .categories-section,
     .instalaciones-section,
     .gallery-section,
     .reservation-info-section,
     .contact-section,
     .testimonials-section {
-        padding-top: 96px !important;
-        padding-bottom: 72px !important;
+        padding-top: 64px !important;
+        padding-bottom: 48px !important;
     }
 
-    /* Numerales romanos mobile: más arriba, más sutiles */
+    /* Numerales romanos mobile: más sutiles */
     .section-header[data-numeral]::before {
-        top: -32px !important;
-        font-size: clamp(2.6rem, 11vw, 4rem) !important;
-        opacity: 0.7;
+        top: -24px !important;
+        font-size: clamp(2.2rem, 9vw, 3.2rem) !important;
+        opacity: 0.6;
     }
     .categories-section .section-header,
     .instalaciones-section .section-header,
     .gallery-section .section-header {
-        padding-top: 50px !important;
+        padding-top: 36px !important;
     }
 
-    /* Section title scale */
+    /* Section title: compacto */
     .section-title {
-        font-size: clamp(2.1rem, 8vw, 3rem) !important;
-        line-height: 1.05 !important;
+        font-size: clamp(1.8rem, 7vw, 2.4rem) !important;
+        line-height: 1.08 !important;
         letter-spacing: -0.005em !important;
-        padding: 0 12px;
+        padding: 0 8px;
+        margin-bottom: 12px !important;
     }
     .section-overtitle {
-        font-size: 0.62rem !important;
-        letter-spacing: 0.4em !important;
+        font-size: 0.58rem !important;
+        letter-spacing: 0.36em !important;
+        margin-bottom: 8px !important;
     }
     .section-description {
-        font-size: 0.96rem !important;
-        line-height: 1.7 !important;
+        font-size: 0.88rem !important;
+        line-height: 1.6 !important;
+        padding: 0 8px;
     }
 
     /* Espacio cards mobile: tap state */
@@ -1023,7 +1026,7 @@
 
 @media (max-width: 380px) {
     .hero-title {
-        font-size: clamp(2.8rem, 17vw, 4.4rem) !important;
+        font-size: clamp(2.4rem, 13vw, 3.4rem) !important;
     }
     .hero-eyebrow::before,
     .hero-eyebrow::after {
