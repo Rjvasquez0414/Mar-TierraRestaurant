@@ -757,9 +757,14 @@
 
 @media (max-width: 720px) {
 
-    /* Insertamos un bar sticky via fixed positioning. Como no podemos
-       agregar HTML solo con CSS, usamos un pseudo-element en body o
-       confiamos en JS para inyectarlo. Aquí preparamos los estilos. */
+    .mobile-cta-bar,
+    .mobile-cta-bar:link,
+    .mobile-cta-bar:visited,
+    .mobile-cta-bar:hover,
+    .mobile-cta-bar:active {
+        text-decoration: none !important;
+        -webkit-text-decoration: none !important;
+    }
 
     .mobile-cta-bar {
         position: fixed;
