@@ -124,39 +124,55 @@ header #nav .nav-link.active {
     opacity: 0.6;
 }
 
-/* Hero title: 3 spans (Mar | & | Tierra) */
+/* Hero title: stacked layout like the logo (Mar& / Tierra) */
 .hero-title {
     font-family: var(--serif-display) !important;
-    font-size: clamp(4.5rem, 13vw, 11rem) !important;
-    line-height: 0.92 !important;
-    letter-spacing: -0.015em !important;
     color: var(--blanco-perla) !important;
     text-shadow: 0 6px 40px rgba(0, 0, 0, 0.55);
     margin: 0 0 38px 0 !important;
     display: flex;
-    align-items: baseline;
-    justify-content: center;
-    flex-wrap: nowrap;
-    gap: 0.12em;
+    flex-direction: column;
+    align-items: center;
+    line-height: 0.88 !important;
+    letter-spacing: -0.015em !important;
+    font-size: clamp(5rem, 14vw, 12rem) !important;
 }
 .hero-title::after {
-    display: none !important; /* removemos la línea dorada anterior */
+    display: none !important;
 }
+
+/* Top row: "Mar" + "&" */
+.hero-title-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.05em;
+    font-size: 0.48em;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: heroFade 1.4s var(--ease-cinematic) 0.3s forwards;
+}
+
 .hero-word {
     display: inline-block;
+}
+.hero-word--mar {
+    opacity: 1;
+    transform: none;
+    animation: none;
+}
+.hero-word--tierra {
     opacity: 0;
     transform: translateY(40px);
-    animation: heroFade 1.4s var(--ease-cinematic) forwards;
+    animation: heroFade 1.4s var(--ease-cinematic) 0.55s forwards;
 }
-.hero-word--mar    { animation-delay: 0.35s; }
-.hero-word--tierra { animation-delay: 0.65s; }
 
-/* El ampersand — pieza icónica, en Valerius gigante con tinte oro */
+/* El ampersand — pieza icónica, en Valerius con tinte oro */
 .hero-ampersand {
     display: inline-block;
     font-family: var(--serif-display);
     font-style: italic;
-    font-size: 1.35em;
+    font-size: 1.1em;
     line-height: 0.85;
     background: linear-gradient(160deg,
         var(--dorado-brillante) 0%,

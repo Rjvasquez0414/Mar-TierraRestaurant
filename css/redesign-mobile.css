@@ -350,17 +350,19 @@
         opacity: 0.7;
     }
 
-    /* Title: cabe en una línea sin overflow */
+    /* Title: stacked layout */
     .hero-title {
-        font-size: clamp(2.8rem, 14vw, 4.2rem) !important;
+        font-size: clamp(3.4rem, 18vw, 5rem) !important;
         letter-spacing: -0.02em !important;
         margin-bottom: 22px !important;
-        gap: 0.04em !important;
-        line-height: 0.95 !important;
+        line-height: 0.88 !important;
+    }
+    .hero-title-top {
+        font-size: 0.48em;
     }
     .hero-ampersand {
-        font-size: 1.18em !important;
-        transform: translateY(0.08em) rotate(-2deg);
+        font-size: 1.1em !important;
+        transform: translateY(0.04em) rotate(-2deg);
     }
 
     .hero-subtitle {
@@ -1026,7 +1028,7 @@
 
 @media (max-width: 380px) {
     .hero-title {
-        font-size: clamp(2.4rem, 13vw, 3.4rem) !important;
+        font-size: clamp(2.8rem, 16vw, 4rem) !important;
     }
     .hero-eyebrow::before,
     .hero-eyebrow::after {
