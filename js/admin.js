@@ -4,10 +4,47 @@
 
 const MT_WA = '573008263403';
 
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function normalizePhone(phone) {
+    if (!phone) return '';
+    let p = phone.replace(/[\s\-\(\)\+]/g, '');
+    if (!p.startsWith('57')) p = '57' + p;
+    return p.replace(/[^\d]/g, '');
+}
+
+function getLocalDateString(date) {
+    if (!date) date = new Date();
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+}
+
+function escapeCSV(str) {
+    if (!str) return '""';
+    return '"' + String(str).replace(/"/g, '""') + '"';
+}
+
+const VALID_TRANSITIONS = {
+    pending: ['confirmed', 'cancelled', 'no_show'],
+    confirmed: ['seated', 'cancelled', 'no_show'],
+    seated: ['completed'],
+    completed: [],
+    cancelled: [],
+    no_show: []
+};
+
 class AdminPanel {
     constructor() {
         this.user = null;
         this.salons = [];
+        this.actionInProgress = false;
         this.currentView = 'reservations';
         this.realtimeChannel = null;
         this.init();
@@ -115,6 +152,15 @@ class AdminPanel {
             e.preventDefault();
             this.blockSlot();
         });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('reservation-modal');
+                if (modal && modal.style.display !== 'none') {
+                    modal.style.display = 'none';
+                }
+            }
+        });
     }
 
     switchView(view) {
@@ -151,19 +197,19 @@ class AdminPanel {
     getDateRange() {
         const filter = document.getElementById('filter-date')?.value || 'week';
         const today = new Date();
-        const todayStr = today.toISOString().split('T')[0];
+        const todayStr = getLocalDateString(today);
 
         const tomorrow = new Date(today);
         tomorrow.setDate(tomorrow.getDate() + 1);
-        const tomorrowStr = tomorrow.toISOString().split('T')[0];
+        const tomorrowStr = getLocalDateString(tomorrow);
 
         const weekEnd = new Date(today);
         weekEnd.setDate(weekEnd.getDate() + 7);
-        const weekStr = weekEnd.toISOString().split('T')[0];
+        const weekStr = getLocalDateString(weekEnd);
 
         const monthEnd = new Date(today);
         monthEnd.setMonth(monthEnd.getMonth() + 1);
-        const monthStr = monthEnd.toISOString().split('T')[0];
+        const monthStr = getLocalDateString(monthEnd);
 
         switch (filter) {
             case 'today': return { from: todayStr, to: todayStr };
@@ -245,8 +291,8 @@ class AdminPanel {
             <div class="adm-res-card" data-id="${r.id}">
                 <span class="adm-res-code">${r.reservation_code}</span>
                 <div class="adm-res-info">
-                    <span class="adm-res-name">${r.customer?.name || 'Sin nombre'}</span>
-                    <span class="adm-res-meta">${r.customer?.phone || ''} · ${r.party_size} pers. · ${typeLabels[r.reservation_type] || r.reservation_type} · $${(r.deposit_amount || 0).toLocaleString('es-CO')}</span>
+                    <span class="adm-res-name">${escapeHtml(r.customer?.name) || 'Sin nombre'}</span>
+                    <span class="adm-res-meta">${escapeHtml(r.customer?.phone) || ''} · ${r.party_size} pers. · ${typeLabels[r.reservation_type] || r.reservation_type} · $${(r.deposit_amount || 0).toLocaleString('es-CO')}</span>
                 </div>
                 <div class="adm-res-details">
                     <span class="adm-res-date">${dateStr} · ${time}</span>
@@ -299,17 +345,17 @@ class AdminPanel {
 
         detail.innerHTML = `
             <div class="adm-detail-header">
-                <div class="adm-detail-code">${r.reservation_code}</div>
-                <div class="adm-detail-title">${r.customer?.name || 'Sin nombre'}</div>
+                <div class="adm-detail-code">${escapeHtml(r.reservation_code)}</div>
+                <div class="adm-detail-title">${escapeHtml(r.customer?.name) || 'Sin nombre'}</div>
             </div>
             <div class="adm-detail-grid">
                 <div class="adm-detail-item">
                     <span class="adm-detail-label">Teléfono</span>
-                    <span class="adm-detail-value">${r.customer?.phone || '—'}</span>
+                    <span class="adm-detail-value">${escapeHtml(r.customer?.phone) || '—'}</span>
                 </div>
                 <div class="adm-detail-item">
                     <span class="adm-detail-label">Email</span>
-                    <span class="adm-detail-value">${r.customer?.email || '—'}</span>
+                    <span class="adm-detail-value">${escapeHtml(r.customer?.email) || '—'}</span>
                 </div>
                 <div class="adm-detail-item">
                     <span class="adm-detail-label">Fecha y hora</span>
@@ -337,11 +383,11 @@ class AdminPanel {
                 </div>
                 ${r.special_requests ? `<div class="adm-detail-item" style="grid-column:1/-1">
                     <span class="adm-detail-label">Solicitudes especiales</span>
-                    <span class="adm-detail-value">${r.special_requests}</span>
+                    <span class="adm-detail-value">${escapeHtml(r.special_requests)}</span>
                 </div>` : ''}
                 ${r.admin_notes ? `<div class="adm-detail-item" style="grid-column:1/-1">
                     <span class="adm-detail-label">Notas admin</span>
-                    <span class="adm-detail-value">${r.admin_notes}</span>
+                    <span class="adm-detail-value">${escapeHtml(r.admin_notes)}</span>
                 </div>` : ''}
             </div>
 
@@ -367,8 +413,7 @@ class AdminPanel {
     }
 
     renderDetailActions(container, r) {
-        const rawPhone = r.customer?.phone || '';
-        const phone = rawPhone.startsWith('57') ? rawPhone : '57' + rawPhone;
+        const phone = normalizePhone(r.customer?.phone);
         const name = r.customer?.name || '';
         const code = r.reservation_code;
         const deposit = '$' + (r.deposit_amount || 0).toLocaleString('es-CO');
@@ -409,6 +454,9 @@ class AdminPanel {
     }
 
     async updateReservation(id, action) {
+        if (this.actionInProgress) return;
+        this.actionInProgress = true;
+
         const statusMap = {
             confirm: 'confirmed',
             cancel: 'cancelled',
@@ -418,39 +466,45 @@ class AdminPanel {
         };
 
         const newStatus = statusMap[action];
-        if (!newStatus) return;
+        if (!newStatus) { this.actionInProgress = false; return; }
+
+        // Get current status and validate transition
+        const { data: current } = await sb.from('reservations').select('status').eq('id', id).single();
+        if (current && VALID_TRANSITIONS[current.status] && !VALID_TRANSITIONS[current.status].includes(newStatus)) {
+            alert('No se puede cambiar de "' + current.status + '" a "' + newStatus + '"');
+            this.actionInProgress = false;
+            return;
+        }
 
         const updates = { status: newStatus };
         if (action === 'confirm') updates.payment_status = 'verified';
         if (action === 'cancel') {
-            const reason = prompt('Razón de cancelación:');
-            if (!reason) return;
+            const reason = prompt('Razon de cancelacion:');
+            if (!reason) { this.actionInProgress = false; return; }
             updates.cancellation_reason = reason;
             updates.payment_status = 'rejected';
         }
 
-        const { error } = await sb.from('reservations').update(updates).eq('id', id);
-        if (error) { alert('Error: ' + error.message); return; }
+        try {
+            const { error } = await sb.from('reservations').update(updates).eq('id', id);
+            if (error) { alert('Error al actualizar'); return; }
 
-        await sb.from('reservation_logs').insert({
-            reservation_id: id,
-            action: action,
-            details: updates,
-            performed_by: this.user.id
-        });
+            await sb.from('reservation_logs').insert({
+                reservation_id: id,
+                action: action,
+                details: updates,
+                performed_by: this.user.id
+            });
 
-        if (action === 'no_show') {
-            const { data: res } = await sb.from('reservations').select('customer_id').eq('id', id).single();
-            if (res) {
-                const { data: cust } = await sb.from('customers').select('no_show_count').eq('id', res.customer_id).single();
-                if (cust) {
-                    await sb.from('customers').update({ no_show_count: (cust.no_show_count || 0) + 1 }).eq('id', res.customer_id);
-                }
-            }
+            // no_show counter is handled by database trigger (sync_customer_noshow)
+
+            document.getElementById('reservation-modal').style.display = 'none';
+            this.loadReservations();
+        } catch (err) {
+            alert('Error de conexion. Intenta de nuevo.');
+        } finally {
+            this.actionInProgress = false;
         }
-
-        document.getElementById('reservation-modal').style.display = 'none';
-        this.loadReservations();
     }
 
     // ================================================================
@@ -481,8 +535,8 @@ class AdminPanel {
         list.innerHTML = data.map(c => `
             <div class="adm-cust-card">
                 <div>
-                    <span class="adm-cust-name">${c.name}</span>
-                    <span class="adm-cust-phone">${c.phone} ${c.email ? '· ' + c.email : ''}</span>
+                    <span class="adm-cust-name">${escapeHtml(c.name)}</span>
+                    <span class="adm-cust-phone">${escapeHtml(c.phone)} ${c.email ? '· ' + escapeHtml(c.email) : ''}</span>
                 </div>
                 <div class="adm-cust-stat">
                     <span class="adm-cust-stat-num">${c.total_reservations}</span>
@@ -503,9 +557,9 @@ class AdminPanel {
     async exportCustomersCSV() {
         const { data } = await sb.from('customers').select('*').order('name');
         if (!data) return;
-        const header = 'Nombre,Teléfono,Email,Reservas,No-shows,Última visita\n';
+        const header = 'Nombre,Telefono,Email,Reservas,No-shows,Ultima visita\n';
         const rows = data.map(c =>
-            `"${c.name}","${c.phone}","${c.email || ''}",${c.total_reservations},${c.no_show_count},"${c.last_visit || ''}"`
+            `${escapeCSV(c.name)},${escapeCSV(c.phone)},${escapeCSV(c.email)},${c.total_reservations},${c.no_show_count},${escapeCSV(c.last_visit)}`
         ).join('\n');
         const blob = new Blob([header + rows], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
@@ -566,7 +620,7 @@ class AdminPanel {
         if (topEl && topCust) {
             topEl.innerHTML = topCust.map((c, i) => `
                 <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--adm-border)">
-                    <span>${i + 1}. ${c.name} <span style="color:var(--adm-text-muted);font-size:0.75rem">${c.phone}</span></span>
+                    <span>${i + 1}. ${escapeHtml(c.name)} <span style="color:var(--adm-text-muted);font-size:0.75rem">${escapeHtml(c.phone)}</span></span>
                     <span style="color:var(--adm-gold)">${c.total_reservations} reservas</span>
                 </div>
             `).join('');
@@ -659,18 +713,30 @@ class AdminPanel {
     // ================================================================
 
     setupRealtime() {
+        if (this.realtimeChannel) {
+            sb.removeChannel(this.realtimeChannel);
+        }
+
         this.realtimeChannel = sb
             .channel('reservations-changes')
             .on('postgres_changes', {
                 event: '*',
                 schema: 'public',
                 table: 'reservations'
-            }, (payload) => {
+            }, () => {
                 if (this.currentView === 'reservations') {
                     this.loadReservations();
                 }
             })
-            .subscribe();
+            .subscribe((status) => {
+                const indicator = document.getElementById('realtime-status');
+                if (status === 'SUBSCRIBED') {
+                    if (indicator) { indicator.textContent = 'En vivo'; indicator.className = 'adm-realtime-on'; }
+                } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+                    if (indicator) { indicator.textContent = 'Desconectado'; indicator.className = 'adm-realtime-off'; }
+                    setTimeout(() => this.setupRealtime(), 5000);
+                }
+            });
     }
 }
 

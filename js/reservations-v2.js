@@ -6,6 +6,8 @@
 class ReservationWizard {
     constructor() {
         this.step = 1;
+        this.submitting = false;
+        this.lastSalonLoad = 0;
         this.data = {
             date: null,
             time: null,
@@ -24,6 +26,12 @@ class ReservationWizard {
         this.salons = [];
         this.el = document.getElementById('reservation-wizard');
         if (!this.el) return;
+
+        if (typeof sb === 'undefined' || !sb?.rpc) {
+            this.el.innerHTML = '<div class="rw-error" style="display:block;text-align:center;padding:40px">Error al conectar con el servidor. Recarga la pagina.</div>';
+            return;
+        }
+
         this.render();
         this.bindEvents();
     }
@@ -43,8 +51,8 @@ class ReservationWizard {
     }
 
     generateTimeSlots(dateStr) {
-        const date = new Date(dateStr + 'T12:00:00');
-        const day = date.getUTCDay();
+        const [y, m, d] = dateStr.split('-').map(Number);
+        const day = new Date(y, m - 1, d).getDay();
         const h = this.getHours(day);
         if (!h) return [];
 
@@ -429,8 +437,16 @@ class ReservationWizard {
                         Nueva reserva
                     </button>
                 </div>
+                ${this.emailFailed ? '<p class="rw-email-warn">No pudimos enviar el email de confirmacion. Revisa tu bandeja de spam o contactanos por WhatsApp.</p>' : ''}
             </div>
         `;
+    }
+
+    escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
 
     // ================================================================
@@ -520,7 +536,10 @@ class ReservationWizard {
 
         ['rw-name', 'rw-phone', 'rw-email'].forEach(id => {
             const el = document.getElementById(id);
-            if (el) el.addEventListener('input', () => this.checkStep3());
+            if (el) {
+                el.addEventListener('input', () => this.checkStep3());
+                el.addEventListener('paste', () => setTimeout(() => this.checkStep3(), 10));
+            }
         });
 
         if (submitBtn) {
@@ -581,9 +600,15 @@ class ReservationWizard {
 
         const btn = document.getElementById('rw-submit');
         if (btn) {
-            const phoneValid = phone && phone.replace(/\D/g, '').length >= 7;
-            const emailValid = email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            const digits = (phone || '').replace(/\D/g, '');
+            const phoneValid = digits.length === 10 || (digits.startsWith('57') && digits.length === 12);
+            const emailValid = email && /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email);
             btn.disabled = !(name && phoneValid && emailValid && policies);
+
+            const phoneEl = document.getElementById('rw-phone');
+            const emailEl = document.getElementById('rw-email');
+            if (phoneEl) phoneEl.classList.toggle('rw-input-error', phone && !phoneValid);
+            if (emailEl) emailEl.classList.toggle('rw-input-error', email && !emailValid);
         }
     }
 
@@ -684,14 +709,20 @@ class ReservationWizard {
     // ================================================================
 
     async submit() {
+        if (this.submitting) return;
+        this.submitting = true;
+
         const btn = document.getElementById('rw-submit');
         const errorEl = document.getElementById('rw-error');
-        if (!btn) return;
+        if (!btn) { this.submitting = false; return; }
 
         btn.disabled = true;
         btn.querySelector('.rw-btn-text').style.display = 'none';
         btn.querySelector('.rw-btn-loading').style.display = 'inline-flex';
         errorEl.style.display = 'none';
+
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 15000);
 
         try {
             const { data, error } = await sb.rpc('create_reservation', {
@@ -703,7 +734,7 @@ class ReservationWizard {
                 p_date: this.data.date,
                 p_time: this.data.time,
                 p_party_size: this.data.partySize,
-                p_requests: this.data.requests || null
+                p_requests: this.escapeHtml(this.data.requests) || null
             });
 
             if (error) throw error;
@@ -719,12 +750,18 @@ class ReservationWizard {
                 throw new Error(data?.error || 'Error desconocido al crear la reserva');
             }
         } catch (err) {
-            errorEl.textContent = err.message || 'Error al procesar la reserva. Intenta de nuevo.';
+            const msg = err.name === 'AbortError'
+                ? 'La conexion tardo demasiado. Verifica tu internet e intenta de nuevo.'
+                : (err.message || 'Error al procesar la reserva. Intenta de nuevo.');
+            errorEl.textContent = msg;
             errorEl.style.display = 'block';
             btn.disabled = false;
             btn.querySelector('.rw-btn-text').style.display = 'inline';
             btn.querySelector('.rw-btn-loading').style.display = 'none';
             console.error('Reservation error:', err);
+        } finally {
+            clearTimeout(timeout);
+            this.submitting = false;
         }
     }
 
@@ -797,7 +834,7 @@ class ReservationWizard {
         });
 
         try {
-            await sb.functions.invoke('send-reservation-email', {
+            const { error: emailError } = await sb.functions.invoke('send-reservation-email', {
                 body: {
                     customerName: this.data.name,
                     customerEmail: this.data.email,
@@ -811,7 +848,12 @@ class ReservationWizard {
                     isConsumable: resData.is_consumable
                 }
             });
+            if (emailError) {
+                this.emailFailed = true;
+                console.warn('Email notification failed:', emailError);
+            }
         } catch (e) {
+            this.emailFailed = true;
             console.warn('Email notification failed (non-blocking):', e);
         }
     }

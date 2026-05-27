@@ -2074,3 +2074,15 @@ select.rw-input {
 .rw-modal-close:hover {
     background: rgba(43, 24, 16, 0.12);
 }
+
+.rw-input-error {
+    border-bottom-color: #9B3B3B !important;
+}
+
+.rw-email-warn {
+    margin-top: 16px;
+    font-family: var(--sans-body);
+    font-size: 0.82rem;
+    color: #9B3B3B;
+    text-align: center;
+}
