@@ -56,7 +56,7 @@
     <link rel="preload" href="fonts/causten-light.otf" as="font" type="font/otf" crossorigin>
 
     <!-- Google Fonts (weights optimizados — sólo los que se usan) -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@400;500;600&family=Cormorant+Garamond:wght@400&family=Bebas+Neue&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Font Awesome para iconos profesionales -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -214,7 +214,7 @@
                 <a href="#galeria" class="nav-link" onclick="showSection('galeria'); return false;">Galería</a>
                 <a href="#reservation-info" class="nav-link" onclick="showSection('reservation-info'); return false;">Reservas</a>
                 <a href="#contact" class="nav-link" onclick="showSection('contact'); return false;">Contacto</a>
-                <button type="button" class="reservation-btn" onclick="reservarPorWhatsApp('mesa')" aria-label="Reservar mesa por WhatsApp">
+                <button type="button" class="reservation-btn" onclick="showSection('reservation-info')" aria-label="Reservar mesa">
                     <span>Reservar Mesa</span>
                 </button>
                 <!-- Footer del drawer mobile: contacto + horarios + IG -->
@@ -843,382 +843,30 @@
         <div class="lightbox-counter" aria-live="polite"></div>
     </div>
 
-    <!-- Sección de Información de Reservas (Vista Separada) -->
+    <!-- Sección de Reservas — Wizard v2 (Supabase) -->
     <section class="reservation-info-section" id="reservation-info">
         <div class="reservation-info-container">
-            <div class="section-header">
-                <p class="section-overtitle">Experiencias Exclusivas</p>
-                <h2 class="section-title">Tipos de Reserva</h2>
+            <div class="section-header" data-numeral="IV">
+                <p class="section-overtitle">Reserva tu experiencia</p>
+                <h2 class="section-title">Reservar Mesa</h2>
                 <div class="ornament">
                     <div class="ornament-line"></div>
                     <div class="ornament-center"></div>
                     <div class="ornament-line"></div>
                 </div>
                 <p class="section-description">
-                    Cada mesa representa una experiencia única. Descubre nuestras opciones para hacer de tu celebración un recuerdo inolvidable.
+                    Reserva en 3 simples pasos — elige fecha, experiencia y confirma.
                 </p>
             </div>
 
-            <!-- Tipos de Reserva -->
-            <div class="reservation-types-grid">
-                <!-- Reserva Free (Anticipo Consumible) -->
-                <button type="button" class="reservation-type-card" onclick="showReservationDetail('normal')">
-                    <div class="card-image" style="background: linear-gradient(135deg, #2c3e50, #34495e);">
-                        <img src="images/placeholder.jpg" alt="Reserva Free" loading="lazy" decoding="async" onerror="this.style.display='none'">
-                    </div>
-                    <div class="card-header">
-                        <h3>Reserva Free</h3>
-                        <span class="card-badge">Anticipo Consumible</span>
-                    </div>
-                    <div class="card-content">
-                        <ul class="feature-list">
-                            <li><span class="icon">✓</span> Ideal para grupos pequeños (1-14 personas)</li>
-                            <li><span class="icon">✓</span> Anticipo: $100,000 totalmente consumibles</li>
-                            <li><span class="icon">✓</span> NO reembolsable en caso de no asistencia</li>
-                            <li><span class="icon">✓</span> Puede reprogramar en los próximos 10 días</li>
-                            <li><span class="icon">✓</span> Mesa garantizada en el salón principal</li>
-                        </ul>
-                        <div class="card-footer">
-                            <p class="note">Perfecto para cenas y almuerzos con reserva confirmada</p>
-                        </div>
-                    </div>
-                </button>
-
-                <!-- Reservas con Decoración -->
-                <button type="button" class="reservation-type-card" onclick="showReservationDetail('regular')">
-                    <div class="card-image" style="background: linear-gradient(135deg, #0056D2, #003d8f);">
-                        <img src="images/placeholder.jpg" alt="Reserva con Decoración" loading="lazy" decoding="async" onerror="this.style.display='none'">
-                    </div>
-                    <div class="card-header">
-                        <h3>Reserva con Decoración</h3>
-                        <span class="card-badge">Plan Especial</span>
-                    </div>
-                    <div class="card-content">
-                        <ul class="feature-list">
-                            <li><span class="icon">✓</span> Anticipo reemplazado por costo del plan</li>
-                            <li><span class="icon">✓</span> Dinero NO reembolsable NI consumible</li>
-                            <li><span class="icon">✓</span> Mesa garantizada con decoración incluida</li>
-                            <li><span class="icon">✓</span> Ideal para celebraciones especiales</li>
-                            <li><span class="icon">✓</span> Planes desde $80,000 hasta $220,000</li>
-                        </ul>
-                        <div class="card-footer">
-                            <p class="note">Experiencia personalizada para ocasiones especiales</p>
-                        </div>
-                    </div>
-                </button>
-
-                <!-- Reservas Especiales -->
-                <button type="button" class="reservation-type-card featured" onclick="showReservationDetail('gold')">
-                    <div class="card-image" style="background: linear-gradient(135deg, #D4AF37, #b8941f);">
-                        <img src="images/placeholder.jpg" alt="Salón Gold" loading="lazy" decoding="async" onerror="this.style.display='none'">
-                    </div>
-                    <div class="card-header">
-                        <h3>Reservas Especiales</h3>
-                        <span class="card-badge gold">Grupos 15+ Personas</span>
-                    </div>
-                    <div class="card-content">
-                        <ul class="feature-list">
-                            <li><span class="icon">★</span> Grupos de 15+ personas</li>
-                            <li><span class="icon">★</span> Anticipo: $150,000 por persona (consumible)</li>
-                            <li><span class="icon">★</span> Opción de pagar 50% del anticipo</li>
-                            <li><span class="icon">★</span> Servicios especiales: pago 100% anticipado</li>
-                            <li><span class="icon">★</span> Acceso exclusivo al Salón Gold</li>
-                            <li><span class="icon">★</span> Atención VIP garantizada</li>
-                        </ul>
-                        <div class="card-footer">
-                            <p class="note">Experiencia premium para grupos grandes</p>
-                        </div>
-                    </div>
-                </button>
-            </div>
-
-            <!-- Planes de Decoración -->
-            <div class="section-header" style="margin-top: 80px;">
-                <p class="section-overtitle">Ambientación Especial</p>
-                <h2 class="section-title">Planes de Decoración</h2>
-                <div class="ornament">
-                    <div class="ornament-line"></div>
-                    <div class="ornament-center"></div>
-                    <div class="ornament-line"></div>
-                </div>
-                <p class="section-description">
-                    Transforma tu celebración con nuestros planes de decoración personalizados
-                </p>
-            </div>
-
-            <!-- Planes de Decoración - Formato Vertical Premium -->
-            <div class="decoration-plans-vertical">
-                <!-- Plan Plata -->
-                <div class="decoration-plan-card vertical-card" onclick="showDecorationDetail('plata')">
-                    <div class="plan-image-section">
-                        <div class="plan-image premium">
-                            <img src="images/PlanesDecoracion/plan-plata.webp" alt="Plan Plata — ambientación con globos y pastel"
-                                 loading="lazy" decoding="async" width="800" height="600"
-                                 onerror="this.style.display='none'">
-                            <div class="plan-overlay">
-                                <span class="plan-category">Clásico</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="plan-details">
-                        <div class="plan-header premium">
-                            <h4>Plan Plata</h4>
-                            <div class="plan-price">
-                                <span class="price-amount">$80.000</span>
-                                <span class="price-currency">COP</span>
-                            </div>
-                        </div>
-                        <div class="plan-content premium">
-                            <p class="plan-description">Ambientación refinada con elementos cuidadosamente seleccionados para su celebración.</p>
-                            <div class="plan-features premium">
-                                <div class="feature-item elegant">
-                                    <div class="feature-icon-wrapper">
-                                        <svg viewBox="0 0 24 24" class="feature-icon-svg">
-                                            <circle cx="7" cy="11" r="5" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                                            <circle cx="17" cy="11" r="5" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                                            <circle cx="12" cy="7" r="5" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                                            <path d="M7 16v6m10-6v6m-5-6v6" stroke="currentColor" stroke-width="1.5"/>
-                                        </svg>
-                                    </div>
-                                    <div class="feature-text">
-                                        <strong>Globos Premium</strong>
-                                        <span>Tres unidades con helio de larga duración</span>
-                                    </div>
-                                </div>
-                                <div class="feature-item elegant">
-                                    <div class="feature-icon-wrapper">
-                                        <svg viewBox="0 0 24 24" class="feature-icon-svg">
-                                            <path d="M12 2L3 7v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V7l-9-5z" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                                            <path d="M12 8v4m0 0v4m0-4h4m-4 0H8" stroke="currentColor" stroke-width="1.5"/>
-                                        </svg>
-                                    </div>
-                                    <div class="feature-text">
-                                        <strong>Pastel Artesanal</strong>
-                                        <span>Porción individual preparada por nuestro chef</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="plan-cta-button">Ver Detalles</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Plan Oro -->
-                <div class="decoration-plan-card vertical-card featured" onclick="showDecorationDetail('oro')">
-                    <div class="plan-image-section">
-                        <div class="plan-image premium">
-                            <img src="images/PlanesDecoracion/plan-oro.webp" alt="Plan Oro — ambientación con vino, globos dorados y pastel gourmet"
-                                 loading="lazy" decoding="async" width="800" height="600"
-                                 onerror="this.style.display='none'">
-                            <div class="plan-overlay">
-                                <span class="plan-category">Preferido</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="plan-details">
-                        <div class="plan-header premium">
-                            <h4>Plan Oro</h4>
-                            <div class="plan-price">
-                                <span class="price-amount">$120.000</span>
-                                <span class="price-currency">COP</span>
-                            </div>
-                        </div>
-                        <div class="plan-content premium">
-                            <p class="plan-description">Distinción y sofisticación para momentos memorables con selección vinícola premium.</p>
-                            <div class="plan-features premium">
-                                <div class="feature-item elegant">
-                                    <div class="feature-icon-wrapper">
-                                        <svg viewBox="0 0 24 24" class="feature-icon-svg">
-                                            <path d="M5 12.5c0 .5.5 1.5 1 2l5 4.5c.5.5 1 .5 1 .5s.5 0 1-.5l5-4.5c.5-.5 1-1.5 1-2V7.5C19 7 18.5 6.5 18 6.5h-3.5c-.5 0-1 .5-1.5 1L12 9l-1.5-1.5c-.5-.5-1-1-1.5-1H5.5C5 6.5 5 7 5 7.5v5z" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                                            <circle cx="12" cy="12" r="1" fill="currentColor"/>
-                                        </svg>
-                                    </div>
-                                    <div class="feature-text">
-                                        <strong>Vino Selecto</strong>
-                                        <span>Botella 375ml de nuestra cava</span>
-                                    </div>
-                                </div>
-                                <div class="feature-item elegant">
-                                    <div class="feature-icon-wrapper">
-                                        <svg viewBox="0 0 24 24" class="feature-icon-svg">
-                                            <circle cx="7" cy="11" r="5" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                                            <circle cx="17" cy="11" r="5" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                                            <circle cx="12" cy="7" r="5" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                                            <path d="M7 16v6m10-6v6m-5-6v6" stroke="currentColor" stroke-width="1.5"/>
-                                        </svg>
-                                    </div>
-                                    <div class="feature-text">
-                                        <strong>Globos Dorados</strong>
-                                        <span>Diseño especial con helio premium</span>
-                                    </div>
-                                </div>
-                                <div class="feature-item elegant">
-                                    <div class="feature-icon-wrapper">
-                                        <svg viewBox="0 0 24 24" class="feature-icon-svg">
-                                            <path d="M12 2L3 7v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V7l-9-5z" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                                            <path d="M12 8v4m0 0v4m0-4h4m-4 0H8" stroke="currentColor" stroke-width="1.5"/>
-                                        </svg>
-                                    </div>
-                                    <div class="feature-text">
-                                        <strong>Pastel Gourmet</strong>
-                                        <span>Creación exclusiva del chef</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="plan-note premium">*Vino según disponibilidad de bodega</p>
-                            <button class="plan-cta-button featured">Ver Detalles</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Plan Luxury -->
-                <div class="decoration-plan-card vertical-card luxury" onclick="showDecorationDetail('luxury')">
-                    <div class="plan-image-section">
-                        <div class="plan-image premium">
-                            <img src="images/PlanesDecoracion/plan-luxury.webp" alt="Plan Luxury — ambientación con rosas y pétalos"
-                                 loading="lazy" decoding="async" width="800" height="600"
-                                 onerror="this.style.display='none'">
-                            <div class="plan-overlay">
-                                <span class="plan-category">Exclusivo</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="plan-details">
-                        <div class="plan-header premium">
-                            <h4>Plan Luxury</h4>
-                            <div class="plan-price">
-                                <span class="price-amount">$100.000</span>
-                                <span class="price-currency">COP</span>
-                            </div>
-                        </div>
-                        <div class="plan-content premium">
-                            <p class="plan-description">Exquisita ambientación floral que transforma su mesa en un espacio de distinción absoluta.</p>
-                            <div class="plan-features premium">
-                                <div class="feature-item elegant">
-                                    <div class="feature-icon-wrapper">
-                                        <svg viewBox="0 0 24 24" class="feature-icon-svg">
-                                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                                            <circle cx="12" cy="12" r="2" fill="currentColor"/>
-                                        </svg>
-                                    </div>
-                                    <div class="feature-text">
-                                        <strong>Rosas Naturales</strong>
-                                        <span>Arreglo con doce rosas frescas selectas</span>
-                                    </div>
-                                </div>
-                                <div class="feature-item elegant">
-                                    <div class="feature-icon-wrapper">
-                                        <svg viewBox="0 0 24 24" class="feature-icon-svg">
-                                            <path d="M12 2C9.5 2 7.5 4 7.5 6.5c0 1.74.98 3.24 2.4 4L12 13l2.1-2.5c1.42-.76 2.4-2.26 2.4-4C16.5 4 14.5 2 12 2z" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                                            <path d="M7 13l-2 3 2 2 2-2 3 3 3-3 2 2 2-2-2-3" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                                        </svg>
-                                    </div>
-                                    <div class="feature-text">
-                                        <strong>Pétalos de Rosa</strong>
-                                        <span>Ambientación romántica sobre la mesa</span>
-                                    </div>
-                                </div>
-                                <div class="feature-item elegant">
-                                    <div class="feature-icon-wrapper">
-                                        <svg viewBox="0 0 24 24" class="feature-icon-svg">
-                                            <path d="M12 2l2 7h7l-5.5 4 2 7-5.5-4-5.5 4 2-7L3 9h7l2-7z" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                                        </svg>
-                                    </div>
-                                    <div class="feature-text">
-                                        <strong>Personalización</strong>
-                                        <span>Selección de colores según preferencia</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="plan-note premium">*Según disponibilidad de flores de temporada</p>
-                            <button class="plan-cta-button luxury">Ver Detalles</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="plans-note">
-                <p>Los planes se pueden combinar para crear la experiencia perfecta</p>
-            </div>
-
-            <!-- Servicios Adicionales -->
-            <div class="section-header" style="margin-top: 80px;">
-                <p class="section-overtitle">Servicios Premium</p>
-                <h2 class="section-title">Servicios Adicionales</h2>
-                <div class="ornament">
-                    <div class="ornament-line"></div>
-                    <div class="ornament-center"></div>
-                    <div class="ornament-line"></div>
-                </div>
-                <p class="section-description">
-                    Complementa tu celebración con entretenimiento en vivo y servicios profesionales
-                </p>
-            </div>
-
-            <div class="additional-services-grid">
-                <div class="service-card">
-                    <div class="service-icon"><i class="fas fa-music"></i></div>
-                    <h4>Saxofonista</h4>
-                    <p class="service-duration">1 hora de show</p>
-                    <div class="service-price">$400.000 COP</div>
-                    <p class="service-note" style="font-size: 0.85rem; color: #666; margin-top: 8px;">*Pago completo reemplaza anticipo - No reembolsable</p>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon"><i class="fas fa-violin"></i></div>
-                    <h4>Violinista</h4>
-                    <p class="service-duration">1 hora de show</p>
-                    <div class="service-price">$400.000 COP</div>
-                    <p class="service-note" style="font-size: 0.85rem; color: #666; margin-top: 8px;">*Pago completo reemplaza anticipo - No reembolsable</p>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon"><i class="fas fa-camera"></i></div>
-                    <h4>Fotógrafo</h4>
-                    <p class="service-duration">2 horas de servicio</p>
-                    <div class="service-price">$480.000 COP</div>
-                    <p class="service-note" style="font-size: 0.85rem; color: #666; margin-top: 8px;">*Pago completo reemplaza anticipo - No reembolsable</p>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon"><i class="fas fa-headphones-alt"></i></div>
-                    <h4>DJ Profesional</h4>
-                    <p class="service-duration">3 horas de música</p>
-                    <div class="service-price">$600.000 COP</div>
-                    <p class="service-note" style="font-size: 0.85rem; color: #666; margin-top: 8px;">*Pago completo reemplaza anticipo - No reembolsable</p>
-                </div>
-            </div>
-
-            <!-- Políticas de Reserva -->
-            <div class="policies-section">
-                <div class="section-header">
-                    <h3>Políticas Importantes</h3>
-                </div>
-                <div class="policies-grid">
-                    <div class="policy-card">
-                        <h4>Métodos de Pago Autorizados</h4>
-                        <ul>
-                            <li>Transferencia a cuentas bancarias oficiales de Mar & Tierra</li>
-                            <li>Pago en efectivo únicamente en caja del restaurante</li>
-                            <li>Comprobante de pago obligatorio para validar reserva</li>
-                            <li>No nos responsabilizamos por pagos fuera de canales autorizados</li>
-                        </ul>
-                    </div>
-                    <div class="policy-card">
-                        <h4>Política de Cancelación y Reagendamiento</h4>
-                        <ul>
-                            <li>Reserva Free: NO reembolsable, puede reprogramar en 10 días</li>
-                            <li>Decoración y servicios: NO reembolsables NI consumibles</li>
-                            <li>Grupos 15+: Anticipo consumible, servicios no reembolsables</li>
-                            <li>Cancelar con al menos 48 horas de anticipación</li>
-                            <li>Pasados 10 días sin reprogramar, se pierde el anticipo</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+            <!-- Wizard de reservas (renderizado por reservations-v2.js) -->
+            <div id="reservation-wizard"></div>
         </div>
     </section>
-    
+
+
+
+
     <!-- Menu Sections - Nuevo Menu Completo -->
 
     <!-- Para Compartir -->
@@ -1373,7 +1021,7 @@
 
     <!-- Contact Section -->
     <section class="contact-section" id="contact">
-        <div class="section-header">
+        <div class="section-header" data-numeral="V">
             <p class="section-overtitle">Visítanos</p>
             <h2 class="section-title">Contacto & Ubicación</h2>
             <div class="ornament">
@@ -1478,416 +1126,7 @@
         </div>
     </section>
     
-    <!-- Modal para Reservas -->
-    <div class="reservation-modal-overlay" id="reservationModal" role="dialog" aria-modal="true" aria-label="Formulario de reserva">
-        <div class="reservation-modal-container">
-            <div class="reservation-modal-close" onclick="closeReservationModal()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            </div>
-            
-            <div class="reservation-modal-content">
-                <div class="reservation-header">
-                    <h2 class="reservation-title">Reservar Mesa</h2>
-                    <p class="reservation-subtitle">Complete el formulario para realizar su reserva</p>
-                </div>
-                
-                <form id="reservationForm" class="reservation-form">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="resName">Nombre Completo *</label>
-                            <input type="text" id="resName" name="name" required autocomplete="name" placeholder="Nombre completo...">
-                            <span class="error-message"></span>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="resPhone">Teléfono *</label>
-                            <input type="tel" id="resPhone" name="phone" required autocomplete="tel" placeholder="Ej: 300 123 4567..." inputmode="tel">
-                            <span class="error-message"></span>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="resEmail">Email *</label>
-                            <input type="email" id="resEmail" name="email" required autocomplete="email" placeholder="correo@ejemplo.com..." spellcheck="false" inputmode="email">
-                            <span class="error-message"></span>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="resPeople">Número de Personas *</label>
-                            <select id="resPeople" name="people" required onchange="handlePeopleChange()">
-                                <option value="">Seleccione</option>
-                                <option value="1">1 persona</option>
-                                <option value="2">2 personas</option>
-                                <option value="3">3 personas</option>
-                                <option value="4">4 personas</option>
-                                <option value="5">5 personas</option>
-                                <option value="6">6 personas</option>
-                                <option value="7">7 personas</option>
-                                <option value="8">8 personas</option>
-                                <option value="9">9 personas</option>
-                                <option value="10">10 personas</option>
-                                <option value="11">11 personas</option>
-                                <option value="12">12 personas</option>
-                                <option value="13">13 personas</option>
-                                <option value="14">14 personas</option>
-                                <option value="15">15 personas</option>
-                                <option value="16">16 personas</option>
-                                <option value="17">17 personas</option>
-                                <option value="18">18 personas</option>
-                                <option value="19">19 personas</option>
-                                <option value="20">20 personas</option>
-                                <option value="custom">Más de 20 personas</option>
-                            </select>
-                            <span class="error-message"></span>
-                            <!-- Input para número personalizado -->
-                            <div id="customPeopleContainer" class="custom-people-input" style="display: none;">
-                                <label for="customPeopleCount">Especifique el número exacto de personas *</label>
-                                <input type="number" id="customPeopleCount" min="21" max="100" placeholder="Ej: 25, 30, 45...">
-                                <small class="input-hint">Capacidad máxima: 60 personas (Salón Arca)</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Selector de Salón -->
-                    <div class="form-row">
-                        <div class="form-group full-width">
-                            <label for="resSalon">Salón / Área *</label>
-                            <select id="resSalon" name="salon" required onchange="updateSalonInfo()">
-                                <option value="">Seleccione un salón</option>
-                                <option value="moon-terraza" data-capacity="30">Moon Terraza (hasta 30 personas)</option>
-                                <option value="golden" data-capacity="44">Salón Golden (hasta 44 personas)</option>
-                                <option value="arca" data-capacity="60">Arca (hasta 60 personas)</option>
-                                <option value="barco" data-capacity="16">Barco (hasta 16 personas)</option>
-                                <option value="chill-out" data-capacity="8">Chill Out (hasta 8 personas)</option>
-                            </select>
-                            <span class="error-message"></span>
-                            <div id="salonInfo" class="salon-info-hint" style="display: none;"></div>
-                        </div>
-                    </div>
-
-                    <!-- Mensaje especial Golden -->
-                    <div id="goldenExclusiveMsg" class="golden-exclusive-message" style="display: none;">
-                        <div class="info-hint golden-hint">
-                            <i class="fas fa-crown"></i>
-                            <div>
-                                <strong>¿Desea reservar el Salón Golden de forma exclusiva?</strong>
-                                <p>Para reservas privadas del salón completo, contáctenos directamente:</p>
-                                <p><strong>WhatsApp: +57 300 826 3403</strong></p>
-                                <p style="font-size: 0.85rem; color: #888;">⚠️ Por este medio NO se aceptan reservas.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="resDate">Fecha de Reserva *</label>
-                            <input type="date" id="resDate" name="date" required>
-                            <span class="error-message"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="resTime">Hora de Reserva *</label>
-                            <select id="resTime" name="time" required disabled>
-                                <option value="">Primero seleccione una fecha</option>
-                            </select>
-                            <span class="error-message"></span>
-                            <div id="availabilityStatus" class="availability-status" style="display: none;" role="status" aria-live="polite"></div>
-                        </div>
-                    </div>
-
-                    <!-- Tipo de Reserva -->
-                    <div class="form-row">
-                        <div class="form-group full-width">
-                            <label for="resType">Tipo de Reserva *</label>
-                            <select id="resType" name="reservationType" required onchange="updateReservationOptions()">
-                                <option value="estandar">Reserva Free ($100,000 consumibles)</option>
-                                <option value="decoracion">Reserva con Decoración</option>
-                                <option value="servicios">Reserva con Servicios Especiales</option>
-                                <option value="decoracion-servicios">Reserva con Decoración + Servicios</option>
-                                <option value="especial">Reserva Especial (15+ personas)</option>
-                            </select>
-                            <span class="error-message"></span>
-                            <div id="reservationTypeAlert" class="alert-message" style="display: none;">
-                                <span class="alert-icon">ℹ️</span>
-                                <span class="alert-text"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Información del Tipo de Reserva Seleccionado -->
-                    <div id="reservationTypeInfo" class="reservation-type-info" style="display: none;">
-                        <div class="info-card">
-                            <span class="info-icon"></span>
-                            <p id="reservationTypeDescription"></p>
-                        </div>
-                    </div>
-
-                    <!-- Plan de Decoración (Oculto por defecto) -->
-                    <div id="decorationSection" class="conditional-section" style="display: none;">
-                        <div class="section-header">
-                            <span class="section-icon section-icon-decoration"></span>
-                            <h4>Seleccione su Plan de Decoración</h4>
-                        </div>
-                        <p class="section-description">Transforme su experiencia con nuestros planes de decoración especial. El costo del plan <strong>reemplaza</strong> el anticipo estándar y <strong>no es reembolsable ni consumible</strong>.</p>
-                        <div class="form-row">
-                            <div class="form-group full-width">
-                                <label for="resDecoration">Plan de Decoración *</label>
-                                <select id="resDecoration" name="decorationPlan" onchange="calculateTotal()">
-                                    <option value="">-- Seleccione un plan --</option>
-                                    <option value="none">Sin plan de Decoración</option>
-                                    <option value="plata">Plan Plata - $80.000 (3 globos + pastel)</option>
-                                    <option value="oro">Plan Oro - $120.000 (vino + 3 globos + pastel)</option>
-                                    <option value="luxury">Plan Luxury - $100.000 (rosas + pétalos)</option>
-                                    <option value="combo-plata-luxury">Combo Plata + Luxury - $180.000</option>
-                                    <option value="combo-oro-luxury">Combo Oro + Luxury - $220.000</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Servicios Especiales (Oculto por defecto) -->
-                    <div id="servicesSection" class="conditional-section" style="display: none;">
-                        <div class="section-header">
-                            <span class="section-icon section-icon-services"></span>
-                            <h4>Seleccione sus Servicios Especiales</h4>
-                        </div>
-                        <p class="section-description">Haga de su velada un momento inolvidable. El costo de los servicios <strong>reemplaza</strong> el anticipo estándar y <strong>no es reembolsable</strong>. Requiere pago del 100% por adelantado.</p>
-                        <div class="form-group full-width">
-                            <div class="services-checkboxes">
-                                <label class="checkbox-label service-option">
-                                    <input type="checkbox" name="services" value="saxofonista" onchange="calculateTotal()">
-                                    <span class="service-info">
-                                        <span class="service-icon service-icon-sax"></span>
-                                        <span class="service-name">Saxofonista</span>
-                                        <span class="service-details">1 hora de show en vivo</span>
-                                        <span class="service-price">$400.000</span>
-                                    </span>
-                                </label>
-                                <label class="checkbox-label service-option">
-                                    <input type="checkbox" name="services" value="violinista" onchange="calculateTotal()">
-                                    <span class="service-info">
-                                        <span class="service-icon service-icon-violin"></span>
-                                        <span class="service-name">Violinista</span>
-                                        <span class="service-details">1 hora de presentación musical</span>
-                                        <span class="service-price">$400.000</span>
-                                    </span>
-                                </label>
-                                <label class="checkbox-label service-option">
-                                    <input type="checkbox" name="services" value="fotografo" onchange="calculateTotal()">
-                                    <span class="service-info">
-                                        <span class="service-icon service-icon-photo"></span>
-                                        <span class="service-name">Fotógrafo Profesional</span>
-                                        <span class="service-details">2 horas de servicio fotográfico</span>
-                                        <span class="service-price">$480.000</span>
-                                    </span>
-                                </label>
-                                <label class="checkbox-label service-option">
-                                    <input type="checkbox" name="services" value="dj" onchange="calculateTotal()">
-                                    <span class="service-info">
-                                        <span class="service-icon service-icon-dj"></span>
-                                        <span class="service-name">DJ Profesional</span>
-                                        <span class="service-details">3 horas de música y ambiente</span>
-                                        <span class="service-price">$600.000</span>
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Mensaje cuando servicios/decoración no están disponibles -->
-                    <div id="optionsNotAvailable" class="options-not-available" style="display: none;">
-                        <div class="info-hint">
-                            <span class="hint-icon"></span>
-                            <p id="optionsHintText"></p>
-                        </div>
-                    </div>
-                    
-                    <!-- Resumen de Costos -->
-                    <div class="cost-summary" id="costSummary" style="display: none;">
-                        <h4>Resumen de Anticipo Requerido:</h4>
-                        <div class="cost-breakdown">
-                            <div class="cost-item" id="baseDepositItem">
-                                <span>Anticipo de reserva:</span>
-                                <span id="baseDeposit">$100.000</span>
-                            </div>
-                            <div class="cost-item" id="decorationCostItem" style="display: none;">
-                                <span>Decoración:</span>
-                                <span id="decorationCost">$0</span>
-                            </div>
-                            <div class="cost-item" id="servicesCostItem" style="display: none;">
-                                <span>Servicios adicionales:</span>
-                                <span id="servicesCost">$0</span>
-                            </div>
-                            <div class="cost-total">
-                                <span>Total Anticipo Requerido:</span>
-                                <span id="totalDeposit">$0</span>
-                            </div>
-                        </div>
-                        <div class="payment-info">
-                            <p><strong>Información de Pago:</strong></p>
-                            <p class="payment-details">
-                                <strong>Bancolombia</strong> - Cuenta Corriente
-                                <br>No. Cuenta: <strong>30200003995</strong>
-                                <br>NIT: 901857854
-                                <br>Titular: MYT RESTAURANT SAS
-                            </p>
-                            <p class="payment-note" style="margin-top: 10px;">
-                                Envíe comprobante de pago al WhatsApp:
-                                <a href="https://wa.me/573008263403?text=Hola%2C%20adjunto%20comprobante%20de%20pago%20para%20mi%20reserva"
-                                   style="color: #25D366; font-weight: bold;" target="_blank">+57 300 826 3403</a>
-                            </p>
-                            <p class="payment-warning" style="font-size: 0.85em; color: #6B4C3B; margin-top: 5px;">
-                                Este número es ÚNICAMENTE para comprobantes. NO se realizan reservas por este medio.
-                            </p>
-                            <p class="payment-note" style="margin-top: 10px;">
-                                Su reserva será confirmada únicamente después de verificar el pago del anticipo.
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group full-width">
-                        <label for="resComments">Comentarios Especiales (Opcional)</label>
-                        <textarea id="resComments" name="comments" rows="3" 
-                                  placeholder="Alergias, celebraciones especiales, preferencias de ubicación..."></textarea>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="button" class="btn-cancel" onclick="closeReservationModal()">
-                            Cancelar
-                        </button>
-                        <button type="submit" class="btn-submit">
-                            <span class="btn-text">Confirmar Reserva</span>
-                            <span class="btn-loading" style="display: none;">
-                                <svg class="spinner" viewBox="0 0 24 24">
-                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="42" stroke-dashoffset="10">
-                                        <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/>
-                                    </circle>
-                                </svg>
-                                Procesando...
-                            </span>
-                        </button>
-                    </div>
-                </form>
-                
-                <!-- Success Message -->
-                <div class="reservation-success" id="reservationSuccess" style="display: none;" role="alert" aria-live="polite">
-                    <div class="success-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M9 12l2 2 4-4"></path>
-                        </svg>
-                    </div>
-                    <h3>¡Reserva Recibida!</h3>
-                    <p id="successMessage">Hemos recibido su solicitud de reserva. <strong>IMPORTANTE:</strong> Su reserva será confirmada únicamente después de verificar el pago del anticipo requerido.</p>
-                    <div id="paymentReminderSuccess" class="payment-reminder">
-                        <p><strong>Próximo paso:</strong> Realice el pago del anticipo a la cuenta indicada y su reserva será confirmada.</p>
-                    </div>
-                    <button class="btn-primary" onclick="closeReservationModal()">Cerrar</button>
-                </div>
-                
-                <!-- Error Message -->
-                <div class="reservation-error" id="reservationError" style="display: none;" role="alert" aria-live="assertive">
-                    <div class="error-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="8" x2="12" y2="12"></line>
-                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                        </svg>
-                    </div>
-                    <h3>Error al procesar la reserva</h3>
-                    <p id="errorMessage">Ocurrió un error al procesar su reserva. Por favor, intente nuevamente.</p>
-                    <button class="btn-primary" onclick="resetReservationForm()">Intentar de nuevo</button>
-                </div>
-            </div>
-        </div>
-    </div>
     
-    <!-- Modal para Detalles de Reserva/Decoración - Diseño Premium -->
-    <div class="detail-modal-overlay" id="detailModal" role="dialog" aria-modal="true" aria-label="Detalle de reserva">
-        <div class="detail-modal-container premium">
-            <!-- Botón de cerrar elegante -->
-            <div class="detail-modal-close" onclick="closeDetailModal()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            </div>
-
-            <div class="detail-modal-content">
-                <!-- Carrusel de Imágenes Premium -->
-                <div class="modal-carousel-section">
-                    <div class="carousel-container">
-                        <div class="carousel-wrapper" id="detailCarousel">
-                            <!-- Las imágenes se cargarán dinámicamente desde el plan seleccionado -->
-                            <img src="images/placeholder.jpg" alt="" class="carousel-image active" loading="lazy" decoding="async" width="800" height="600" onerror="this.style.display='none'">
-                            <img src="images/placeholder.jpg" alt="" class="carousel-image" loading="lazy" decoding="async" width="800" height="600" onerror="this.style.display='none'">
-                            <img src="images/placeholder.jpg" alt="" class="carousel-image" loading="lazy" decoding="async" width="800" height="600" onerror="this.style.display='none'">
-                            <img src="images/placeholder.jpg" alt="" class="carousel-image" loading="lazy" decoding="async" width="800" height="600" onerror="this.style.display='none'">
-                        </div>
-
-                        <!-- Controles del carrusel -->
-                        <button class="carousel-control carousel-prev" onclick="changeSlide(-1)">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <path d="M15 18l-6-6 6-6"/>
-                            </svg>
-                        </button>
-                        <button class="carousel-control carousel-next" onclick="changeSlide(1)">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <path d="M9 18l6-6-6-6"/>
-                            </svg>
-                        </button>
-
-                        <!-- Indicadores -->
-                        <div class="carousel-indicators">
-                            <span class="indicator active" onclick="goToSlide(0)"></span>
-                            <span class="indicator" onclick="goToSlide(1)"></span>
-                            <span class="indicator" onclick="goToSlide(2)"></span>
-                            <span class="indicator" onclick="goToSlide(3)"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Información Premium -->
-                <div class="detail-modal-info premium">
-                    <div class="detail-modal-header">
-                        <span class="detail-modal-badge premium-badge" id="detailBadge"></span>
-                        <h2 class="detail-modal-title" id="detailTitle"></h2>
-                        <div class="detail-modal-price premium-price" id="detailPrice"></div>
-                    </div>
-
-                    <div class="detail-modal-description elegant" id="detailDescription">
-                        <!-- Descripción dinámica -->
-                    </div>
-
-                    <div class="detail-modal-features premium-features" id="detailFeatures">
-                        <!-- Características dinámicas -->
-                    </div>
-
-                    <div class="detail-modal-extra premium-extra" id="detailExtra">
-                        <!-- Información adicional dinámica -->
-                    </div>
-
-                    <!-- Botones de acción premium -->
-                    <div class="detail-modal-actions premium">
-                        <button class="modal-btn modal-btn-secondary glass" onclick="closeDetailModal()">
-                            <span>Cerrar</span>
-                        </button>
-                        <button class="modal-btn modal-btn-primary premium-cta" onclick="reservarPorWhatsAppDesdeDetalle()" aria-label="Reservar por WhatsApp">
-                            <span>Reservar por WhatsApp</span>
-                            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true">
-                                <path d="M20.52 3.48A11.93 11.93 0 0 0 12 0C5.37 0 .02 5.37 0 12c0 2.12.55 4.18 1.6 6.01L0 24l6.18-1.62A11.94 11.94 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.2-1.25-6.21-3.48-8.52zM12 21.82a9.86 9.86 0 0 1-5.03-1.38l-.36-.21-3.66.96.97-3.56-.23-.37A9.86 9.86 0 0 1 2.18 12c0-5.41 4.41-9.82 9.82-9.82 2.62 0 5.08 1.02 6.93 2.87a9.78 9.78 0 0 1 2.87 6.95c0 5.41-4.41 9.82-9.82 9.82zm5.39-7.36c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.66.15-.2.3-.76.96-.93 1.16-.17.2-.34.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.74-1.64-2.04-.17-.3-.02-.46.13-.6.13-.13.3-.34.45-.51.15-.17.2-.29.3-.49.1-.2.05-.37-.02-.52-.07-.15-.66-1.6-.91-2.19-.24-.57-.48-.49-.66-.5l-.57-.01c-.2 0-.51.07-.78.37-.27.3-1.03 1.01-1.03 2.46s1.05 2.86 1.2 3.05c.15.2 2.07 3.16 5.02 4.43.7.3 1.25.48 1.68.62.71.22 1.35.19 1.86.12.57-.09 1.75-.71 2-1.4.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.34z"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Modal para Detalles del Plato -->
     <div class="dish-modal-overlay" id="dishModal" role="dialog" aria-modal="true" aria-label="Detalle del plato">
         <div class="dish-modal-container">
@@ -2030,10 +1269,15 @@
         <span class="wa-float-label">Reservar</span>
     </a>
 
+    <!-- Supabase JS Client (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
+
     <!-- Scripts (defer mantiene orden de ejecución y no bloquea render) -->
-    <script src="js/menu-data.js?v=20260520c" defer></script>
-    <script src="js/menu-schema.js?v=20260520c" defer></script>
-    <script src="js/script.js?v=20260520c" defer></script>
+    <script src="js/menu-data.js?v=20260527" defer></script>
+    <script src="js/menu-schema.js?v=20260527" defer></script>
+    <script src="js/script.js?v=20260527" defer></script>
+    <script src="js/supabase-config.js?v=20260527" defer></script>
+    <script src="js/reservations-v2.js?v=20260527" defer></script>
 
     <!-- Galeria v2: PhotoSwipe 5 (modulo) + Vanilla-Tilt + init -->
     <script type="module">
@@ -2045,104 +1289,8 @@
     <script src="https://unpkg.com/vanilla-tilt@1.8.1/dist/vanilla-tilt.min.js" defer></script>
     <script src="js/gallery-v2.js" defer></script>
 
-    <!-- Enhanced Navigation Script -->
-    <!-- Nota: el parallax del hero y la función showMenuSection() viven en
-         js/script.js + js/enhancements.js. Aquí sólo declaramos los handlers
-         de los modales de detalle y las funciones de WhatsApp. -->
+    <!-- WhatsApp functions -->
     <script>
-        // Functions for Reservation Details Modal
-        function showReservationDetail(type) {
-            const modal = document.getElementById('detailModal');
-            if (modal) {
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-
-                // Set content based on type
-                const detailTitle = document.getElementById('detailTitle');
-                const detailDescription = document.getElementById('detailDescription');
-                const detailPrice = document.getElementById('detailPrice');
-
-                switch(type) {
-                    case 'normal':
-                        detailTitle.textContent = 'Reserva Normal';
-                        detailPrice.textContent = 'Sin Anticipo';
-                        detailDescription.innerHTML = '<p>Ideal para grupos pequeños. Mesa garantizada sin costo de anticipo.</p>';
-                        break;
-                    case 'regular':
-                        detailTitle.textContent = 'Reserva Regular';
-                        detailPrice.textContent = '$100.000 COP';
-                        detailDescription.innerHTML = '<p>Mesa garantizada con anticipo que se descuenta de la cuenta final.</p>';
-                        break;
-                    case 'gold':
-                        detailTitle.textContent = 'Salón Gold';
-                        detailPrice.textContent = '$100.000 COP';
-                        detailDescription.innerHTML = '<p>Acceso exclusivo al Salón Gold con atención VIP.</p>';
-                        break;
-                }
-            }
-        }
-
-        function showDecorationDetail(plan) {
-            const modal = document.getElementById('detailModal');
-            if (modal) {
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-
-                // Set content based on plan
-                const detailTitle = document.getElementById('detailTitle');
-                const detailDescription = document.getElementById('detailDescription');
-                const detailPrice = document.getElementById('detailPrice');
-
-                // Crear contenedor de imagen si no existe
-                let imageContainer = document.querySelector('.detail-image-container');
-                if (!imageContainer) {
-                    imageContainer = document.createElement('div');
-                    imageContainer.className = 'detail-image-container';
-                    const detailContent = document.querySelector('.detail-content');
-                    if (detailContent) {
-                        detailContent.insertBefore(imageContainer, detailContent.firstChild);
-                    }
-                }
-
-                switch(plan) {
-                    case 'plata':
-                        detailTitle.textContent = 'Plan Plata';
-                        detailPrice.textContent = '$80.000 COP';
-                        detailDescription.innerHTML = '<p>3 globos con helio y 1 porción de pastel.</p>';
-                        imageContainer.innerHTML = `<img src="images/PlanesDecoracion/plan-plata.webp" alt="Plan Plata"
-                                                     onerror="this.style.display='none'">`;
-                        break;
-                    case 'oro':
-                        detailTitle.textContent = 'Plan Oro';
-                        detailPrice.textContent = '$120.000 COP';
-                        detailDescription.innerHTML = '<p>1 botella de vino, 3 globos con helio y 1 porción de pastel.</p>';
-                        imageContainer.innerHTML = `<img src="images/PlanesDecoracion/plan-oro.webp" alt="Plan Oro"
-                                                     onerror="this.style.display='none'">`;
-                        break;
-                    case 'luxury':
-                        detailTitle.textContent = 'Plan Luxury';
-                        detailPrice.textContent = '$100.000 COP';
-                        detailDescription.innerHTML = '<p>Jarrón de rosas y pétalos decorativos.</p>';
-                        imageContainer.innerHTML = `<img src="images/PlanesDecoracion/plan-luxury.webp" alt="Plan Luxury"
-                                                     onerror="this.style.display='none'">`;
-                        break;
-                }
-            }
-        }
-
-        function closeDetailModal() {
-            const modal = document.getElementById('detailModal');
-            if (modal) {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        }
-
-        // ============================================================
-        // Reservas vía WhatsApp (bridge mientras se construye el sistema
-        // definitivo con base de datos). El número y la marca se centralizan
-        // aquí para que cambiar uno cambie toda la web.
-        // ============================================================
         const MT_WHATSAPP = {
             phone: '573008263403',          // +57 300 826 3403 sin signos
             displayName: 'Mar&Tierra',
@@ -2158,40 +1306,13 @@
 
         function reservarPorWhatsApp(contexto) {
             const plantillas = {
-                'mesa':       '¡Hola Mar&Tierra! Quisiera reservar una mesa.\n\n• Fecha: \n• Hora: \n• Personas: \n• Salón / espacio (opcional): \n\nGracias.',
-                'evento':     '¡Hola Mar&Tierra! Me gustaría organizar un evento.\n\n• Fecha tentativa: \n• Tipo de evento: \n• Número de invitados: \n\nQuedo atento(a).',
-                'general':    '¡Hola Mar&Tierra! Me interesa conocer más sobre el restaurante.'
+                'mesa':       'Hola Mar&Tierra! Quisiera reservar una mesa.\n\n- Fecha: \n- Hora: \n- Personas: \n- Salon / espacio (opcional): \n\nGracias.',
+                'evento':     'Hola Mar&Tierra! Me gustaria organizar un evento.\n\n- Fecha tentativa: \n- Tipo de evento: \n- Numero de invitados: \n\nQuedo atento(a).',
+                'general':    'Hola Mar&Tierra! Me interesa conocer mas sobre el restaurante.'
             };
             _abrirWhatsApp(plantillas[contexto] || plantillas['mesa']);
         }
 
-        function reservarPorWhatsAppDesdeDetalle() {
-            // Recupera el contexto del modal abierto (plan o tipo de reserva)
-            const titleEl = document.getElementById('detailTitle');
-            const priceEl = document.getElementById('detailPrice');
-            const tituloDetalle = titleEl ? (titleEl.textContent || '').trim() : '';
-            const precioDetalle = priceEl ? (priceEl.textContent || '').trim() : '';
-
-            let mensaje = '¡Hola Mar&Tierra! Quisiera reservar';
-            if (tituloDetalle) {
-                mensaje += ' con la opción "' + tituloDetalle + '"';
-                if (precioDetalle && precioDetalle !== 'Sin Anticipo') {
-                    mensaje += ' (' + precioDetalle + ')';
-                }
-            } else {
-                mensaje += ' una mesa';
-            }
-            mensaje += '.\n\n• Fecha: \n• Hora: \n• Personas: \n\nGracias.';
-
-            closeDetailModal();
-            _abrirWhatsApp(mensaje);
-        }
-
-        // Compatibilidad: si alguna parte del código aún llama a la función
-        // antigua, la enrutamos a WhatsApp en lugar de abrir el formulario.
-        function openReservationModalFromDetail() {
-            reservarPorWhatsAppDesdeDetalle();
-        }
     </script>
 
     <!-- AOS Script -->
@@ -2227,7 +1348,7 @@
 
     <!-- Sticky CTA bar mobile + comportamiento (visible al hacer scroll
          más allá del hero; se oculta cuando el drawer está abierto) -->
-    <a class="mobile-cta-bar" href="javascript:void(0)" onclick="reservarPorWhatsApp('mesa'); return false;" aria-label="Reservar mesa por WhatsApp">
+    <a class="mobile-cta-bar" href="javascript:void(0)" onclick="showSection('reservation-info'); return false;" aria-label="Reservar mesa">
         <span class="mcb-quote">Donde el mar y la tierra se complementan.</span>
         <span class="mcb-cta">Reservar</span>
     </a>

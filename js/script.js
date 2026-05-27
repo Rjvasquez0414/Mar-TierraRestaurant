@@ -30,23 +30,27 @@ class MenuApp {
 
     // Preloader functionality
     setupPreloader() {
-        // El preloader-v2 ejecuta una animacion editorial de ~2.85s
-        // antes de la cortina-split. Garantizamos ese minimo para que
-        // la secuencia complete aunque la pagina cargue antes.
+        const preloader = document.getElementById('preloader');
+        if (!preloader) return;
+
+        if (sessionStorage.getItem('mt-visited')) {
+            preloader.remove();
+            return;
+        }
+
         const start = performance.now();
         const MIN_DURATION = 2850;
 
         const hidePreloader = () => {
-            const preloader = document.getElementById('preloader');
-            if (!preloader) return;
             preloader.classList.add('fade-out');
-            // Animacion de entrada al hero coordinada con la apertura
             document.querySelectorAll('.hero-content > *').forEach((el, index) => {
                 el.style.animationDelay = `${index * 0.2}s`;
                 el.classList.add('fade-in');
             });
-            // Retira el preloader del DOM despues que las cortinas terminan
-            setTimeout(() => preloader.remove(), 1300);
+            setTimeout(() => {
+                preloader.remove();
+                sessionStorage.setItem('mt-visited', '1');
+            }, 1300);
         };
 
         window.addEventListener('load', () => {
