@@ -946,10 +946,13 @@ body {
     );
 }
 
+.cal-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
 .cal-event {
-    position: absolute;
-    left: 2px;
-    right: 2px;
+    position: relative;
     border-radius: 3px;
     padding: 3px 6px;
     font-size: 0.6rem;
@@ -959,6 +962,7 @@ body {
     z-index: 1;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     border-left: 3px solid;
+    flex-shrink: 0;
 }
 .cal-event:hover {
     transform: translateY(-1px);
