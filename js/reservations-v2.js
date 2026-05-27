@@ -474,6 +474,11 @@ class ReservationWizard {
         if (dateInput) {
             dateInput.addEventListener('change', () => {
                 const selected = dateInput.value;
+                if (!selected) {
+                    this.data.date = null;
+                    this.checkStep1();
+                    return;
+                }
                 const min = this.getMinDate();
                 const max = this.getMaxDate();
                 if (selected < min) {
