@@ -359,8 +359,8 @@
         gap: 0.1em !important;
     }
     .hero-anchor {
-        width: 1.3em !important;
-        height: 1.3em !important;
+        height: 1em !important;
+        width: auto !important;
     }
     .hero-title-top {
         font-size: 0.50em;

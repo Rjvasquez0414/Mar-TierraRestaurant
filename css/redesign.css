@@ -124,15 +124,15 @@ header #nav .nav-link.active {
     opacity: 0.6;
 }
 
-/* Hero title: logo layout — stacked with anchor next to Mar */
+/* Hero title: logo layout — anchor left, text stacked right */
 .hero-title {
     font-family: var(--serif-display) !important;
     color: var(--blanco-perla) !important;
     text-shadow: 0 6px 40px rgba(0, 0, 0, 0.55);
     margin: 0 0 38px 0 !important;
     display: inline-flex;
-    flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    gap: 0.12em;
     line-height: 0.92 !important;
     letter-spacing: -0.015em !important;
     font-size: clamp(5rem, 14vw, 12rem) !important;
@@ -141,25 +141,30 @@ header #nav .nav-link.active {
     display: none !important;
 }
 
-/* Anchor icon — sits inside the top row, left of "Mar" */
+/* Anchor: full height of both lines, left side */
 .hero-anchor {
-    width: 1.4em;
-    height: 1.4em;
+    width: auto;
+    height: 1.1em;
     object-fit: contain;
     filter: brightness(0) invert(1) drop-shadow(0 4px 20px rgba(0,0,0,0.3));
     opacity: 0;
     transform: translateY(20px);
     animation: heroFade 1.2s var(--ease-cinematic) 0.2s forwards;
     flex-shrink: 0;
-    vertical-align: middle;
-    margin-right: 0.08em;
 }
 
-/* Top row: anchor + "Mar" + small "&" */
+/* Text column: Mar& / Tierra */
+.hero-title-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* Top row: "Mar" + small "&" */
 .hero-title-top {
     display: flex;
-    align-items: center;
-    gap: 0;
+    align-items: baseline;
+    gap: 0.02em;
     font-size: 0.52em;
     align-self: flex-end;
     opacity: 0;
