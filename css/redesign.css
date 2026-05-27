@@ -174,14 +174,8 @@ header #nav .nav-link.active {
     font-style: italic;
     font-size: 1.1em;
     line-height: 0.85;
-    background: linear-gradient(160deg,
-        var(--dorado-brillante) 0%,
-        var(--dorado-premium) 45%,
-        var(--dorado-oscuro) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
+    color: var(--blanco-perla);
+    -webkit-text-fill-color: var(--blanco-perla);
     transform: translateY(0.08em) rotate(-2deg);
     text-shadow: none;
     opacity: 0;
