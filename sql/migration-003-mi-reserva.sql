@@ -31,7 +31,8 @@ BEGIN
             'customer_name', c.name,
             'customer_email', regexp_replace(c.email, '(^.).*(.)(@.*)', '\1***\2\3'),
             'created_at', r.created_at,
-            'cancellation_reason', r.cancellation_reason
+            'cancellation_reason', r.cancellation_reason,
+            'modifications_used', (SELECT COUNT(*) FROM reservation_logs rl WHERE rl.reservation_id = r.id AND rl.action = 'customer_modified')::INT
         )
     ) INTO v_result
     FROM reservations r
@@ -154,6 +155,12 @@ BEGIN
 
     IF v_status NOT IN ('pending', 'confirmed') THEN
         RETURN jsonb_build_object('success', false, 'error', 'Esta reserva no puede ser modificada');
+    END IF;
+
+    -- Max 2 modifications per reservation
+    IF (SELECT COUNT(*) FROM reservation_logs
+        WHERE reservation_id = v_id AND action = 'customer_modified') >= 2 THEN
+        RETURN jsonb_build_object('success', false, 'error', 'Has alcanzado el limite de 2 modificaciones. Contacta al restaurante por WhatsApp para mas cambios.');
     END IF;
 
     IF p_new_date < CURRENT_DATE THEN

@@ -142,7 +142,21 @@ function showDetail() {
     document.getElementById('mr-info-grid').innerHTML = gridHtml;
 
     const canModify = ['pending', 'confirmed'].includes(r.status);
+    const modsLeft = 2 - (r.modifications_used || 0);
     document.getElementById('mr-actions-section').style.display = canModify ? 'block' : 'none';
+
+    const modBtn = document.getElementById('mr-modify-btn');
+    if (modBtn && canModify) {
+        if (modsLeft <= 0) {
+            modBtn.textContent = 'Limite de modificaciones alcanzado';
+            modBtn.disabled = true;
+            modBtn.style.opacity = '0.4';
+        } else {
+            modBtn.textContent = `Modificar fecha u hora (${modsLeft} cambio${modsLeft === 1 ? '' : 's'} restante${modsLeft === 1 ? '' : 's'})`;
+            modBtn.disabled = false;
+            modBtn.style.opacity = '1';
+        }
+    }
 }
 
 // ================================================================
