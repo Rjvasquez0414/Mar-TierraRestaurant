@@ -21,7 +21,9 @@ class ReservationWizard {
             name: '',
             phone: '',
             email: '',
-            requests: ''
+            requests: '',
+            hasValet: false,
+            valetVehicles: 0
         };
         this.salons = [];
         this.el = document.getElementById('reservation-wizard');
@@ -361,6 +363,23 @@ class ReservationWizard {
                     </div>
                 </div>
 
+                <div class="rw-valet">
+                    <label class="rw-checkbox rw-valet-check">
+                        <input type="checkbox" id="rw-valet" ${this.data.hasValet ? 'checked' : ''}>
+                        <span>
+                            <strong>Servicio de Valet Parking</strong>
+                            <br>
+                            <small>Cortesia de la casa — el costo del parqueadero lo cubre el restaurante.</small>
+                        </span>
+                    </label>
+                    <div id="rw-valet-count" class="rw-field" style="display:${this.data.hasValet ? 'block' : 'none'};margin-top:14px">
+                        <label class="rw-label">Cuantos vehiculos llevaras?</label>
+                        <select class="rw-input" id="rw-valet-vehicles">
+                            ${[1,2,3,4,5].map(n => `<option value="${n}" ${this.data.valetVehicles === n ? 'selected' : ''}>${n} ${n === 1 ? 'vehiculo' : 'vehiculos'}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+
                 <div class="rw-payment-info">
                     <h4 class="rw-payment-title">Información de pago</h4>
                     <div class="rw-payment-details">
@@ -566,6 +585,25 @@ class ReservationWizard {
             }
         });
 
+        const valetCheck = document.getElementById('rw-valet');
+        const valetCount = document.getElementById('rw-valet-count');
+        const valetVehicles = document.getElementById('rw-valet-vehicles');
+        if (valetCheck && valetCount) {
+            valetCheck.addEventListener('change', () => {
+                this.data.hasValet = valetCheck.checked;
+                valetCount.style.display = valetCheck.checked ? 'block' : 'none';
+                if (valetCheck.checked && !this.data.valetVehicles) {
+                    this.data.valetVehicles = 1;
+                    if (valetVehicles) valetVehicles.value = '1';
+                }
+            });
+        }
+        if (valetVehicles) {
+            valetVehicles.addEventListener('change', () => {
+                this.data.valetVehicles = parseInt(valetVehicles.value) || 0;
+            });
+        }
+
         if (submitBtn) {
             submitBtn.addEventListener('click', () => this.submit());
         }
@@ -758,7 +796,9 @@ class ReservationWizard {
                 p_date: this.data.date,
                 p_time: this.data.time,
                 p_party_size: this.data.partySize,
-                p_requests: this.escapeHtml(this.data.requests) || null
+                p_requests: this.escapeHtml(this.data.requests) || null,
+                p_has_valet: !!this.data.hasValet,
+                p_valet_vehicles: this.data.hasValet ? (this.data.valetVehicles || 1) : 0
             });
 
             if (error) throw error;

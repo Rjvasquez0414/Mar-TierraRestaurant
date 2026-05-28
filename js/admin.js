@@ -341,7 +341,7 @@ class AdminPanel {
             <div class="adm-res-card" data-id="${r.id}">
                 <span class="adm-res-code">${r.reservation_code}</span>
                 <div class="adm-res-info">
-                    <span class="adm-res-name">${escapeHtml(r.customer?.name) || 'Sin nombre'}</span>
+                    <span class="adm-res-name">${escapeHtml(r.customer?.name) || 'Sin nombre'}${r.has_valet ? ' <span style="background:rgba(212,175,55,0.15);color:#8B6914;font-size:0.52rem;letter-spacing:0.18em;text-transform:uppercase;padding:2px 6px;border-radius:2px;margin-left:6px;vertical-align:middle">Valet ' + (r.valet_vehicles || 1) + '</span>' : ''}</span>
                     <span class="adm-res-meta">${escapeHtml(r.customer?.phone) || ''} · ${r.party_size} pers. · ${typeLabels[r.reservation_type] || r.reservation_type} · $${(r.deposit_amount || 0).toLocaleString('es-CO')}</span>
                 </div>
                 <div class="adm-res-details">
@@ -431,6 +431,10 @@ class AdminPanel {
                     <span class="adm-detail-label">Estado</span>
                     <span class="adm-detail-value"><span class="adm-badge adm-badge-${r.status}">${statusLabels[r.status]}</span></span>
                 </div>
+                ${r.has_valet ? `<div class="adm-detail-item" style="grid-column:1/-1;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.25);border-radius:4px;padding:10px 14px">
+                    <span class="adm-detail-label">Valet Parking</span>
+                    <span class="adm-detail-value"><strong style="color:#8B6914">SI</strong> — ${r.valet_vehicles || 1} ${r.valet_vehicles === 1 ? 'vehiculo' : 'vehiculos'}</span>
+                </div>` : ''}
                 ${r.special_requests ? `<div class="adm-detail-item" style="grid-column:1/-1">
                     <span class="adm-detail-label">Solicitudes especiales</span>
                     <span class="adm-detail-value">${escapeHtml(r.special_requests)}</span>
