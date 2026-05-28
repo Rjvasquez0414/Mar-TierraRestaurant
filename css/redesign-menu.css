@@ -406,6 +406,11 @@
     pointer-events: none;
     z-index: 0;
     user-select: none;
+    /* Reset base styles.css golden gradient bar */
+    background: none !important;
+    height: auto !important;
+    left: auto;
+    bottom: auto;
     /* Posicionado del lado del CONTENT (no del image) */
     right: -20px;
     top: 50%;

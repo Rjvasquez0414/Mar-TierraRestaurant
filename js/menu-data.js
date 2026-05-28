@@ -298,7 +298,7 @@ window.menuData = {
             name: "BEEF WELLINGTON",
             description: "Lomo de res (250 gr) con espinaca y duxelle, envuelto en hojaldre, sobre espejo de demi-glase, acompañado de vegetales salteados.",
             price: "$105.000",
-            image: "",
+            image: "https://res.cloudinary.com/dxvl2i2fy/image/upload/v1779924791/beef-wellington_kdrakv.jpg",
             tags: ["popular"],
             available: true,
             category: "tierra"
@@ -308,7 +308,7 @@ window.menuData = {
             name: "CORDÓN BLUE A LOS 3 QUESOS",
             description: "Rollo de pollo apanado (300 gr) relleno de espinaca, queso mozarela y jamón serrano, salsa de queso azul y parmesano, acompañado de pasta mafaldini en salsa cítrica.",
             price: "$65.000",
-            image: "",
+            image: "https://res.cloudinary.com/dxvl2i2fy/image/upload/v1779925100/cordon-bleu_gveqzg.jpg",
             tags: [],
             available: true,
             category: "tierra"
@@ -352,7 +352,7 @@ window.menuData = {
             name: "FILET MIGNON",
             description: "Lomo fino (200 gr) envuelto en tocineta (100 gr), langostinos rostizados en mantequilla de ajo, salsa demi glase con setas y alioli de trufa, acompañado de puré amazónico.",
             price: "$110.000",
-            image: "",
+            image: "https://res.cloudinary.com/dxvl2i2fy/image/upload/v1779924791/filet-mignon_yedcyc.jpg",
             tags: ["popular"],
             available: true,
             category: "marytierra"
