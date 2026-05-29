@@ -184,6 +184,8 @@ class AdminPanel {
         ['filter-date', 'filter-status', 'filter-salon'].forEach(id => {
             document.getElementById(id)?.addEventListener('change', () => this.loadReservations());
         });
+
+        document.getElementById('aforo-date')?.addEventListener('change', () => this.loadAforo());
         let searchTimer;
         document.getElementById('filter-search')?.addEventListener('input', () => {
             clearTimeout(searchTimer);
@@ -219,6 +221,7 @@ class AdminPanel {
         document.getElementById(`view-${view}`)?.classList.add('active');
 
         if (view === 'reservations') this.loadReservations();
+        if (view === 'aforo') this.loadAforo();
         if (view === 'customers') this.loadCustomers();
         if (view === 'stats') this.loadStats();
         if (view === 'settings') this.loadSettings();
@@ -547,7 +550,10 @@ class AdminPanel {
         }
 
         const updates = { status: newStatus };
-        if (action === 'confirm') updates.payment_status = 'verified';
+        if (action === 'confirm') {
+            updates.payment_status = 'verified';
+            updates.expires_at = null; // pago verificado → ya no expira, retiene cupo en firme
+        }
         if (action === 'cancel') {
             const reason = prompt('Razon de cancelacion:');
             if (!reason) { this.actionInProgress = false; return; }
@@ -624,6 +630,168 @@ class AdminPanel {
         }
     }
 
+    // ================================================================
+    // AFORO — control de capacidad por fecha (turno ±2h)
+    // ================================================================
+
+    async loadAforo() {
+        const dateInput = document.getElementById('aforo-date');
+        if (dateInput && !dateInput.value) dateInput.value = getLocalDateString(new Date());
+        const date = dateInput?.value || getLocalDateString(new Date());
+
+        const loading = document.getElementById('aforo-loading');
+        const empty = document.getElementById('aforo-empty');
+        const grid = document.getElementById('aforo-grid');
+        loading.style.display = 'flex';
+        empty.style.display = 'none';
+        grid.innerHTML = '';
+
+        // Limpia pendientes vencidas (>24h sin pago) antes de calcular
+        try { await sb.rpc('expire_stale_reservations'); } catch (e) { /* no bloqueante */ }
+
+        const { data, error } = await sb
+            .from('reservations')
+            .select('*, customer:customers(name, phone), salon:salons(name, slug)')
+            .eq('reservation_date', date)
+            .in('status', ['pending', 'confirmed', 'seated'])
+            .order('reservation_time', { ascending: true });
+
+        loading.style.display = 'none';
+
+        if (error) {
+            empty.style.display = 'block';
+            empty.querySelector('p').textContent = 'Error al cargar el aforo.';
+            return;
+        }
+
+        this.aforoReservations = data || [];
+
+        // Renderiza una tarjeta por salón activo, ordenada por display_order
+        const salons = (this.salons || []).filter(s => s.is_active);
+        grid.innerHTML = salons.map(s => this.renderAforoSalon(s, this.aforoReservations)).join('');
+
+        // Click en una fila → detalle; click en "Liberar" → liberar cupo
+        grid.querySelectorAll('.adm-aforo-row').forEach(row => {
+            row.addEventListener('click', (e) => {
+                if (e.target.closest('.adm-aforo-release')) return;
+                this.showReservationDetail(row.dataset.id, this.aforoReservations);
+            });
+        });
+        grid.querySelectorAll('.adm-aforo-release').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.releaseReservation(btn.dataset.id);
+            });
+        });
+    }
+
+    // Pico de aforo simultáneo (mayor suma de personas en cualquier ventana ±2h)
+    computeAforoPeak(reservations) {
+        const toMin = t => { const [h, m] = (t || '00:00').split(':').map(Number); return h * 60 + m; };
+        let peak = 0, peakConf = 0, peakPend = 0;
+        reservations.forEach(center => {
+            const c = toMin(center.reservation_time);
+            let conf = 0, pend = 0;
+            reservations.forEach(o => {
+                if (Math.abs(toMin(o.reservation_time) - c) <= 120) {
+                    if (o.status === 'confirmed' || o.status === 'seated') conf += o.party_size;
+                    else if (o.status === 'pending') pend += o.party_size;
+                }
+            });
+            if (conf + pend > peak) { peak = conf + pend; peakConf = conf; peakPend = pend; }
+        });
+        return { peak, peakConf, peakPend };
+    }
+
+    renderAforoSalon(salon, allReservations) {
+        const res = allReservations.filter(r => r.salon_id === salon.id);
+        const cap = salon.capacity || 0;
+        const { peak, peakConf, peakPend } = this.computeAforoPeak(res);
+        const pct = cap ? Math.min(Math.round((peak / cap) * 100), 100) : 0;
+        const confPct = cap ? Math.min(Math.round((peakConf / cap) * 100), 100) : 0;
+        const pendPct = cap ? Math.min(Math.round((peakPend / cap) * 100), 100) : 0;
+        const level = peak >= cap ? 'full' : (peak >= cap * 0.8 ? 'high' : 'ok');
+
+        const statusLabels = { pending: 'Pendiente', confirmed: 'Confirmada', seated: 'En mesa' };
+
+        const rows = res.length === 0
+            ? '<p class="adm-aforo-norows">Sin reservas este día.</p>'
+            : res.map(r => {
+                const time = (r.reservation_time || '').slice(0, 5);
+                const isPending = r.status === 'pending';
+                const age = this.timeAgo(r.created_at);
+                const expiry = isPending ? this.expiryLabel(r.expires_at) : '';
+                return `
+                <div class="adm-aforo-row ${isPending ? 'is-pending' : ''}" data-id="${r.id}">
+                    <span class="adm-aforo-time">${time}</span>
+                    <span class="adm-aforo-party">${r.party_size}p</span>
+                    <span class="adm-aforo-cust">${escapeHtml(r.customer?.name) || 'Sin nombre'}</span>
+                    <span class="adm-badge adm-badge-${r.status}">${statusLabels[r.status] || r.status}</span>
+                    ${isPending ? `<span class="adm-aforo-age" title="Creada ${age}">${expiry}</span>` : '<span class="adm-aforo-age"></span>'}
+                    ${isPending ? `<button class="adm-aforo-release" data-id="${r.id}" title="Liberar cupo (cancela esta reserva sin pago)">Liberar</button>` : '<span></span>'}
+                </div>`;
+            }).join('');
+
+        return `
+        <div class="adm-aforo-card adm-aforo-${level}">
+            <div class="adm-aforo-card-head">
+                <h3 class="adm-aforo-name">${escapeHtml(salon.name)}</h3>
+                <span class="adm-aforo-peak">Pico: <strong>${peak}</strong> / ${cap}</span>
+            </div>
+            <div class="adm-aforo-bar" title="${peakConf} confirmadas + ${peakPend} pendientes de ${cap}">
+                <span class="adm-aforo-fill confirmed" style="width:${confPct}%"></span>
+                <span class="adm-aforo-fill pending" style="width:${pendPct}%"></span>
+            </div>
+            <div class="adm-aforo-legend">
+                <span><i class="dot confirmed"></i>${peakConf} confirmadas</span>
+                <span><i class="dot pending"></i>${peakPend} pendientes</span>
+                <span><i class="dot free"></i>${Math.max(cap - peak, 0)} libres</span>
+            </div>
+            <div class="adm-aforo-rows">${rows}</div>
+        </div>`;
+    }
+
+    timeAgo(iso) {
+        if (!iso) return '';
+        const diff = (Date.now() - new Date(iso).getTime()) / 1000;
+        if (diff < 3600) return 'hace ' + Math.max(1, Math.floor(diff / 60)) + ' min';
+        if (diff < 86400) return 'hace ' + Math.floor(diff / 3600) + ' h';
+        return 'hace ' + Math.floor(diff / 86400) + ' d';
+    }
+
+    expiryLabel(iso) {
+        if (!iso) return 'sin vencimiento';
+        const mins = (new Date(iso).getTime() - Date.now()) / 60000;
+        if (mins <= 0) return 'vencida';
+        if (mins < 60) return 'vence en ' + Math.floor(mins) + ' min';
+        return 'vence en ' + Math.floor(mins / 60) + ' h';
+    }
+
+    async releaseReservation(id) {
+        if (this.actionInProgress) return;
+        if (!confirm('¿Liberar el cupo de esta reserva? Se cancelará (sin pago) y el cupo quedará disponible.')) return;
+        this.actionInProgress = true;
+        try {
+            const { error } = await sb.from('reservations').update({
+                status: 'cancelled',
+                payment_status: 'rejected',
+                cancellation_reason: 'Liberado por admin (cupo, sin pago)'
+            }).eq('id', id);
+            if (error) { alert('Error al liberar el cupo.'); return; }
+            await sb.from('reservation_logs').insert({
+                reservation_id: id, action: 'cancelled',
+                details: { reason: 'liberado-por-admin-aforo' },
+                performed_by: this.user.id
+            });
+            this.loadAforo();
+        } catch (e) {
+            alert('Error de conexión. Intenta de nuevo.');
+        } finally {
+            this.actionInProgress = false;
+        }
+    }
+
+    // ================================================================
     // CUSTOMERS
     // ================================================================
 

@@ -748,8 +748,8 @@ class ReservationWizard {
                         <h4 class="rw-salon-name">${s.name}</h4>
                         <p class="rw-salon-desc">${s.description || ''}</p>
                         ${s.is_available
-                            ? '<span class="rw-salon-status available">Disponible</span>'
-                            : '<span class="rw-salon-status full">Sin disponibilidad</span>'
+                            ? `<span class="rw-salon-status available">${typeof s.seats_available === 'number' ? 'Quedan ' + s.seats_available + ' ' + (s.seats_available === 1 ? 'cupo' : 'cupos') : 'Disponible'}</span>`
+                            : '<span class="rw-salon-status full">Aforo completo</span>'
                         }
                     </div>
                 </button>

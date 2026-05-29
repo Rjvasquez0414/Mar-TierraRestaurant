@@ -12,11 +12,16 @@
 -- Correr en: Supabase → SQL Editor (proyecto ocynnsdxzdoudqpqpgje)
 -- =====================================================================
 
+-- La tabla pricing está versionada (effective_from / effective_to). La fila
+-- vigente es la que tiene effective_to IS NULL (así la lee create_reservation).
+-- Acotamos el UPDATE a esa fila para no tocar precios históricos.
 UPDATE pricing
 SET deposit_amount = 150000
-WHERE reservation_type = 'luxury';
+WHERE reservation_type = 'luxury'
+  AND effective_to IS NULL;
 
 -- Verificación (debe devolver 150000, is_consumable = false)
 SELECT reservation_type, deposit_amount, is_consumable
 FROM pricing
-WHERE reservation_type = 'luxury';
+WHERE reservation_type = 'luxury'
+  AND effective_to IS NULL;

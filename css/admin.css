@@ -1185,3 +1185,156 @@ body {
     .adm-modal { padding: 24px 18px; }
     .adm-login-card { padding: 36px 24px; }
 }
+
+
+/* =====================================================================
+   AFORO VIEW — control de capacidad por fecha
+   ===================================================================== */
+.adm-aforo-head {
+    display: flex;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+.adm-aforo-hint {
+    flex: 1;
+    min-width: 280px;
+    font-family: var(--adm-sans);
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--adm-text-muted);
+    margin: 0;
+}
+.adm-aforo-hint strong { color: var(--adm-text); }
+
+.adm-aforo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 18px;
+}
+
+.adm-aforo-card {
+    background: var(--adm-surface);
+    border: 1px solid var(--adm-border);
+    border-left: 4px solid var(--adm-green);
+    border-radius: 8px;
+    padding: 18px 20px;
+}
+.adm-aforo-ok   { border-left-color: var(--adm-green); }
+.adm-aforo-high { border-left-color: var(--adm-yellow); }
+.adm-aforo-full { border-left-color: var(--adm-red); }
+
+.adm-aforo-card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+}
+.adm-aforo-name {
+    font-family: var(--adm-serif);
+    font-size: 1.2rem;
+    color: var(--adm-text);
+    margin: 0;
+}
+.adm-aforo-peak {
+    font-family: var(--adm-sans);
+    font-size: 0.85rem;
+    color: var(--adm-text-muted);
+}
+.adm-aforo-peak strong { color: var(--adm-text); font-size: 1.05rem; }
+.adm-aforo-full .adm-aforo-peak strong { color: var(--adm-red); }
+
+.adm-aforo-bar {
+    display: flex;
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(43, 24, 16, 0.08);
+    overflow: hidden;
+    margin: 12px 0 10px;
+}
+.adm-aforo-fill { height: 100%; }
+.adm-aforo-fill.confirmed { background: var(--adm-green); }
+.adm-aforo-fill.pending {
+    background: var(--adm-yellow);
+    background-image: repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(255,255,255,0.35) 4px, rgba(255,255,255,0.35) 8px);
+}
+
+.adm-aforo-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-family: var(--adm-sans);
+    font-size: 0.74rem;
+    color: var(--adm-text-muted);
+    margin-bottom: 14px;
+}
+.adm-aforo-legend .dot {
+    display: inline-block;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: baseline;
+}
+.adm-aforo-legend .dot.confirmed { background: var(--adm-green); }
+.adm-aforo-legend .dot.pending { background: var(--adm-yellow); }
+.adm-aforo-legend .dot.free { background: rgba(43, 24, 16, 0.18); }
+
+.adm-aforo-rows {
+    border-top: 1px solid var(--adm-border);
+    padding-top: 6px;
+}
+.adm-aforo-norows {
+    font-family: var(--adm-sans);
+    font-size: 0.8rem;
+    color: var(--adm-text-muted);
+    margin: 8px 0 2px;
+}
+.adm-aforo-row {
+    display: grid;
+    grid-template-columns: 48px 36px 1fr auto auto auto;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 4px;
+    border-bottom: 1px solid var(--adm-border);
+    cursor: pointer;
+    font-family: var(--adm-sans);
+    font-size: 0.82rem;
+    transition: background 0.15s ease;
+}
+.adm-aforo-row:last-child { border-bottom: none; }
+.adm-aforo-row:hover { background: rgba(43, 24, 16, 0.03); }
+.adm-aforo-row.is-pending { background: rgba(184, 148, 31, 0.05); }
+.adm-aforo-time { font-weight: 600; color: var(--adm-text); }
+.adm-aforo-party { color: var(--adm-text-muted); }
+.adm-aforo-cust {
+    color: var(--adm-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.adm-aforo-age {
+    font-size: 0.7rem;
+    color: var(--adm-text-muted);
+    white-space: nowrap;
+}
+.adm-aforo-release {
+    font-family: var(--adm-sans);
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--adm-red);
+    background: var(--adm-red-bg);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+.adm-aforo-release:hover { border-color: var(--adm-red); }
+
+@media (max-width: 640px) {
+    .adm-aforo-grid { grid-template-columns: 1fr; }
+    .adm-aforo-row { grid-template-columns: 42px 30px 1fr auto; }
+    .adm-aforo-row .adm-aforo-age { display: none; }
+}
