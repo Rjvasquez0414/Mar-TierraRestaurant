@@ -5,10 +5,13 @@
 const MT_WA = '573008263403';
 
 function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    if (text == null) return '';
+    return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
 
 function normalizePhone(phone) {
@@ -493,7 +496,7 @@ class AdminPanel {
             html += `<button class="adm-btn adm-btn-sm adm-btn-confirm" data-action="confirm">Confirmar pago</button>`;
             html += `<button class="adm-btn adm-btn-sm adm-btn-reject" data-action="cancel">Rechazar</button>`;
             const reminderMsg = encodeURIComponent(`Hola ${name}, te recordamos que tu reserva *${code}* requiere el anticipo de *${deposit}* para ser confirmada.\n\nBancolombia Cta. Corriente: 30200003995\nNIT: 901857854\nTitular: MYT RESTAURANT SAS\n\nEnvia tu comprobante a este chat. Gracias!`);
-            html += `<button class="adm-btn adm-btn-sm adm-btn-warn" data-action="remind" data-phone="${phone}" data-wa-msg="${reminderMsg}" data-email="${r.customer?.email || ''}" data-customer-name="${escapeHtml(name)}" data-code="${code}" data-deposit="${deposit}" data-date="${date}" data-time="${time}" data-party="${r.party_size}" data-salon="${escapeHtml(r.salon?.name || '')}">Recordar pago</button>`;
+            html += `<button class="adm-btn adm-btn-sm adm-btn-warn" data-action="remind" data-phone="${escapeHtml(phone)}" data-wa-msg="${reminderMsg}" data-email="${escapeHtml(r.customer?.email || '')}" data-customer-name="${escapeHtml(name)}" data-code="${escapeHtml(code)}" data-deposit="${deposit}" data-date="${date}" data-time="${time}" data-party="${r.party_size}" data-salon="${escapeHtml(r.salon?.name || '')}">Recordar pago</button>`;
         }
 
         if (r.status === 'confirmed') {

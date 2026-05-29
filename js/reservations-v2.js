@@ -266,7 +266,7 @@ class ReservationWizard {
             <div class="rw-step-content" data-step="2">
                 <div class="rw-header">
                     <h3 class="rw-title">Elige tu experiencia</h3>
-                    <p class="rw-subtitle">${this.data.partySize} ${this.data.partySize === 1 ? 'persona' : 'personas'} · ${this.data.salonName} · ${this.formatTime(this.data.time)}</p>
+                    <p class="rw-subtitle">${this.data.partySize} ${this.data.partySize === 1 ? 'persona' : 'personas'} · ${this.escapeHtml(this.data.salonName)} · ${this.formatTime(this.data.time)}</p>
                 </div>
 
                 <div class="rw-types-grid">
@@ -333,11 +333,11 @@ class ReservationWizard {
                     </div>
                     <div class="rw-summary-row">
                         <span class="rw-summary-label">Espacio</span>
-                        <span class="rw-summary-value">${this.data.salonName}</span>
+                        <span class="rw-summary-value">${this.escapeHtml(this.data.salonName)}</span>
                     </div>
                     <div class="rw-summary-row">
                         <span class="rw-summary-label">Experiencia</span>
-                        <span class="rw-summary-value">${this.data.typeName}</span>
+                        <span class="rw-summary-value">${this.escapeHtml(this.data.typeName)}</span>
                     </div>
                     <div class="rw-summary-row rw-summary-total">
                         <span class="rw-summary-label">Anticipo requerido</span>
@@ -480,10 +480,13 @@ class ReservationWizard {
     }
 
     escapeHtml(text) {
-        if (!text) return '';
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
+        if (text == null) return '';
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
     }
 
     // ================================================================
