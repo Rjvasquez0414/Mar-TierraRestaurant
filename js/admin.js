@@ -774,15 +774,21 @@ class AdminPanel {
     async releaseReservation(id) {
         if (this.actionInProgress) return;
         if (!confirm('¿Liberar el cupo de esta reserva? Se cancelará (sin pago), el cupo quedará disponible y se le avisará al cliente por correo y WhatsApp.')) return;
-        this.actionInProgress = true;
         const r = (this.aforoReservations || []).find(x => x.id === id);
+
+        // Abrir la pestaña de WhatsApp YA, dentro del gesto del click. Si se
+        // abre después de un await, el navegador la bloquea como popup.
+        const phone = (r?.customer?.phone || '').replace(/\D/g, '');
+        const waWin = (r && phone) ? window.open('', '_blank') : null;
+
+        this.actionInProgress = true;
         try {
             const { error } = await sb.from('reservations').update({
                 status: 'cancelled',
                 payment_status: 'rejected',
                 cancellation_reason: 'Liberado por admin (cupo, sin pago)'
             }).eq('id', id);
-            if (error) { alert('Error al liberar el cupo.'); return; }
+            if (error) { alert('Error al liberar el cupo.'); if (waWin) waWin.close(); return; }
             await sb.from('reservation_logs').insert({
                 reservation_id: id, action: 'cancelled',
                 details: { reason: 'liberado-por-admin-aforo' },
@@ -792,12 +798,12 @@ class AdminPanel {
             // Notificar al cliente: correo automático + WhatsApp prefijado
             if (r) {
                 this.sendReleaseEmail(r);
-                const phone = (r.customer?.phone || '').replace(/\D/g, '');
-                if (phone) window.open(`https://wa.me/${phone.length === 10 ? '57' + phone : phone}?text=${this.releaseWaText(r)}`, '_blank', 'noopener,noreferrer');
+                if (waWin) waWin.location.href = `https://wa.me/${phone.length === 10 ? '57' + phone : phone}?text=${this.releaseWaText(r)}`;
             }
 
             this.loadAforo();
         } catch (e) {
+            if (waWin) waWin.close();
             alert('Error de conexión. Intenta de nuevo.');
         } finally {
             this.actionInProgress = false;
