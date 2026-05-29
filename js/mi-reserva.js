@@ -251,6 +251,16 @@ function showCancelForm() {
     document.getElementById('mr-modify').style.display = 'none';
     document.getElementById('mr-actions-section').style.display = 'none';
     document.getElementById('mr-cancel-phone').value = '';
+
+    // Nota según estado: pendiente (sin pago) cancela libre; confirmada aplica 48h.
+    const note = document.getElementById('mr-cancel-note');
+    if (note) {
+        if (currentReservation?.status === 'pending') {
+            note.innerHTML = 'Tu reserva <strong>aún no tiene pago</strong>, así que puedes cancelarla sin costo. Tu cupo quedará disponible de inmediato.';
+        } else {
+            note.innerHTML = 'El anticipo <strong>no es reembolsable</strong>. Solo puedes cancelar con al menos 48 horas de anticipacion.';
+        }
+    }
 }
 
 async function confirmCancel() {

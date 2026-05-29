@@ -646,12 +646,16 @@ class AdminPanel {
         empty.style.display = 'none';
         grid.innerHTML = '';
 
-        // Limpia pendientes vencidas (>24h sin pago) antes de calcular
-        try { await sb.rpc('expire_stale_reservations'); } catch (e) { /* no bloqueante */ }
+        // Limpia pendientes vencidas (>24h sin pago) y envía el correo de
+        // liberación a cada cliente afectado.
+        try {
+            const { data: expired } = await sb.rpc('expire_stale_reservations');
+            if (Array.isArray(expired) && expired.length) this.notifyExpiredByEmail(expired);
+        } catch (e) { /* no bloqueante */ }
 
         const { data, error } = await sb
             .from('reservations')
-            .select('*, customer:customers(name, phone), salon:salons(name, slug)')
+            .select('*, customer:customers(name, phone, email), salon:salons(name, slug)')
             .eq('reservation_date', date)
             .in('status', ['pending', 'confirmed', 'seated'])
             .order('reservation_time', { ascending: true });
@@ -769,8 +773,9 @@ class AdminPanel {
 
     async releaseReservation(id) {
         if (this.actionInProgress) return;
-        if (!confirm('¿Liberar el cupo de esta reserva? Se cancelará (sin pago) y el cupo quedará disponible.')) return;
+        if (!confirm('¿Liberar el cupo de esta reserva? Se cancelará (sin pago), el cupo quedará disponible y se le avisará al cliente por correo y WhatsApp.')) return;
         this.actionInProgress = true;
+        const r = (this.aforoReservations || []).find(x => x.id === id);
         try {
             const { error } = await sb.from('reservations').update({
                 status: 'cancelled',
@@ -783,12 +788,67 @@ class AdminPanel {
                 details: { reason: 'liberado-por-admin-aforo' },
                 performed_by: this.user.id
             });
+
+            // Notificar al cliente: correo automático + WhatsApp prefijado
+            if (r) {
+                this.sendReleaseEmail(r);
+                const phone = (r.customer?.phone || '').replace(/\D/g, '');
+                if (phone) window.open(`https://wa.me/${phone.length === 10 ? '57' + phone : phone}?text=${this.releaseWaText(r)}`, '_blank', 'noopener,noreferrer');
+            }
+
             this.loadAforo();
         } catch (e) {
             alert('Error de conexión. Intenta de nuevo.');
         } finally {
             this.actionInProgress = false;
         }
+    }
+
+    // Texto de WhatsApp para avisar liberación (prefijado, lo envía el restaurante)
+    releaseWaText(r) {
+        const date = new Date(r.reservation_date + 'T12:00:00').toLocaleDateString('es-CO', { weekday: 'long', month: 'long', day: 'numeric' });
+        const time = (r.reservation_time || '').slice(0, 5);
+        const name = r.customer?.name || '';
+        return encodeURIComponent(
+            `Hola ${name}, tu reserva ${r.reservation_code} para el ${date} a las ${time} fue liberada porque no recibimos el pago del anticipo. El cupo quedó disponible. Si aún quieres acompañarnos, con gusto te ayudamos a reservar de nuevo.`
+        );
+    }
+
+    // Correo de liberación (vía Edge Function); no bloquea la UI
+    async sendReleaseEmail(r) {
+        if (!r?.customer?.email) return;
+        const date = new Date(r.reservation_date + 'T12:00:00').toLocaleDateString('es-CO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        try {
+            await sb.functions.invoke('send-reservation-email', {
+                body: {
+                    type: 'reservation_released',
+                    customerName: r.customer?.name || '',
+                    customerEmail: r.customer.email,
+                    reservationCode: r.reservation_code,
+                    date, time: (r.reservation_time || '').slice(0, 5),
+                    salonName: r.salon?.name || ''
+                }
+            });
+        } catch (e) { console.warn('Release email failed:', e); }
+    }
+
+    // Correos de liberación para las reservas auto-expiradas (24h sin pago).
+    // `list` viene de expire_stale_reservations() (code, name, email, date...).
+    notifyExpiredByEmail(list) {
+        list.forEach(x => {
+            if (!x.email) return;
+            const date = new Date(x.date + 'T12:00:00').toLocaleDateString('es-CO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            sb.functions.invoke('send-reservation-email', {
+                body: {
+                    type: 'reservation_released',
+                    customerName: x.name || '',
+                    customerEmail: x.email,
+                    reservationCode: x.reservation_code,
+                    date, time: (x.time || '').slice(0, 5),
+                    salonName: x.salon_name || ''
+                }
+            }).catch(e => console.warn('Auto-release email failed:', e));
+        });
     }
 
     // ================================================================
