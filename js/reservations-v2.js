@@ -314,8 +314,8 @@ class ReservationWizard {
         return `
             <div class="rw-step-content" data-step="3">
                 <div class="rw-header">
-                    <h3 class="rw-title">Solicita tu reserva</h3>
-                    <p class="rw-subtitle">Revisa los datos y completa tu información — validamos disponibilidad antes del pago</p>
+                    <h3 class="rw-title">Confirma tu reserva</h3>
+                    <p class="rw-subtitle">Aparta tu cupo y completa el anticipo para confirmar</p>
                 </div>
 
                 <div class="rw-summary">
@@ -393,7 +393,7 @@ class ReservationWizard {
                         <p>NIT: 901857854</p>
                         <p>Titular: MYT RESTAURANT SAS</p>
                     </div>
-                    <p class="rw-payment-note">Primero validamos la disponibilidad y te confirmamos por WhatsApp o correo (revisamos de <strong>8:00 a.m. a 10:00 p.m.</strong>). Una vez confirmada, realiza el anticipo y envía el comprobante al <strong>300 826 3403</strong>.</p>
+                    <p class="rw-payment-note">Al reservar, tu cupo queda <strong>apartado por 24 horas</strong>. Realiza el anticipo y envía el comprobante al <strong>300 826 3403</strong> para confirmar. Verificamos tu pago en horario de atención (<strong>8:00 a.m. a 10:00 p.m.</strong>). Si no pagas en 24 h, el cupo se libera.</p>
                 </div>
 
                 <div class="rw-policies">
@@ -408,7 +408,7 @@ class ReservationWizard {
                 <div class="rw-actions">
                     <button type="button" class="rw-btn rw-btn-back" id="rw-back-3">Atrás</button>
                     <button type="button" class="rw-btn rw-btn-submit" id="rw-submit" disabled>
-                        <span class="rw-btn-text">Solicitar reserva</span>
+                        <span class="rw-btn-text">Apartar mi cupo</span>
                         <span class="rw-btn-loading" style="display:none">
                             <span class="rw-spinner-sm"></span> Procesando...
                         </span>
@@ -424,13 +424,13 @@ class ReservationWizard {
         });
 
         const waMsg = encodeURIComponent(
-            `Hola Mar&Tierra! Acabo de solicitar una reserva.\n\n` +
+            `Hola Mar&Tierra! Acabo de apartar mi cupo.\n\n` +
             `- Codigo: ${this.data.reservationCode}\n` +
             `- Fecha: ${dateStr}\n` +
             `- Hora: ${this.formatTime(this.data.time)}\n` +
             `- Personas: ${this.data.partySize}\n` +
             `- Anticipo: ${this.formatPrice(this.data.deposit)}\n\n` +
-            `Quedo atento(a) a la confirmacion de disponibilidad.`
+            `Adjunto el comprobante de pago para confirmar.`
         );
 
         return `
@@ -441,10 +441,10 @@ class ReservationWizard {
                         <path d="M14 24l7 7 13-13" stroke="var(--dorado-premium)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
-                <h3 class="rw-success-title">¡Reserva solicitada!</h3>
+                <h3 class="rw-success-title">¡Cupo apartado!</h3>
                 <p class="rw-success-code">${this.escapeHtml(this.data.reservationCode)}</p>
 
-                <p class="rw-success-pending">Tu reserva <strong>aún no está confirmada</strong>. Primero validamos la disponibilidad; cuando te confirmemos, realizas el anticipo para asegurarla.</p>
+                <p class="rw-success-pending">Tu cupo está <strong>reservado por 24 horas</strong>. Realiza el anticipo y envía el comprobante para confirmar tu reserva. <strong>Si no recibimos el pago en 24 h, el cupo se libera automáticamente.</strong></p>
 
                 <div class="rw-success-summary">
                     <p>${this.escapeHtml(dateStr)} · ${this.escapeHtml(this.formatTime(this.data.time))}</p>
@@ -455,10 +455,9 @@ class ReservationWizard {
                 <div class="rw-success-steps">
                     <h4>¿Qué sigue?</h4>
                     <ol>
-                        <li><strong>Validamos la disponibilidad</strong> y te confirmamos por WhatsApp o correo. Revisamos las solicitudes de <strong>8:00 a.m. a 10:00 p.m.</strong>; si reservas fuera de ese horario, te respondemos dentro de la siguiente franja.</li>
-                        <li>Una vez confirmada la disponibilidad, <strong>realiza el anticipo de ${this.formatPrice(this.data.deposit)}</strong> a la cuenta Bancolombia (los datos están en tu correo de confirmación).</li>
+                        <li><strong>Realiza el anticipo de ${this.formatPrice(this.data.deposit)}</strong> a la cuenta Bancolombia (los datos están en tu correo de confirmación).</li>
                         <li><strong>Envía el comprobante</strong> por WhatsApp al 300 826 3403.</li>
-                        <li>Tu reserva <strong>queda confirmada</strong> al verificar el pago.</li>
+                        <li>Confirmamos tu reserva al <strong>verificar el pago</strong>, en horario de atención (<strong>8:00 a.m. a 10:00 p.m.</strong>).</li>
                     </ol>
                 </div>
 

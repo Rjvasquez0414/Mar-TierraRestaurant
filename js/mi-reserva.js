@@ -3,7 +3,7 @@
 // =====================================================================
 
 const STATUS_LABELS = {
-    pending: 'Por confirmar',
+    pending: 'Pendiente de pago',
     confirmed: 'Confirmada',
     seated: 'En mesa',
     completed: 'Completada',
