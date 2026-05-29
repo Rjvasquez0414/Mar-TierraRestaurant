@@ -39,13 +39,22 @@ function buildCustomerEmail(data: ReservationEmail): string {
         <!-- Header -->
         <tr><td style="padding:40px 40px 24px;text-align:center;border-bottom:1px solid rgba(43,24,16,0.08);">
           <p style="margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#8B8680;">Mar &amp; Tierra Restaurant</p>
-          <h1 style="margin:0;font-size:28px;font-weight:normal;color:#2B1810;letter-spacing:-0.5px;">Reserva Registrada</h1>
+          <h1 style="margin:0;font-size:28px;font-weight:normal;color:#2B1810;letter-spacing:-0.5px;">Reserva Solicitada</h1>
         </td></tr>
 
         <!-- Code -->
         <tr><td style="padding:28px 40px 0;text-align:center;">
           <p style="margin:0 0 4px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8B8680;">Codigo de reserva</p>
           <p style="margin:0;font-size:20px;font-weight:bold;color:#8B6914;letter-spacing:1px;">${data.reservationCode}</p>
+        </td></tr>
+
+        <!-- Pending notice -->
+        <tr><td style="padding:24px 40px 0;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(212,175,55,0.10);border:1px solid rgba(212,175,55,0.32);border-radius:4px;">
+            <tr><td style="padding:16px 20px;">
+              <p style="margin:0;font-size:14px;color:#3A332E;line-height:1.6;">Tu reserva <strong style="color:#2B1810;">aun no esta confirmada</strong>. Primero validamos la disponibilidad y te confirmamos por WhatsApp o correo. Revisamos las solicitudes de <strong style="color:#2B1810;">8:00 a.m. a 10:00 p.m.</strong>; si reservas fuera de ese horario, te respondemos dentro de la siguiente franja.</p>
+            </td></tr>
+          </table>
         </td></tr>
 
         <!-- Details -->
@@ -82,9 +91,10 @@ function buildCustomerEmail(data: ReservationEmail): string {
         <tr><td style="padding:0 40px 28px;">
           <table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(43,24,16,0.025);border:1px solid rgba(43,24,16,0.06);border-radius:4px;padding:20px;">
             <tr><td>
-              <p style="margin:0 0 12px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8B8680;">Siguiente paso</p>
-              <p style="margin:0 0 8px;font-size:14px;color:#3A332E;line-height:1.6;">1. Realiza la transferencia de <strong>${formatPrice(data.depositAmount)}</strong></p>
-              <p style="margin:0 0 16px;font-size:14px;color:#3A332E;line-height:1.6;">2. Envia el comprobante por WhatsApp al <strong>300 826 3403</strong></p>
+              <p style="margin:0 0 12px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8B8680;">Que sigue</p>
+              <p style="margin:0 0 8px;font-size:14px;color:#3A332E;line-height:1.6;">1. Validamos la disponibilidad y te confirmamos (de 8:00 a.m. a 10:00 p.m.)</p>
+              <p style="margin:0 0 8px;font-size:14px;color:#3A332E;line-height:1.6;">2. Una vez confirmada, realiza el anticipo de <strong>${formatPrice(data.depositAmount)}</strong></p>
+              <p style="margin:0 0 16px;font-size:14px;color:#3A332E;line-height:1.6;">3. Envia el comprobante por WhatsApp al <strong>300 826 3403</strong></p>
               <p style="margin:0 0 4px;font-size:14px;color:#2B1810;"><strong>Bancolombia</strong> - Cuenta Corriente</p>
               <p style="margin:0 0 2px;font-size:14px;color:#3A332E;">No. Cuenta: <strong>30200003995</strong></p>
               <p style="margin:0 0 2px;font-size:14px;color:#3A332E;">NIT: 901857854</p>
@@ -209,7 +219,7 @@ serve(async (req) => {
       body: JSON.stringify({
         from: `Mar&Tierra Restaurant <${FROM_EMAIL}>`,
         to: [emailData.customerEmail],
-        subject: `Reserva ${emailData.reservationCode} — Mar&Tierra Restaurant`,
+        subject: `Solicitud de reserva ${emailData.reservationCode} — Mar&Tierra Restaurant`,
         html: buildCustomerEmail(emailData),
       }),
     });

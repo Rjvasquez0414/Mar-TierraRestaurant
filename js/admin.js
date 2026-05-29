@@ -313,12 +313,22 @@ class AdminPanel {
             );
         }
 
+        // Ocultar reservas COMPLETADAS del listado por defecto — saturan la
+        // vista. Siguen disponibles seleccionando "Completadas" en el filtro
+        // de estado. Los contadores usan `data` completo, así que no se ven
+        // afectados por este ocultamiento.
+        const statusFilter = document.getElementById('filter-status')?.value;
+        if (statusFilter !== 'completed') {
+            filtered = filtered.filter(r => r.status !== 'completed');
+        }
+
+        // Contadores con el set completo (antes de ocultar completadas)
+        this.updateCounters(data);
+
         if (filtered.length === 0) {
             empty.style.display = 'block';
             return;
         }
-
-        this.updateCounters(data);
 
         list.innerHTML = filtered.map(r => this.renderReservationCard(r)).join('');
 

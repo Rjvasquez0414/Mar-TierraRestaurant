@@ -26,7 +26,7 @@
      3. Menu cards: alturas premium + números visibles sin clip
      4. Espacio modal fullscreen inmersivo
      5. Oro restringido en contacto + instalaciones (tags/icons)
-     6. WhatsApp button rediseñado en paleta de marca
+     6. Review button "Califícanos en Google" en paleta de marca
      7. Sticky reservation bar mobile (reemplaza CTAs flotantes feos)
      8. Footer editorial mobile
      9. Tap states (no hay hover en touch — feedback al press)
@@ -678,13 +678,12 @@
 
 
 /* =====================================================================
-   6. WHATSAPP BUTTON — REDISEÑO EN PALETA DE MARCA
-   El verde neón del WhatsApp rompe la atmósfera editorial.
-   Lo transformamos en un botón discreto en marrón tinta con
-   acento dorado, y eliminamos el pulse ring verde.
+   6. REVIEW BUTTON — BOTÓN FLOTANTE "CALIFÍCANOS EN GOOGLE"
+   Botón discreto en marrón tinta con acento dorado y estrella,
+   coherente con la atmósfera editorial.
    ===================================================================== */
 
-.wa-float {
+.review-float {
     background: var(--marron-tinta) !important;
     background-image: none !important;
     color: var(--blanco-perla) !important;
@@ -697,9 +696,9 @@
                 background 0.3s ease !important;
 }
 
-.wa-float:hover,
-.wa-float:focus-visible,
-.wa-float:active {
+.review-float:hover,
+.review-float:focus-visible,
+.review-float:active {
     background: #0F0908 !important;
     color: var(--dorado-brillante) !important;
     box-shadow:
@@ -709,16 +708,16 @@
 }
 
 /* Iconito SVG en dorado */
-.wa-float-icon {
+.review-float-icon {
     background: transparent !important;
     color: var(--dorado-brillante) !important;
 }
-.wa-float-icon svg {
+.review-float-icon svg {
     fill: var(--dorado-brillante) !important;
 }
 
 /* Label en dorado sutil */
-.wa-float-label {
+.review-float-label {
     color: rgba(228, 212, 168, 0.95) !important;
     font-family: var(--sans-body) !important;
     letter-spacing: 0.16em !important;
@@ -728,20 +727,20 @@
 }
 
 /* Eliminar el pulse verde — reemplazar por uno dorado muy sutil */
-.wa-float-pulse {
+.review-float-pulse {
     background: rgba(212, 175, 55, 0.4) !important;
     opacity: 0.35 !important;
 }
 
 /* Mobile: variante compacta sólo icono, también en paleta */
 @media (max-width: 600px) {
-    .wa-float {
+    .review-float {
         width: 54px !important;
         height: 54px !important;
         right: 16px !important;
         bottom: 16px !important;
     }
-    .wa-float-icon svg {
+    .review-float-icon svg {
         width: 24px;
         height: 24px;
     }
@@ -830,12 +829,9 @@
         padding-bottom: 78px;
     }
 
-    /* Ocultamos el WhatsApp float cuando el CTA bar está activo —
-       el CTA bar lo absorbe. */
-    body.has-mcb-visible .whatsapp-float,
-    body.has-mcb-visible .floating-whatsapp,
-    body.has-mcb-visible .wa-float,
-    body.has-mcb-visible .wa-button-float {
+    /* Ocultamos el botón flotante de reseña cuando el CTA bar está
+       activo — el CTA bar ocupa la zona inferior. */
+    body.has-mcb-visible .review-float {
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.4s ease;

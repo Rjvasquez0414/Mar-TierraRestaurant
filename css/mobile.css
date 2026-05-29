@@ -848,8 +848,8 @@ img, video, iframe, svg {
         height: 280px;
     }
 
-    /* WhatsApp floating un poco más pequeño en pantallas chicas */
-    .wa-float {
+    /* Botón flotante de reseña un poco más pequeño en pantallas chicas */
+    .review-float {
         width: 52px;
         height: 52px;
         right: 12px;

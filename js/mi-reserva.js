@@ -3,7 +3,7 @@
 // =====================================================================
 
 const STATUS_LABELS = {
-    pending: 'Pendiente de pago',
+    pending: 'Por confirmar',
     confirmed: 'Confirmada',
     seated: 'En mesa',
     completed: 'Completada',
@@ -13,14 +13,17 @@ const STATUS_LABELS = {
 
 const TYPE_LABELS = { free: 'Reserva Free', plata: 'Plan Plata', oro: 'Plan Oro', luxury: 'Plan Luxury' };
 
+// open = primera hora reservable, lastSlot = última hora reservable.
+// Debe coincidir con getHours() de js/reservations-v2.js.
+//   Lun→7PM · Mar-Jue→8PM · Vie-Sáb→9PM · Dom→4PM
 const HOURS = {
-    0: { open: '11:30', close: '21:00' },
-    1: { open: '11:30', close: '22:00' },
-    2: { open: '11:30', close: '23:00' },
-    3: { open: '11:30', close: '23:00' },
-    4: { open: '11:30', close: '23:00' },
-    5: { open: '11:30', close: '00:00' },
-    6: { open: '11:30', close: '00:00' }
+    0: { open: '11:30', lastSlot: '16:00' },
+    1: { open: '11:30', lastSlot: '19:00' },
+    2: { open: '11:30', lastSlot: '20:00' },
+    3: { open: '11:30', lastSlot: '20:00' },
+    4: { open: '11:30', lastSlot: '20:00' },
+    5: { open: '11:30', lastSlot: '21:00' },
+    6: { open: '11:30', lastSlot: '21:00' }
 };
 
 let currentReservation = null;
@@ -47,10 +50,8 @@ function generateTimeSlots(dateStr) {
     if (!h) return [];
     const slots = [];
     const [oh, om] = h.open.split(':').map(Number);
-    const [ch, cm] = h.close.split(':').map(Number);
-    let end = ch * 60 + cm;
-    if (end === 0) end = 24 * 60;
-    end -= 60;
+    const [lh, lm] = h.lastSlot.split(':').map(Number);
+    const end = lh * 60 + lm;
     for (let min = oh * 60 + om; min <= end; min += 30) {
         const hh = String(Math.floor(min / 60)).padStart(2, '0');
         const mm = String(min % 60).padStart(2, '0');

@@ -24,29 +24,29 @@
     --z-modal:       1100;
     --z-modal-top:   1200;   /* botones dentro del modal */
     --z-toast:       1300;
-    --z-wa-float:    1400;   /* siempre por encima */
+    --z-review-float:    1400;   /* siempre por encima */
     --z-skip-link:   9999;   /* máxima prioridad para a11y */
 }
 
 
 /* ------------------------------------------------------------
-   2. WHATSAPP FLOATING BUTTON
+   2. REVIEW FLOATING BUTTON (Califícanos en Google)
    ------------------------------------------------------------ */
-.wa-float {
+.review-float {
     position: fixed;
     right: 24px;
     bottom: 24px;
-    z-index: var(--z-wa-float);
+    z-index: var(--z-review-float);
     display: inline-flex;
     align-items: center;
     gap: 10px;
     padding: 12px 18px 12px 12px;
-    background: #25D366;
-    color: #fff;
+    background: var(--marron-tinta, #2B1810);
+    color: var(--dorado-brillante, #E4D4A8);
     border-radius: 999px;
     box-shadow:
-        0 8px 24px rgba(37, 211, 102, 0.35),
-        0 2px 6px rgba(0, 0, 0, 0.15);
+        0 8px 24px rgba(15, 8, 4, 0.45),
+        0 0 0 1px rgba(212, 175, 55, 0.25);
     text-decoration: none;
     font-family: 'Causten', 'Outfit', 'Poppins', sans-serif;
     font-size: 0.95rem;
@@ -56,42 +56,43 @@
                 box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.wa-float:hover,
-.wa-float:focus-visible {
+.review-float:hover,
+.review-float:focus-visible {
     transform: translateY(-2px) scale(1.03);
     box-shadow:
-        0 12px 30px rgba(37, 211, 102, 0.45),
-        0 4px 10px rgba(0, 0, 0, 0.2);
-    color: #fff;
+        0 12px 30px rgba(15, 8, 4, 0.55),
+        0 0 0 1px rgba(212, 175, 55, 0.5);
+    color: var(--dorado-brillante, #E4D4A8);
 }
 
-.wa-float-icon {
+.review-float-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.16);
+    background: rgba(212, 175, 55, 0.14);
+    color: var(--dorado-brillante, #E4D4A8);
 }
 
-.wa-float-pulse {
+.review-float-pulse {
     position: absolute;
     inset: 0;
     border-radius: 999px;
-    background: #25D366;
-    opacity: 0.55;
+    background: rgba(212, 175, 55, 0.4);
+    opacity: 0.4;
     z-index: -1;
-    animation: waFloatPulse 2.4s ease-out infinite;
+    animation: reviewFloatPulse 2.4s ease-out infinite;
     pointer-events: none;
 }
 
-.wa-float-label {
+.review-float-label {
     padding-right: 4px;
     white-space: nowrap;
 }
 
-@keyframes waFloatPulse {
+@keyframes reviewFloatPulse {
     0%   { transform: scale(1);    opacity: 0.55; }
     70%  { transform: scale(1.35); opacity: 0;    }
     100% { transform: scale(1.35); opacity: 0;    }
@@ -99,7 +100,7 @@
 
 /* Variante compacta en móvil — solo el icono */
 @media (max-width: 600px) {
-    .wa-float {
+    .review-float {
         padding: 0;
         width: 60px;
         height: 60px;
@@ -107,10 +108,10 @@
         right: 18px;
         bottom: 18px;
     }
-    .wa-float-icon {
+    .review-float-icon {
         background: transparent;
     }
-    .wa-float-label {
+    .review-float-label {
         display: none;
     }
 }
@@ -397,7 +398,7 @@ textarea:focus-visible,
         scroll-behavior: auto !important;
     }
 
-    .wa-float-pulse,
+    .review-float-pulse,
     .pulse-ring,
     .pulse-ring-2 {
         animation: none !important;

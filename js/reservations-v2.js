@@ -38,16 +38,23 @@ class ReservationWizard {
         this.bindEvents();
     }
 
-    // Restaurant operating hours by day (0=Sun, 1=Mon, ...)
+    // Horario de reservas por día (0=Dom, 1=Lun, ...).
+    // open      = primera hora reservable
+    // lastSlot  = última hora reservable (el cliente NO puede reservar después)
+    // close     = cierre del servicio (informativo)
+    //   Lun        11:30 → última reserva 7:00 PM  (servicio hasta 9:00 PM)
+    //   Mar a Jue  11:30 → última reserva 8:00 PM  (servicio hasta 10:00 PM)
+    //   Vie y Sáb  11:30 → última reserva 9:00 PM  (servicio hasta 11:00 PM)
+    //   Dom        11:30 → última reserva 4:00 PM  (servicio hasta 6:00 PM)
     getHours(dayOfWeek) {
         const hours = {
-            0: { open: '11:30', close: '21:00' },
-            1: { open: '11:30', close: '22:00' },
-            2: { open: '11:30', close: '23:00' },
-            3: { open: '11:30', close: '23:00' },
-            4: { open: '11:30', close: '23:00' },
-            5: { open: '11:30', close: '00:00' },
-            6: { open: '11:30', close: '00:00' }
+            0: { open: '11:30', lastSlot: '16:00', close: '18:00' },
+            1: { open: '11:30', lastSlot: '19:00', close: '21:00' },
+            2: { open: '11:30', lastSlot: '20:00', close: '22:00' },
+            3: { open: '11:30', lastSlot: '20:00', close: '22:00' },
+            4: { open: '11:30', lastSlot: '20:00', close: '22:00' },
+            5: { open: '11:30', lastSlot: '21:00', close: '23:00' },
+            6: { open: '11:30', lastSlot: '21:00', close: '23:00' }
         };
         return hours[dayOfWeek];
     }
@@ -60,11 +67,9 @@ class ReservationWizard {
 
         const slots = [];
         const [openH, openM] = h.open.split(':').map(Number);
-        const [closeH, closeM] = h.close.split(':').map(Number);
+        const [lastH, lastM] = h.lastSlot.split(':').map(Number);
 
-        let endMinutes = closeH * 60 + closeM;
-        if (endMinutes === 0) endMinutes = 24 * 60;
-        endMinutes -= 60;
+        const endMinutes = lastH * 60 + lastM;
 
         for (let m = openH * 60 + openM; m <= endMinutes; m += 30) {
             const hh = String(Math.floor(m / 60)).padStart(2, '0');
@@ -250,7 +255,7 @@ class ReservationWizard {
                 key: 'luxury',
                 name: 'Plan Luxury',
                 tagline: 'Rosas, pétalos y velas',
-                price: 100000,
+                price: 150000,
                 consumable: false,
                 includes: ['12 rosas naturales', 'Pétalos sobre la mesa', 'Velas aromáticas', 'Playlist personalizada'],
                 icon: `<svg viewBox="0 0 32 32"><path d="M16 6c-3 0-6 3-6 7 0 5 6 13 6 13s6-8 6-13c0-4-3-7-6-7z" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="16" cy="14" r="2" fill="currentColor"/></svg>`
@@ -309,8 +314,8 @@ class ReservationWizard {
         return `
             <div class="rw-step-content" data-step="3">
                 <div class="rw-header">
-                    <h3 class="rw-title">Confirma tu reserva</h3>
-                    <p class="rw-subtitle">Revisa los datos y completa tu información</p>
+                    <h3 class="rw-title">Solicita tu reserva</h3>
+                    <p class="rw-subtitle">Revisa los datos y completa tu información — validamos disponibilidad antes del pago</p>
                 </div>
 
                 <div class="rw-summary">
@@ -388,7 +393,7 @@ class ReservationWizard {
                         <p>NIT: 901857854</p>
                         <p>Titular: MYT RESTAURANT SAS</p>
                     </div>
-                    <p class="rw-payment-note">Envía el comprobante de pago por WhatsApp al <strong>300 826 3403</strong> para confirmar tu reserva.</p>
+                    <p class="rw-payment-note">Primero validamos la disponibilidad y te confirmamos por WhatsApp o correo (revisamos de <strong>8:00 a.m. a 10:00 p.m.</strong>). Una vez confirmada, realiza el anticipo y envía el comprobante al <strong>300 826 3403</strong>.</p>
                 </div>
 
                 <div class="rw-policies">
@@ -403,7 +408,7 @@ class ReservationWizard {
                 <div class="rw-actions">
                     <button type="button" class="rw-btn rw-btn-back" id="rw-back-3">Atrás</button>
                     <button type="button" class="rw-btn rw-btn-submit" id="rw-submit" disabled>
-                        <span class="rw-btn-text">Reservar</span>
+                        <span class="rw-btn-text">Solicitar reserva</span>
                         <span class="rw-btn-loading" style="display:none">
                             <span class="rw-spinner-sm"></span> Procesando...
                         </span>
@@ -419,13 +424,13 @@ class ReservationWizard {
         });
 
         const waMsg = encodeURIComponent(
-            `Hola Mar&Tierra! Acabo de realizar mi reserva.\n\n` +
+            `Hola Mar&Tierra! Acabo de solicitar una reserva.\n\n` +
             `- Codigo: ${this.data.reservationCode}\n` +
             `- Fecha: ${dateStr}\n` +
             `- Hora: ${this.formatTime(this.data.time)}\n` +
             `- Personas: ${this.data.partySize}\n` +
             `- Anticipo: ${this.formatPrice(this.data.deposit)}\n\n` +
-            `Adjunto comprobante de pago.`
+            `Quedo atento(a) a la confirmacion de disponibilidad.`
         );
 
         return `
@@ -436,8 +441,10 @@ class ReservationWizard {
                         <path d="M14 24l7 7 13-13" stroke="var(--dorado-premium)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
-                <h3 class="rw-success-title">¡Reserva registrada!</h3>
+                <h3 class="rw-success-title">¡Reserva solicitada!</h3>
                 <p class="rw-success-code">${this.escapeHtml(this.data.reservationCode)}</p>
+
+                <p class="rw-success-pending">Tu reserva <strong>aún no está confirmada</strong>. Primero validamos la disponibilidad; cuando te confirmemos, realizas el anticipo para asegurarla.</p>
 
                 <div class="rw-success-summary">
                     <p>${this.escapeHtml(dateStr)} · ${this.escapeHtml(this.formatTime(this.data.time))}</p>
@@ -446,11 +453,12 @@ class ReservationWizard {
                 </div>
 
                 <div class="rw-success-steps">
-                    <h4>Siguiente paso</h4>
+                    <h4>¿Qué sigue?</h4>
                     <ol>
-                        <li>Realiza la transferencia de <strong>${this.formatPrice(this.data.deposit)}</strong> a la cuenta Bancolombia indicada</li>
-                        <li>Envía el comprobante por WhatsApp</li>
-                        <li>Tu reserva será confirmada tras verificar el pago</li>
+                        <li><strong>Validamos la disponibilidad</strong> y te confirmamos por WhatsApp o correo. Revisamos las solicitudes de <strong>8:00 a.m. a 10:00 p.m.</strong>; si reservas fuera de ese horario, te respondemos dentro de la siguiente franja.</li>
+                        <li>Una vez confirmada la disponibilidad, <strong>realiza el anticipo de ${this.formatPrice(this.data.deposit)}</strong> a la cuenta Bancolombia (los datos están en tu correo de confirmación).</li>
+                        <li><strong>Envía el comprobante</strong> por WhatsApp al 300 826 3403.</li>
+                        <li>Tu reserva <strong>queda confirmada</strong> al verificar el pago.</li>
                     </ol>
                 </div>
 
@@ -458,7 +466,7 @@ class ReservationWizard {
                     <a href="https://wa.me/573008263403?text=${waMsg}"
                        class="rw-btn rw-btn-wa" target="_blank" rel="noopener">
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.52 3.48A11.93 11.93 0 0 0 12 0C5.37 0 .02 5.37 0 12c0 2.12.55 4.18 1.6 6.01L0 24l6.18-1.62A11.94 11.94 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.2-1.25-6.21-3.48-8.52z"/></svg>
-                        Enviar comprobante
+                        Escribir por WhatsApp
                     </a>
                     <a href="mi-reserva.html?code=${this.escapeHtml(this.data.reservationCode)}" class="rw-btn rw-btn-back" style="text-decoration:none;text-align:center">
                         Consultar mi reserva
@@ -848,7 +856,7 @@ class ReservationWizard {
                     <h4>Anticipo</h4>
                     <ul>
                         <li><strong>Reserva Free ($100.000):</strong> Totalmente consumible — se descuenta de tu cuenta final.</li>
-                        <li><strong>Plan Plata ($80.000), Oro ($120.000), Luxury ($100.000):</strong> NO consumible, NO reembolsable. El costo cubre la decoración y montaje.</li>
+                        <li><strong>Plan Plata ($80.000), Oro ($120.000), Luxury ($150.000):</strong> NO consumible, NO reembolsable. El costo cubre la decoración y montaje.</li>
                     </ul>
                     <h4>Cancelación y reagendamiento</h4>
                     <ul>
