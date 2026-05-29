@@ -1,13 +1,52 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
 const FROM_EMAIL = "reservas@marytierrarestaurantbga.com";
 const RESTAURANT_EMAIL = "marytierrarestaurantbga@gmail.com";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+// Cliente con service role para verificar el email REAL del cliente por
+// código de reserva. Evita que se usen estos endpoints para enviar correos
+// a destinatarios arbitrarios desde el dominio del restaurante.
+const supabaseAdmin = createClient(
+  Deno.env.get("SUPABASE_URL") ?? "",
+  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+);
+
+// CORS restringido a los orígenes propios (en vez de "*").
+const ALLOWED_ORIGINS = [
+  "https://marytierrarestaurantbga.com",
+  "https://www.marytierrarestaurantbga.com",
+  "http://localhost:8765",
+  "http://localhost:3000",
+];
+function cors(req: Request) {
+  const origin = req.headers.get("Origin") ?? "";
+  const allow = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allow,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Vary": "Origin",
+  };
+}
+
+// Devuelve el email real del cliente dueño de la reserva, o null si no existe.
+async function verifiedRecipient(code: unknown): Promise<string | null> {
+  if (!code || typeof code !== "string") return null;
+  try {
+    const { data, error } = await supabaseAdmin
+      .from("reservations")
+      .select("customer:customers(email)")
+      .eq("reservation_code", code.toUpperCase().trim())
+      .maybeSingle();
+    if (error || !data) return null;
+    // deno-lint-ignore no-explicit-any
+    const email = (data as any).customer?.email;
+    return (typeof email === "string" && email.includes("@")) ? email : null;
+  } catch (_e) {
+    return null;
+  }
+}
 
 interface ReservationEmail {
   customerName: string;
@@ -143,12 +182,23 @@ function buildAdminNotification(data: ReservationEmail): string {
 }
 
 serve(async (req) => {
+  const corsHeaders = cors(req);
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
+  const reject = (msg: string, status = 400) =>
+    new Response(JSON.stringify({ success: false, error: msg }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" }, status,
+    });
+
   try {
     const data = await req.json();
+
+    // El destinatario SIEMPRE se resuelve desde la BD por código de reserva
+    // (no se confía en el email que venga en el body).
+    const recipient = await verifiedRecipient(data.reservationCode);
+    if (!recipient) return reject("Reserva no encontrada o sin email registrado.");
 
     // Payment reminder email
     if (data.type === 'payment_reminder') {
@@ -195,7 +245,7 @@ serve(async (req) => {
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
         body: JSON.stringify({
           from: `Mar&Tierra Restaurant <${FROM_EMAIL}>`,
-          to: [data.customerEmail],
+          to: [recipient],
           subject: `Recordatorio de pago - Reserva ${data.reservationCode}`,
           html: reminderHtml,
         }),
@@ -247,7 +297,7 @@ serve(async (req) => {
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
         body: JSON.stringify({
           from: `Mar&Tierra Restaurant <${FROM_EMAIL}>`,
-          to: [data.customerEmail],
+          to: [recipient],
           subject: `Reserva liberada - ${data.reservationCode} — Mar&Tierra Restaurant`,
           html: releasedHtml,
         }),
@@ -270,7 +320,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         from: `Mar&Tierra Restaurant <${FROM_EMAIL}>`,
-        to: [emailData.customerEmail],
+        to: [recipient],
         subject: `Cupo apartado — Reserva ${emailData.reservationCode} — Mar&Tierra Restaurant`,
         html: buildCustomerEmail(emailData),
       }),

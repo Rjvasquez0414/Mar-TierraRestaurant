@@ -19,8 +19,9 @@ Disallow: /google-apps-script-v2.js
 Disallow: /fix-instalaciones.html
 Disallow: /test-fonts.html
 Disallow: /verificar-cambios.html
-Disallow: /propuesta-comercial.html
 Disallow: /menu.txt
+Disallow: /admin.html
+Disallow: /mi-reserva.html
 
 # AI crawlers — permitir (mejora visibilidad en respuestas de IA)
 User-agent: GPTBot

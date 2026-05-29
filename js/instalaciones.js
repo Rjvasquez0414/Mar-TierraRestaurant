@@ -111,7 +111,7 @@ async function loadEspacioImages(espacioKey, folder, wrapper) {
         const slide = document.createElement('div');
         slide.className = 'swiper-slide';
         slide.innerHTML = `
-            <img src="https://via.placeholder.com/1200x800/D4C4AA/6B4C3B?text=Mar%26Tierra"
+            <img src="images/placeholder.jpg"
                  alt="${espacioKey}"
                  loading="lazy">
         `;
@@ -133,7 +133,7 @@ async function loadEspacioImages(espacioKey, folder, wrapper) {
                 <img src="${finalSrc}"
                      alt="${espacioKey}"
                      loading="lazy"
-                     onerror="this.src='https://via.placeholder.com/1200x800/D4C4AA/6B4C3B?text=Imagen+No+Disponible'">
+                     onerror="this.onerror=null;this.src='images/placeholder.jpg'">
             `;
             wrapper.appendChild(slide);
         });

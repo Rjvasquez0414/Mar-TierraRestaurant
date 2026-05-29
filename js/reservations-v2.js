@@ -399,7 +399,7 @@ class ReservationWizard {
                 <div class="rw-policies">
                     <label class="rw-checkbox">
                         <input type="checkbox" id="rw-accept-policies">
-                        <span>He leído y acepto las <a href="#" id="rw-policies-link">políticas de cancelación</a></span>
+                        <span>He leído y acepto las <a href="#" id="rw-policies-link">políticas de cancelación</a> y autorizo el <a href="politica-datos.html" target="_blank" rel="noopener" id="rw-data-link">tratamiento de mis datos personales</a> conforme a la Ley 1581 de 2012.</span>
                     </label>
                 </div>
 
@@ -620,6 +620,12 @@ class ReservationWizard {
                 e.preventDefault();
                 this.showPoliciesModal();
             });
+        }
+
+        // Link a la política de datos: abre la página sin alternar el checkbox
+        const dataLink = document.getElementById('rw-data-link');
+        if (dataLink) {
+            dataLink.addEventListener('click', (e) => e.stopPropagation());
         }
 
         // Step 4 (success)
