@@ -349,22 +349,22 @@ class ReservationWizard {
                     <div class="rw-field">
                         <label class="rw-label">Nombre completo</label>
                         <input type="text" class="rw-input" id="rw-name" placeholder="Tu nombre"
-                               value="${this.data.name}" required autocomplete="name">
+                               value="${this.escapeHtml(this.data.name)}" required autocomplete="name">
                     </div>
                     <div class="rw-field">
                         <label class="rw-label">Teléfono</label>
                         <input type="tel" class="rw-input" id="rw-phone" placeholder="300 123 4567"
-                               value="${this.data.phone}" required autocomplete="tel" inputmode="tel">
+                               value="${this.escapeHtml(this.data.phone)}" required autocomplete="tel" inputmode="tel">
                     </div>
                     <div class="rw-field">
                         <label class="rw-label">Email</label>
                         <input type="email" class="rw-input" id="rw-email" placeholder="correo@ejemplo.com"
-                               value="${this.data.email}" required autocomplete="email" inputmode="email">
+                               value="${this.escapeHtml(this.data.email)}" required autocomplete="email" inputmode="email">
                     </div>
                     <div class="rw-field rw-field-full">
                         <label class="rw-label">Solicitudes especiales <span class="rw-optional">(opcional)</span></label>
                         <textarea class="rw-input rw-textarea" id="rw-requests"
-                                  placeholder="Alergias, celebraciones, preferencias...">${this.data.requests}</textarea>
+                                  placeholder="Alergias, celebraciones, preferencias...">${this.escapeHtml(this.data.requests)}</textarea>
                     </div>
                 </div>
 
@@ -803,7 +803,7 @@ class ReservationWizard {
                 p_date: this.data.date,
                 p_time: this.data.time,
                 p_party_size: this.data.partySize,
-                p_requests: this.escapeHtml(this.data.requests) || null,
+                p_requests: this.data.requests || null,
                 p_has_valet: !!this.data.hasValet,
                 p_valet_vehicles: this.data.hasValet ? (this.data.valetVehicles || 1) : 0
             });
