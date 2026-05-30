@@ -30,6 +30,23 @@ function cors(req: Request) {
   };
 }
 
+// ¿El que invoca es un miembro del staff (host logueado)? Para los correos
+// administrativos (confirmada/liberada/recordatorio) que no deben ser
+// disparables por cualquiera con la anon key pública.
+async function isStaffCaller(req: Request): Promise<boolean> {
+  const jwt = (req.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
+  if (!jwt) return false;
+  try {
+    const { data, error } = await supabaseAdmin.auth.getUser(jwt);
+    if (error || !data?.user) return false;
+    const { data: role } = await supabaseAdmin
+      .from("staff_roles").select("user_id").eq("user_id", data.user.id).maybeSingle();
+    return !!role;
+  } catch (_e) {
+    return false;
+  }
+}
+
 // Devuelve el email real del cliente dueño de la reserva, o null si no existe.
 async function verifiedRecipient(code: unknown): Promise<string | null> {
   if (!code || typeof code !== "string") return null;
@@ -203,6 +220,7 @@ serve(async (req) => {
 
     // Payment reminder email
     if (data.type === 'payment_reminder') {
+      if (!(await isStaffCaller(req))) return reject("No autorizado", 401);
       const reminderHtml = `
 <!DOCTYPE html>
 <html lang="es">
@@ -260,6 +278,7 @@ serve(async (req) => {
 
     // Reservation released email (cupo liberado por falta de pago)
     if (data.type === 'reservation_released') {
+      if (!(await isStaffCaller(req))) return reject("No autorizado", 401);
       const releasedHtml = `
 <!DOCTYPE html>
 <html lang="es">
@@ -312,6 +331,7 @@ serve(async (req) => {
 
     // Reservation confirmed email (pago verificado por el admin)
     if (data.type === 'reservation_confirmed') {
+      if (!(await isStaffCaller(req))) return reject("No autorizado", 401);
       const confirmedHtml = `
 <!DOCTYPE html>
 <html lang="es">

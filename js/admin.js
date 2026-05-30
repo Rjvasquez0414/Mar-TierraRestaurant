@@ -555,12 +555,23 @@ class AdminPanel {
 
         try {
             const updates = { status: 'confirmed', payment_status: 'verified', expires_at: null };
-            const { error } = await sb.from('reservations').update(updates).eq('id', r.id);
+            // Update atómico: solo si SIGUE pendiente (evita re-confirmar por
+            // carrera con otro host o con la expiración automática).
+            const { data: upd, error } = await sb.from('reservations')
+                .update(updates).eq('id', r.id).eq('status', 'pending').select('id');
             if (error) { alert('Error al confirmar el pago.'); if (waWin) waWin.close(); return; }
+            if (!upd || upd.length === 0) {
+                if (waWin) waWin.close();
+                alert('La reserva ya no está pendiente (pudo cambiarla otro host o expirar). Actualiza la lista.');
+                this.loadReservations();
+                return;
+            }
 
-            await sb.from('reservation_logs').insert({
-                reservation_id: r.id, action: 'confirm', details: updates, performed_by: this.user.id
-            });
+            try {
+                await sb.from('reservation_logs').insert({
+                    reservation_id: r.id, action: 'confirm', details: updates, performed_by: this.user.id
+                });
+            } catch (e) { /* el log no debe bloquear la acción */ }
 
             this.sendConfirmedEmail(r);
             if (waWin) waWin.location.href = `https://wa.me/${phone.length === 10 ? '57' + phone : phone}?text=${this.confirmedWaText(r)}`;
@@ -859,17 +870,27 @@ class AdminPanel {
 
         this.actionInProgress = true;
         try {
-            const { error } = await sb.from('reservations').update({
+            // Solo libera si SIGUE pendiente (no cancelar una ya pagada/confirmada
+            // por una vista de aforo desactualizada).
+            const { data: upd, error } = await sb.from('reservations').update({
                 status: 'cancelled',
                 payment_status: 'rejected',
                 cancellation_reason: 'Liberado por admin (cupo, sin pago)'
-            }).eq('id', id);
+            }).eq('id', id).eq('status', 'pending').select('id');
             if (error) { alert('Error al liberar el cupo.'); if (waWin) waWin.close(); return; }
-            await sb.from('reservation_logs').insert({
-                reservation_id: id, action: 'cancelled',
-                details: { reason: 'liberado-por-admin-aforo' },
-                performed_by: this.user.id
-            });
+            if (!upd || upd.length === 0) {
+                if (waWin) waWin.close();
+                alert('La reserva ya no está pendiente (pudo confirmarse o cambiar). Actualiza el aforo.');
+                this.loadAforo();
+                return;
+            }
+            try {
+                await sb.from('reservation_logs').insert({
+                    reservation_id: id, action: 'cancelled',
+                    details: { reason: 'liberado-por-admin-aforo' },
+                    performed_by: this.user.id
+                });
+            } catch (e) { /* el log no debe bloquear la acción */ }
 
             // Notificar al cliente: correo automático + WhatsApp prefijado
             if (r) {
