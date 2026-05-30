@@ -1338,3 +1338,55 @@ body {
     .adm-aforo-row { grid-template-columns: 42px 30px 1fr auto; }
     .adm-aforo-row .adm-aforo-age { display: none; }
 }
+
+
+/* =====================================================================
+   MONITOREO VIEW — registro de actividad
+   ===================================================================== */
+.adm-mon-head,
+.adm-mon-row {
+    display: grid;
+    grid-template-columns: 130px 160px 150px 1fr;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 12px;
+    font-family: var(--adm-sans);
+    font-size: 0.83rem;
+}
+.adm-mon-head {
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--adm-text-muted);
+    border-bottom: 1px solid var(--adm-border);
+}
+.adm-mon-row {
+    background: var(--adm-surface);
+    border: 1px solid var(--adm-border);
+    border-radius: 6px;
+    margin-bottom: 6px;
+}
+.adm-mon-when {
+    color: var(--adm-text-muted);
+    font-variant-numeric: tabular-nums;
+}
+.adm-mon-actor {
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.adm-mon-host    { color: var(--adm-text); }
+.adm-mon-cliente { color: var(--adm-blue); }
+.adm-mon-sistema { color: var(--adm-text-muted); font-style: italic; font-weight: 400; }
+.adm-mon-action { color: var(--adm-text); }
+.adm-mon-target { color: var(--adm-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+@media (max-width: 720px) {
+    .adm-mon-head { display: none; }
+    .adm-mon-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 4px 12px;
+    }
+    .adm-mon-target { grid-column: 1 / -1; }
+}

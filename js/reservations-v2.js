@@ -390,6 +390,7 @@ class ReservationWizard {
                     <div class="rw-payment-details">
                         <p><strong>Bancolombia</strong> — Cuenta Corriente</p>
                         <p>No. Cuenta: <strong>30200003995</strong></p>
+                        <p>Llave Bancolombia: <strong>0071901458</strong></p>
                         <p>NIT: 901857854</p>
                         <p>Titular: MYT RESTAURANT SAS</p>
                     </div>
@@ -875,7 +876,7 @@ class ReservationWizard {
                     </ul>
                     <h4>Métodos de pago</h4>
                     <ul>
-                        <li>Transferencia a <strong>Bancolombia</strong> (Cta. Corriente 30200003995, NIT 901857854, MYT RESTAURANT SAS).</li>
+                        <li>Transferencia a <strong>Bancolombia</strong> (Cta. Corriente 30200003995 · Llave 0071901458, NIT 901857854, MYT RESTAURANT SAS).</li>
                         <li>Efectivo en caja del restaurante.</li>
                         <li>Comprobante obligatorio para validar la reserva.</li>
                     </ul>

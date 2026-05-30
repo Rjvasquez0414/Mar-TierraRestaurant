@@ -57,6 +57,7 @@
         <nav class="adm-nav">
             <button class="adm-tab active" data-view="reservations">Reservas</button>
             <button class="adm-tab" data-view="aforo">Aforo</button>
+            <button class="adm-tab" data-view="monitoreo">Monitoreo</button>
             <button class="adm-tab" data-view="customers">Clientes</button>
             <button class="adm-tab" data-view="stats">Estadísticas</button>
             <button class="adm-tab" data-view="settings">Configuración</button>
@@ -187,6 +188,38 @@
                 </div>
                 <div id="aforo-empty" class="adm-empty" style="display:none"><p>No hay reservas para esta fecha.</p></div>
                 <div id="aforo-grid" class="adm-aforo-grid"></div>
+            </section>
+
+            <!-- ============================================
+                 MONITOREO VIEW — quién hace qué
+                 ============================================ -->
+            <section id="view-monitoreo" class="adm-view">
+                <div class="adm-filters">
+                    <div class="adm-filter-group">
+                        <label>Host</label>
+                        <select id="mon-host"><option value="all">Todos los hosts</option></select>
+                    </div>
+                    <div class="adm-filter-group">
+                        <label>Desde</label>
+                        <input type="date" id="mon-from">
+                    </div>
+                    <div class="adm-filter-group">
+                        <label>Hasta</label>
+                        <input type="date" id="mon-to">
+                    </div>
+                </div>
+                <p class="adm-aforo-hint" style="margin:0 0 16px">Registro de toda la actividad: quién hizo qué y cuándo. Acciones del personal, del cliente (web) y automáticas del sistema.</p>
+                <div id="monitoring-loading" class="adm-loading" style="display:none">
+                    <div class="adm-spinner"></div><span>Cargando actividad...</span>
+                </div>
+                <div id="monitoring-empty" class="adm-empty" style="display:none"><p>No hay actividad en este rango.</p></div>
+                <div class="adm-mon-head">
+                    <span class="adm-mon-when">Fecha</span>
+                    <span class="adm-mon-actor">Host / Origen</span>
+                    <span class="adm-mon-action">Acción</span>
+                    <span class="adm-mon-target">Reserva / Detalle</span>
+                </div>
+                <div id="monitoring-list"></div>
             </section>
 
             <!-- ============================================

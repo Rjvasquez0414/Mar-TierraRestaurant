@@ -189,6 +189,10 @@ class AdminPanel {
         });
 
         document.getElementById('aforo-date')?.addEventListener('change', () => this.loadAforo());
+
+        ['mon-host', 'mon-from', 'mon-to'].forEach(id => {
+            document.getElementById(id)?.addEventListener('change', () => this.loadMonitoring());
+        });
         let searchTimer;
         document.getElementById('filter-search')?.addEventListener('input', () => {
             clearTimeout(searchTimer);
@@ -225,6 +229,7 @@ class AdminPanel {
 
         if (view === 'reservations') this.loadReservations();
         if (view === 'aforo') this.loadAforo();
+        if (view === 'monitoreo') this.loadMonitoring();
         if (view === 'customers') this.loadCustomers();
         if (view === 'stats') this.loadStats();
         if (view === 'settings') this.loadSettings();
@@ -495,7 +500,7 @@ class AdminPanel {
         if (r.status === 'pending') {
             html += `<button class="adm-btn adm-btn-sm adm-btn-confirm" data-action="confirm">Confirmar pago</button>`;
             html += `<button class="adm-btn adm-btn-sm adm-btn-reject" data-action="cancel">Rechazar</button>`;
-            const reminderMsg = encodeURIComponent(`Hola ${name}, te recordamos que tu reserva *${code}* requiere el anticipo de *${deposit}* para ser confirmada.\n\nBancolombia Cta. Corriente: 30200003995\nNIT: 901857854\nTitular: MYT RESTAURANT SAS\n\nEnvia tu comprobante a este chat. Gracias!`);
+            const reminderMsg = encodeURIComponent(`Hola ${name}, te recordamos que tu reserva *${code}* requiere el anticipo de *${deposit}* para ser confirmada.\n\nBancolombia Cta. Corriente: 30200003995\nLlave Bancolombia: 0071901458\nNIT: 901857854\nTitular: MYT RESTAURANT SAS\n\nEnvia tu comprobante a este chat. Gracias!`);
             html += `<button class="adm-btn adm-btn-sm adm-btn-warn" data-action="remind" data-phone="${escapeHtml(phone)}" data-wa-msg="${reminderMsg}" data-email="${escapeHtml(r.customer?.email || '')}" data-customer-name="${escapeHtml(name)}" data-code="${escapeHtml(code)}" data-deposit="${deposit}" data-date="${date}" data-time="${time}" data-party="${r.party_size}" data-salon="${escapeHtml(r.salon?.name || '')}">Recordar pago</button>`;
         }
 
@@ -1219,6 +1224,16 @@ class AdminPanel {
 
         if (error) { alert('Error: ' + error.message); return; }
 
+        // Registro de monitoreo (no bloquea si la tabla aún no es nullable)
+        try {
+            const salonName = (this.salons.find(s => s.id === salonId) || {}).name || 'Todos';
+            await sb.from('reservation_logs').insert({
+                reservation_id: null, action: 'slot_blocked',
+                details: { salon: salonName, date, reason, full_day: fullDay },
+                performed_by: this.user.id
+            });
+        } catch (e) { /* no bloqueante */ }
+
         document.getElementById('block-slot-form').reset();
         this.loadBlockedSlots();
     }
@@ -1246,7 +1261,15 @@ class AdminPanel {
     }
 
     async removeBlock(id) {
+        const { data: blk } = await sb.from('blocked_slots').select('*, salon:salons(name)').eq('id', id).maybeSingle();
         await sb.from('blocked_slots').delete().eq('id', id);
+        try {
+            await sb.from('reservation_logs').insert({
+                reservation_id: null, action: 'slot_unblocked',
+                details: { salon: blk?.salon?.name || 'Todos', date: blk?.blocked_date, reason: blk?.reason },
+                performed_by: this.user.id
+            });
+        } catch (e) { /* no bloqueante */ }
         this.loadBlockedSlots();
     }
 
@@ -1279,6 +1302,95 @@ class AdminPanel {
                 ${status}
             </div>`;
         }).join('');
+    }
+
+    // ================================================================
+    // MONITOREO — registro de actividad (quién hace qué)
+    // ================================================================
+
+    async loadMonitoring() {
+        // Poblar el filtro de hosts una sola vez
+        const hostSel = document.getElementById('mon-host');
+        if (hostSel && !hostSel.dataset.loaded) {
+            try {
+                const { data: staff } = await sb.rpc('get_staff');
+                if (Array.isArray(staff)) {
+                    hostSel.innerHTML = '<option value="all">Todos los hosts</option>' +
+                        staff.map(s => `<option value="${s.user_id}">${escapeHtml(s.name)}</option>`).join('');
+                    hostSel.dataset.loaded = '1';
+                }
+            } catch (e) { /* sin permisos o RPC ausente */ }
+        }
+
+        const list = document.getElementById('monitoring-list');
+        const empty = document.getElementById('monitoring-empty');
+        const loading = document.getElementById('monitoring-loading');
+        loading.style.display = 'flex';
+        list.innerHTML = '';
+        empty.style.display = 'none';
+
+        const host = document.getElementById('mon-host')?.value;
+        const from = document.getElementById('mon-from')?.value || null;
+        const to = document.getElementById('mon-to')?.value || null;
+
+        const params = { p_limit: 300 };
+        if (host && host !== 'all') params.p_performed_by = host;
+        if (from) params.p_from = from;
+        if (to) params.p_to = to;
+
+        let data, error;
+        try {
+            ({ data, error } = await sb.rpc('get_activity_log', params));
+        } catch (e) { error = e; }
+        loading.style.display = 'none';
+
+        if (error) {
+            empty.style.display = 'block';
+            empty.querySelector('p').textContent = 'No se pudo cargar el monitoreo (¿corriste migration-010?).';
+            return;
+        }
+        if (!data || data.length === 0) { empty.style.display = 'block'; return; }
+
+        list.innerHTML = data.map(log => this.renderActivityRow(log)).join('');
+    }
+
+    activityActor(log) {
+        if (log.staff_name) return { name: escapeHtml(log.staff_name), cls: 'host' };
+        if (log.performed_by) return { name: escapeHtml(log.staff_email || 'Staff'), cls: 'host' };
+        if ((log.action || '').startsWith('customer_')) return { name: 'Cliente', cls: 'cliente' };
+        if (log.action === 'created') return { name: 'Cliente (web)', cls: 'cliente' };
+        if (log.action === 'expired') return { name: 'Sistema (auto)', cls: 'sistema' };
+        return { name: '—', cls: 'sistema' };
+    }
+
+    activityAction(action) {
+        const map = {
+            created: 'Creó reserva', confirm: 'Confirmó pago', cancel: 'Canceló',
+            seated: 'Marcó en mesa', completed: 'Completó', no_show: 'Marcó no-show',
+            customer_cancelled: 'Cliente canceló', customer_modified: 'Cliente modificó',
+            expired: 'Expiró sin pago', slot_blocked: 'Bloqueó fecha', slot_unblocked: 'Desbloqueó fecha'
+        };
+        return map[action] || action;
+    }
+
+    renderActivityRow(log) {
+        const d = new Date(log.created_at);
+        const when = d.toLocaleString('es-CO', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+        const actor = this.activityActor(log);
+        let target = '';
+        if (log.reservation_code) {
+            target = `<strong>${escapeHtml(log.reservation_code)}</strong>${log.customer_name ? ' · ' + escapeHtml(log.customer_name) : ''}`;
+        } else if (log.action === 'slot_blocked' || log.action === 'slot_unblocked') {
+            const det = log.details || {};
+            target = `${escapeHtml(det.salon || '')}${det.date ? ' · ' + escapeHtml(det.date) : ''}`;
+        }
+        return `
+        <div class="adm-mon-row">
+            <span class="adm-mon-when">${when}</span>
+            <span class="adm-mon-actor adm-mon-${actor.cls}">${actor.name}</span>
+            <span class="adm-mon-action">${escapeHtml(this.activityAction(log.action))}</span>
+            <span class="adm-mon-target">${target}</span>
+        </div>`;
     }
 
     // ================================================================
