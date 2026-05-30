@@ -119,7 +119,13 @@ class AdminPanel {
     async showDashboard() {
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
-        document.getElementById('admin-name').textContent = this.user.user_metadata?.name || this.user.email;
+        // Mostrar el nombre del host (staff_roles) en el encabezado
+        let displayName = this.user.user_metadata?.name || this.user.email;
+        try {
+            const { data: me } = await sb.from('staff_roles').select('name').eq('user_id', this.user.id).maybeSingle();
+            if (me?.name) displayName = me.name;
+        } catch (e) { /* fallback al email */ }
+        document.getElementById('admin-name').textContent = displayName;
 
         await this.loadSalons();
         this.switchView('reservations');
