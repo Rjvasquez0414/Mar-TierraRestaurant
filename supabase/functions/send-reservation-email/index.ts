@@ -308,6 +308,68 @@ serve(async (req) => {
       });
     }
 
+    // Reservation confirmed email (pago verificado por el admin)
+    if (data.type === 'reservation_confirmed') {
+      const confirmedHtml = `
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#F5F0E8;font-family:Georgia,'Times New Roman',serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F5F0E8;padding:40px 20px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="background:#FDFBF7;border:1px solid rgba(43,24,16,0.08);border-radius:4px;">
+        <tr><td style="padding:40px 40px 24px;text-align:center;border-bottom:1px solid rgba(43,24,16,0.08);">
+          <p style="margin:0 0 8px;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#8B8680;">Mar &amp; Tierra Restaurant</p>
+          <h1 style="margin:0;font-size:28px;font-weight:normal;color:#2B1810;letter-spacing:-0.5px;">¡Reserva Confirmada!</h1>
+        </td></tr>
+        <tr><td style="padding:28px 40px 0;text-align:center;">
+          <p style="margin:0 0 4px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8B8680;">Codigo de reserva</p>
+          <p style="margin:0;font-size:20px;font-weight:bold;color:#8B6914;letter-spacing:1px;">${data.reservationCode}</p>
+        </td></tr>
+        <tr><td style="padding:24px 40px 0;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(74,110,90,0.10);border:1px solid rgba(74,110,90,0.30);border-radius:4px;">
+            <tr><td style="padding:16px 20px;">
+              <p style="margin:0;font-size:14px;color:#2B1810;line-height:1.6;">Confirmamos tu pago. <strong>Tu reserva está asegurada.</strong> Te esperamos.</p>
+            </td></tr>
+          </table>
+        </td></tr>
+        <tr><td style="padding:24px 40px;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid rgba(43,24,16,0.06);border-radius:4px;">
+            <tr><td style="padding:14px 20px;border-bottom:1px solid rgba(43,24,16,0.06);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8B8680;width:120px;">Fecha</td><td style="padding:14px 20px;border-bottom:1px solid rgba(43,24,16,0.06);font-size:15px;color:#2B1810;">${data.date}</td></tr>
+            <tr><td style="padding:14px 20px;border-bottom:1px solid rgba(43,24,16,0.06);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8B8680;">Hora</td><td style="padding:14px 20px;border-bottom:1px solid rgba(43,24,16,0.06);font-size:15px;color:#2B1810;">${data.time}</td></tr>
+            <tr><td style="padding:14px 20px;border-bottom:1px solid rgba(43,24,16,0.06);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8B8680;">Personas</td><td style="padding:14px 20px;border-bottom:1px solid rgba(43,24,16,0.06);font-size:15px;color:#2B1810;">${data.partySize}</td></tr>
+            <tr><td style="padding:14px 20px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8B8680;">Salon</td><td style="padding:14px 20px;font-size:15px;color:#2B1810;">${data.salonName}</td></tr>
+          </table>
+        </td></tr>
+        <tr><td style="padding:0 40px 28px;text-align:center;">
+          <a href="https://marytierrarestaurantbga.com/mi-reserva.html?code=${data.reservationCode}" style="display:inline-block;padding:12px 28px;background:#2B1810;color:#FDFBF7;text-decoration:none;border-radius:3px;font-family:Arial,sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;">Ver mi reserva</a>
+        </td></tr>
+        <tr><td style="padding:24px 40px;border-top:1px solid rgba(43,24,16,0.08);text-align:center;">
+          <p style="margin:0 0 6px;font-size:13px;font-style:italic;color:#8B8680;">Donde el mar y la tierra se complementan.</p>
+          <p style="margin:0;font-size:12px;color:#8B8680;">+57 300 826 3403 &middot; Cra 35a #46-102, Bucaramanga</p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+      const res = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${RESEND_API_KEY}` },
+        body: JSON.stringify({
+          from: `Mar&Tierra Restaurant <${FROM_EMAIL}>`,
+          to: [recipient],
+          subject: `Reserva confirmada - ${data.reservationCode} — Mar&Tierra Restaurant`,
+          html: confirmedHtml,
+        }),
+      });
+      const result = await res.json();
+      return new Response(JSON.stringify({ success: true, id: result.id }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200,
+      });
+    }
+
     // Default: new reservation confirmation
     const emailData: ReservationEmail = data;
 

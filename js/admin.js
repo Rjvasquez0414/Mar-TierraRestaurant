@@ -503,7 +503,7 @@ class AdminPanel {
             html += `<button class="adm-btn adm-btn-sm adm-btn-info" data-action="seated">Marcar en mesa</button>`;
             html += `<button class="adm-btn adm-btn-sm adm-btn-reject" data-action="cancel">Cancelar</button>`;
             const confirmMsg = encodeURIComponent(`Hola ${name}, tu reserva *${code}* esta confirmada.\n\n- Fecha: ${date}\n- Hora: ${time}\n- Personas: ${r.party_size}\n- Salon: ${r.salon?.name || ''}\n\nTe esperamos en Mar&Tierra!`);
-            html += `<a class="adm-btn adm-btn-sm adm-btn-confirm" href="https://wa.me/${phone}?text=${confirmMsg}" target="_blank" rel="noopener">WhatsApp confirmacion</a>`;
+            html += `<a class="adm-btn adm-btn-sm adm-btn-confirm" href="https://wa.me/${phone}?text=${confirmMsg}" target="_blank" rel="noopener">Reenviar confirmación</a>`;
         }
 
         if (r.status === 'seated') {
@@ -522,11 +522,73 @@ class AdminPanel {
             btn.addEventListener('click', () => {
                 if (btn.dataset.action === 'remind') {
                     this.sendPaymentReminder(btn);
+                } else if (btn.dataset.action === 'confirm') {
+                    this.confirmPayment(r);
                 } else {
                     this.updateReservation(r.id, btn.dataset.action);
                 }
             });
         });
+    }
+
+    // Confirmar pago: en un solo clic actualiza, envía el correo de
+    // confirmación y abre WhatsApp con el mensaje listo para enviar.
+    async confirmPayment(r) {
+        if (this.actionInProgress) return;
+        this.actionInProgress = true;
+
+        // Abrir WhatsApp YA, dentro del gesto del click (si va después de un
+        // await, el navegador lo bloquea como popup).
+        const phone = (r.customer?.phone || '').replace(/\D/g, '');
+        const waWin = phone ? window.open('', '_blank') : null;
+
+        try {
+            const updates = { status: 'confirmed', payment_status: 'verified', expires_at: null };
+            const { error } = await sb.from('reservations').update(updates).eq('id', r.id);
+            if (error) { alert('Error al confirmar el pago.'); if (waWin) waWin.close(); return; }
+
+            await sb.from('reservation_logs').insert({
+                reservation_id: r.id, action: 'confirm', details: updates, performed_by: this.user.id
+            });
+
+            this.sendConfirmedEmail(r);
+            if (waWin) waWin.location.href = `https://wa.me/${phone.length === 10 ? '57' + phone : phone}?text=${this.confirmedWaText(r)}`;
+
+            document.getElementById('reservation-modal').style.display = 'none';
+            this.loadReservations();
+        } catch (e) {
+            if (waWin) waWin.close();
+            alert('Error de conexión. Intenta de nuevo.');
+        } finally {
+            this.actionInProgress = false;
+        }
+    }
+
+    confirmedWaText(r) {
+        const date = new Date(r.reservation_date + 'T12:00:00').toLocaleDateString('es-CO', { weekday: 'long', month: 'long', day: 'numeric' });
+        const time = (r.reservation_time || '').slice(0, 5);
+        return encodeURIComponent(
+            `Hola ${r.customer?.name || ''}, tu reserva ${r.reservation_code} está CONFIRMADA.\n\n`
+            + `- Fecha: ${date}\n- Hora: ${time}\n- Personas: ${r.party_size}\n- Salon: ${r.salon?.name || ''}\n\n`
+            + `Te esperamos en Mar&Tierra!`
+        );
+    }
+
+    async sendConfirmedEmail(r) {
+        if (!r?.customer?.email) return;
+        const date = new Date(r.reservation_date + 'T12:00:00').toLocaleDateString('es-CO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        try {
+            await sb.functions.invoke('send-reservation-email', {
+                body: {
+                    type: 'reservation_confirmed',
+                    customerName: r.customer?.name || '',
+                    reservationCode: r.reservation_code,
+                    date, time: (r.reservation_time || '').slice(0, 5),
+                    partySize: r.party_size,
+                    salonName: r.salon?.name || ''
+                }
+            });
+        } catch (e) { console.warn('Confirmed email failed:', e); }
     }
 
     async updateReservation(id, action) {
