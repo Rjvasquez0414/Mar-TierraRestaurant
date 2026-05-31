@@ -53,3 +53,21 @@ COMMIT;
 SELECT r.reservation_code, r.status, c.name
 FROM reservations r JOIN customers c ON c.id = r.customer_id
 ORDER BY r.reservation_code;
+
+
+-- =====================================================================
+-- ADICIONAL (2026-05-31): borrar 2 clientes de prueba más
+--   Raul Andres Beltran Contreras (3004235498)  · MT-20260530-0127
+--   Nicolas Antonio               (3245342124)  · MT-20260530-0128
+-- Quedan 5 reservas reales: Andres Martinez, Diana Lineth pino,
+--   Fabián Díaz guerrero, Yuliana Herrera, Andrés felipe navas.
+-- =====================================================================
+
+DELETE FROM reservations
+WHERE customer_id IN (SELECT id FROM customers WHERE phone IN ('3004235498','3245342124'));
+
+DELETE FROM customers WHERE phone IN ('3004235498','3245342124');
+
+-- Verificación: deben quedar 5 reservas / 5 clientes
+SELECT (SELECT count(*) FROM reservations) AS reservas_restantes,
+       (SELECT count(*) FROM customers)    AS clientes_restantes;
