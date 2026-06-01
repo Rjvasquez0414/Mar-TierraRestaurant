@@ -76,6 +76,19 @@ class ReservationWizard {
             const mm = String(m % 60).padStart(2, '0');
             slots.push(`${hh}:${mm}`);
         }
+
+        // Si la fecha es HOY, ocultar los horarios que ya pasaron, con un
+        // margen mínimo de anticipación (en minutos).
+        const now = new Date();
+        if (dateStr === this.toLocalDate(now)) {
+            const SAME_DAY_LEAD_MIN = 30;
+            const cutoff = now.getHours() * 60 + now.getMinutes() + SAME_DAY_LEAD_MIN;
+            return slots.filter(t => {
+                const [hh, mm] = t.split(':').map(Number);
+                return hh * 60 + mm >= cutoff;
+            });
+        }
+
         return slots;
     }
 
@@ -98,9 +111,9 @@ class ReservationWizard {
     }
 
     getMinDate() {
-        const d = new Date();
-        d.setDate(d.getDate() + 1);
-        return this.toLocalDate(d);
+        // Permite reservar para HOY (mismo día). Los horarios ya pasados se
+        // filtran en generateTimeSlots.
+        return this.toLocalDate(new Date());
     }
 
     getMaxDate() {
