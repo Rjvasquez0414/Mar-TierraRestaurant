@@ -1390,3 +1390,52 @@ body {
     }
     .adm-mon-target { grid-column: 1 / -1; }
 }
+
+
+/* =====================================================================
+   REAGENDAR (cambiar fecha/hora) — modal de detalle
+   ===================================================================== */
+.adm-reschedule {
+    margin-top: 16px;
+    padding: 16px;
+    background: rgba(107, 142, 163, 0.08);
+    border: 1px solid rgba(107, 142, 163, 0.25);
+    border-radius: 8px;
+}
+.adm-reschedule h4 {
+    margin: 0 0 12px;
+    font-family: var(--adm-sans);
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--adm-text-muted);
+}
+.adm-resched-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+.adm-resched-fields input[type="date"],
+.adm-resched-fields select {
+    padding: 8px 10px;
+    border: 1px solid var(--adm-border);
+    border-radius: 6px;
+    background: var(--adm-surface);
+    font-family: var(--adm-sans);
+    font-size: 0.85rem;
+    color: var(--adm-text);
+}
+.adm-resched-msg {
+    margin: 10px 0 0;
+    font-family: var(--adm-sans);
+    font-size: 0.82rem;
+    color: var(--adm-red);
+    min-height: 1em;
+}
+.adm-resched-hint {
+    margin: 8px 0 0;
+    font-family: var(--adm-sans);
+    font-size: 0.74rem;
+    color: var(--adm-text-muted);
+}

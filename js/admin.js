@@ -474,6 +474,18 @@ class AdminPanel {
 
             <div class="adm-detail-actions" id="detail-actions"></div>
 
+            <div id="reschedule-form" class="adm-reschedule" style="display:none">
+                <h4>Cambiar fecha y hora</h4>
+                <div class="adm-resched-fields">
+                    <input type="date" id="resched-date">
+                    <select id="resched-time"><option value="">Hora</option></select>
+                    <button class="adm-btn adm-btn-sm adm-btn-confirm" id="resched-save">Guardar cambio</button>
+                    <button class="adm-btn adm-btn-sm adm-btn-ghost" id="resched-cancel">Cancelar</button>
+                </div>
+                <p id="resched-msg" class="adm-resched-msg"></p>
+                <p class="adm-resched-hint">Se re-valida el aforo del nuevo turno. Tras guardar, usa "Notificar al cliente" para avisarle por WhatsApp.</p>
+            </div>
+
             ${logs && logs.length ? `
                 <div class="adm-detail-logs">
                     <h4>Historial</h4>
@@ -522,6 +534,9 @@ class AdminPanel {
         }
 
         if (['pending', 'confirmed'].includes(r.status)) {
+            html += `<button class="adm-btn adm-btn-sm adm-btn-info" data-action="reschedule">Cambiar fecha/hora</button>`;
+            const notifyMsg = encodeURIComponent(`Hola ${name}, estos son los datos de tu reserva *${code}* en Mar&Tierra:\n\n- Fecha: ${date}\n- Hora: ${time}\n- Personas: ${r.party_size}\n- Salon: ${r.salon?.name || ''}\n\nTe esperamos!`);
+            html += `<a class="adm-btn adm-btn-sm adm-btn-confirm" href="https://wa.me/${phone}?text=${notifyMsg}" target="_blank" rel="noopener">Notificar al cliente</a>`;
             html += `<button class="adm-btn adm-btn-sm adm-btn-reject" data-action="no_show">No-show</button>`;
             const noAvailMsg = encodeURIComponent(`Hola ${name}, lamentamos informarte que no tenemos disponibilidad para tu reserva *${code}* el ${date} a las ${time}.\n\nTe gustaria que busquemos otra fecha u horario? Estamos para ayudarte.`);
             html += `<a class="adm-btn adm-btn-sm adm-btn-ghost" href="https://wa.me/${phone}?text=${noAvailMsg}" target="_blank" rel="noopener">Sin disponibilidad</a>`;
@@ -535,11 +550,105 @@ class AdminPanel {
                     this.sendPaymentReminder(btn);
                 } else if (btn.dataset.action === 'confirm') {
                     this.confirmPayment(r);
+                } else if (btn.dataset.action === 'reschedule') {
+                    this.openReschedule(r);
                 } else {
                     this.updateReservation(r.id, btn.dataset.action);
                 }
             });
         });
+    }
+
+    // ================================================================
+    // REAGENDAR (cambiar fecha/hora) — admin
+    // ================================================================
+
+    // Horario reservable por día (debe coincidir con el wizard)
+    admGetHours(dayOfWeek) {
+        return ({
+            0: { open: '11:30', lastSlot: '16:00' },
+            1: { open: '11:30', lastSlot: '19:00' },
+            2: { open: '11:30', lastSlot: '20:00' },
+            3: { open: '11:30', lastSlot: '20:00' },
+            4: { open: '11:30', lastSlot: '20:00' },
+            5: { open: '11:30', lastSlot: '21:00' },
+            6: { open: '11:30', lastSlot: '21:00' }
+        })[dayOfWeek];
+    }
+
+    admGenerateTimeSlots(dateStr) {
+        const [y, m, d] = dateStr.split('-').map(Number);
+        const h = this.admGetHours(new Date(y, m - 1, d).getDay());
+        if (!h) return [];
+        const slots = [];
+        const [oH, oM] = h.open.split(':').map(Number);
+        const [lH, lM] = h.lastSlot.split(':').map(Number);
+        for (let min = oH * 60 + oM; min <= lH * 60 + lM; min += 30) {
+            slots.push(String(Math.floor(min / 60)).padStart(2, '0') + ':' + String(min % 60).padStart(2, '0'));
+        }
+        return slots;
+    }
+
+    fmtSlot(t) {
+        const [h, m] = t.split(':').map(Number);
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+        return `${h12}:${String(m).padStart(2, '0')} ${ampm}`;
+    }
+
+    openReschedule(r) {
+        const form = document.getElementById('reschedule-form');
+        if (!form) return;
+        form.style.display = 'block';
+        const dateInput = document.getElementById('resched-date');
+        const timeSel = document.getElementById('resched-time');
+        const msg = document.getElementById('resched-msg');
+        msg.textContent = '';
+        dateInput.min = getLocalDateString(new Date());
+        dateInput.value = r.reservation_date;
+
+        const fillTimes = () => {
+            const slots = dateInput.value ? this.admGenerateTimeSlots(dateInput.value) : [];
+            const cur = (r.reservation_time || '').slice(0, 5);
+            timeSel.innerHTML = slots.length
+                ? slots.map(t => `<option value="${t}" ${t === cur ? 'selected' : ''}>${this.fmtSlot(t)}</option>`).join('')
+                : '<option value="">Sin horarios ese día</option>';
+        };
+        fillTimes();
+        dateInput.onchange = fillTimes;
+
+        document.getElementById('resched-cancel').onclick = () => { form.style.display = 'none'; };
+        document.getElementById('resched-save').onclick = () => this.doReschedule(r.id);
+    }
+
+    async doReschedule(id) {
+        if (this.actionInProgress) return;
+        const dateInput = document.getElementById('resched-date');
+        const timeSel = document.getElementById('resched-time');
+        const msg = document.getElementById('resched-msg');
+        const newDate = dateInput.value, newTime = timeSel.value;
+        if (!newDate || !newTime) { msg.textContent = 'Selecciona fecha y hora.'; return; }
+        this.actionInProgress = true;
+        const btn = document.getElementById('resched-save');
+        btn.disabled = true; btn.textContent = 'Guardando...';
+        try {
+            const { data, error } = await sb.rpc('admin_reschedule_reservation', {
+                p_reservation_id: id, p_new_date: newDate, p_new_time: newTime
+            });
+            if (error) { msg.textContent = 'Error al reagendar.'; return; }
+            if (!data?.success) { msg.textContent = data?.error || 'No se pudo reagendar.'; return; }
+            // Refrescar el detalle con los datos nuevos
+            const { data: fresh } = await sb.from('reservations')
+                .select('*, customer:customers(name, phone, email), salon:salons(name, slug)').eq('id', id).single();
+            document.getElementById('reschedule-form').style.display = 'none';
+            this.loadReservations();
+            if (fresh) this.showReservationDetail(fresh.id, [fresh]);
+        } catch (e) {
+            msg.textContent = 'Error de conexión. Intenta de nuevo.';
+        } finally {
+            this.actionInProgress = false;
+            btn.disabled = false; btn.textContent = 'Guardar cambio';
+        }
     }
 
     // Confirmar pago: en un solo clic actualiza, envía el correo de
@@ -1395,7 +1504,8 @@ class AdminPanel {
             created: 'Creó reserva', confirm: 'Confirmó pago', cancel: 'Canceló',
             seated: 'Marcó en mesa', completed: 'Completó', no_show: 'Marcó no-show',
             customer_cancelled: 'Cliente canceló', customer_modified: 'Cliente modificó',
-            expired: 'Expiró sin pago', slot_blocked: 'Bloqueó fecha', slot_unblocked: 'Desbloqueó fecha'
+            expired: 'Expiró sin pago', slot_blocked: 'Bloqueó fecha', slot_unblocked: 'Desbloqueó fecha',
+            admin_rescheduled: 'Cambió fecha/hora'
         };
         return map[action] || action;
     }
