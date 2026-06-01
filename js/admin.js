@@ -653,14 +653,29 @@ class AdminPanel {
 
     // Confirmar pago: en un solo clic actualiza, envía el correo de
     // confirmación y abre WhatsApp con el mensaje listo para enviar.
+    // Abre WhatsApp como un <a> real (no window.open). Hecho dentro del gesto
+    // del clic, abre la APP de WhatsApp en vez de la versión web, y no lo
+    // bloquea el popup blocker. El mensaje queda prefijado; el admin igual
+    // presiona "enviar" manualmente, así que abrirlo no envía nada solo.
+    openWhatsApp(rawPhone, encodedText) {
+        const phone = (rawPhone || '').replace(/\D/g, '');
+        if (!phone) return;
+        const intl = phone.length === 10 ? '57' + phone : phone;
+        const a = document.createElement('a');
+        a.href = `https://wa.me/${intl}?text=${encodedText}`;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    }
+
     async confirmPayment(r) {
         if (this.actionInProgress) return;
         this.actionInProgress = true;
 
-        // Abrir WhatsApp YA, dentro del gesto del click (si va después de un
-        // await, el navegador lo bloquea como popup).
-        const phone = (r.customer?.phone || '').replace(/\D/g, '');
-        const waWin = phone ? window.open('', '_blank') : null;
+        // WhatsApp dentro del gesto del clic (abre la app, no la web).
+        this.openWhatsApp(r.customer?.phone, this.confirmedWaText(r));
 
         try {
             const updates = { status: 'confirmed', payment_status: 'verified', expires_at: null };
@@ -668,9 +683,8 @@ class AdminPanel {
             // carrera con otro host o con la expiración automática).
             const { data: upd, error } = await sb.from('reservations')
                 .update(updates).eq('id', r.id).eq('status', 'pending').select('id');
-            if (error) { alert('Error al confirmar el pago.'); if (waWin) waWin.close(); return; }
+            if (error) { alert('Error al confirmar el pago.'); return; }
             if (!upd || upd.length === 0) {
-                if (waWin) waWin.close();
                 alert('La reserva ya no está pendiente (pudo cambiarla otro host o expirar). Actualiza la lista.');
                 this.loadReservations();
                 return;
@@ -683,12 +697,9 @@ class AdminPanel {
             } catch (e) { /* el log no debe bloquear la acción */ }
 
             this.sendConfirmedEmail(r);
-            if (waWin) waWin.location.href = `https://wa.me/${phone.length === 10 ? '57' + phone : phone}?text=${this.confirmedWaText(r)}`;
-
             document.getElementById('reservation-modal').style.display = 'none';
             this.loadReservations();
         } catch (e) {
-            if (waWin) waWin.close();
             alert('Error de conexión. Intenta de nuevo.');
         } finally {
             this.actionInProgress = false;
@@ -795,8 +806,8 @@ class AdminPanel {
         const party = btn.dataset.party;
         const salon = btn.dataset.salon;
 
-        // Open WhatsApp
-        window.open(`https://wa.me/${phone}?text=${waMsg}`, '_blank', 'noopener,noreferrer');
+        // Abrir WhatsApp (anchor real → app, no web)
+        this.openWhatsApp(phone, waMsg);
 
         // Send email reminder
         if (email) {
@@ -972,10 +983,8 @@ class AdminPanel {
         if (!confirm('¿Liberar el cupo de esta reserva? Se cancelará (sin pago), el cupo quedará disponible y se le avisará al cliente por correo y WhatsApp.')) return;
         const r = (this.aforoReservations || []).find(x => x.id === id);
 
-        // Abrir la pestaña de WhatsApp YA, dentro del gesto del click. Si se
-        // abre después de un await, el navegador la bloquea como popup.
-        const phone = (r?.customer?.phone || '').replace(/\D/g, '');
-        const waWin = (r && phone) ? window.open('', '_blank') : null;
+        // WhatsApp dentro del gesto del clic (abre la app, no la web).
+        if (r) this.openWhatsApp(r.customer?.phone, this.releaseWaText(r));
 
         this.actionInProgress = true;
         try {
@@ -986,9 +995,8 @@ class AdminPanel {
                 payment_status: 'rejected',
                 cancellation_reason: 'Liberado por admin (cupo, sin pago)'
             }).eq('id', id).eq('status', 'pending').select('id');
-            if (error) { alert('Error al liberar el cupo.'); if (waWin) waWin.close(); return; }
+            if (error) { alert('Error al liberar el cupo.'); return; }
             if (!upd || upd.length === 0) {
-                if (waWin) waWin.close();
                 alert('La reserva ya no está pendiente (pudo confirmarse o cambiar). Actualiza el aforo.');
                 this.loadAforo();
                 return;
@@ -1001,15 +1009,9 @@ class AdminPanel {
                 });
             } catch (e) { /* el log no debe bloquear la acción */ }
 
-            // Notificar al cliente: correo automático + WhatsApp prefijado
-            if (r) {
-                this.sendReleaseEmail(r);
-                if (waWin) waWin.location.href = `https://wa.me/${phone.length === 10 ? '57' + phone : phone}?text=${this.releaseWaText(r)}`;
-            }
-
+            if (r) this.sendReleaseEmail(r);
             this.loadAforo();
         } catch (e) {
-            if (waWin) waWin.close();
             alert('Error de conexión. Intenta de nuevo.');
         } finally {
             this.actionInProgress = false;
