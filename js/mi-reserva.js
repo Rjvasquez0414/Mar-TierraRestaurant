@@ -11,7 +11,7 @@ const STATUS_LABELS = {
     no_show: 'No se presento'
 };
 
-const TYPE_LABELS = { free: 'Reserva Free', plata: 'Plan Plata', oro: 'Plan Oro', luxury: 'Plan Luxury' };
+const TYPE_LABELS = { free: 'Reserva Free', plata: 'Plan Plata', oro: 'Plan Oro', luxury: 'Plan Luxury', personalizada: 'Reserva Personalizada' };
 
 // open = primera hora reservable, lastSlot = última hora reservable.
 // Debe coincidir con getHours() de js/reservations-v2.js.

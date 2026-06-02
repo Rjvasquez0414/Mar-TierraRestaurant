@@ -199,6 +199,11 @@ class AdminPanel {
         ['mon-host', 'mon-from', 'mon-to'].forEach(id => {
             document.getElementById(id)?.addEventListener('change', () => this.loadMonitoring());
         });
+
+        document.getElementById('btn-new-reservation')?.addEventListener('click', () => this.openCreateReservation());
+        document.getElementById('nr-cancel')?.addEventListener('click', () => this.closeCreate());
+        document.getElementById('close-create-modal')?.addEventListener('click', () => this.closeCreate());
+        document.getElementById('nr-save')?.addEventListener('click', () => this.submitCreateReservation());
         let searchTimer;
         document.getElementById('filter-search')?.addEventListener('input', () => {
             clearTimeout(searchTimer);
@@ -362,13 +367,13 @@ class AdminPanel {
             pending: 'Pendiente', confirmed: 'Confirmada', seated: 'En mesa',
             completed: 'Completada', cancelled: 'Cancelada', no_show: 'No-show'
         };
-        const typeLabels = { free: 'Free', plata: 'Plata', oro: 'Oro', luxury: 'Luxury' };
+        const typeLabels = { free: 'Free', plata: 'Plata', oro: 'Oro', luxury: 'Luxury', personalizada: 'Personalizada' };
 
         return `
-            <div class="adm-res-card" data-id="${r.id}">
+            <div class="adm-res-card adm-res-type-${r.reservation_type}" data-id="${r.id}">
                 <span class="adm-res-code">${r.reservation_code}</span>
                 <div class="adm-res-info">
-                    <span class="adm-res-name">${escapeHtml(r.customer?.name) || 'Sin nombre'}${r.has_valet ? ' <span style="background:rgba(212,175,55,0.15);color:#8B6914;font-size:0.52rem;letter-spacing:0.18em;text-transform:uppercase;padding:2px 6px;border-radius:2px;margin-left:6px;vertical-align:middle">Valet ' + (r.valet_vehicles || 1) + '</span>' : ''}</span>
+                    <span class="adm-res-name">${escapeHtml(r.customer?.name) || 'Sin nombre'}${r.has_valet ? ' <span style="background:rgba(212,175,55,0.15);color:#8B6914;font-size:0.52rem;letter-spacing:0.18em;text-transform:uppercase;padding:2px 6px;border-radius:2px;margin-left:6px;vertical-align:middle">Valet ' + (r.valet_vehicles || 1) + '</span>' : ''}${r.table_label ? ' <span style="background:rgba(107,142,163,0.15);color:#4A6E7A;font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;padding:2px 6px;border-radius:2px;margin-left:6px;vertical-align:middle">' + escapeHtml(r.table_label) + '</span>' : ''}</span>
                     <span class="adm-res-meta">${escapeHtml(r.customer?.phone) || ''} · ${r.party_size} pers. · ${typeLabels[r.reservation_type] || r.reservation_type} · $${(r.deposit_amount || 0).toLocaleString('es-CO')}</span>
                 </div>
                 <div class="adm-res-details">
@@ -415,7 +420,7 @@ class AdminPanel {
             pending: 'Pendiente', confirmed: 'Confirmada', seated: 'En mesa',
             completed: 'Completada', cancelled: 'Cancelada', no_show: 'No-show'
         };
-        const typeLabels = { free: 'Free', plata: 'Plata', oro: 'Oro', luxury: 'Luxury' };
+        const typeLabels = { free: 'Free', plata: 'Plata', oro: 'Oro', luxury: 'Luxury', personalizada: 'Personalizada' };
         const date = new Date(r.reservation_date + 'T12:00:00').toLocaleDateString('es-CO', {
             weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
         });
@@ -445,6 +450,10 @@ class AdminPanel {
                 <div class="adm-detail-item">
                     <span class="adm-detail-label">Salón</span>
                     <span class="adm-detail-value">${r.salon?.name || '—'}</span>
+                </div>
+                <div class="adm-detail-item">
+                    <span class="adm-detail-label">Mesa</span>
+                    <span class="adm-detail-value">${r.table_label ? escapeHtml(r.table_label) : '—'}</span>
                 </div>
                 <div class="adm-detail-item">
                     <span class="adm-detail-label">Tipo</span>
@@ -484,6 +493,31 @@ class AdminPanel {
                 </div>
                 <p id="resched-msg" class="adm-resched-msg"></p>
                 <p class="adm-resched-hint">Se re-valida el aforo del nuevo turno. Tras guardar, usa "Notificar al cliente" para avisarle por WhatsApp.</p>
+            </div>
+
+            <div id="table-form" class="adm-reschedule" style="display:none">
+                <h4>Asignar mesa</h4>
+                <div class="adm-resched-fields">
+                    <select id="table-select"><option value="">Sin mesa</option></select>
+                    <button class="adm-btn adm-btn-sm adm-btn-confirm" id="table-save">Guardar mesa</button>
+                    <button class="adm-btn adm-btn-sm adm-btn-ghost" id="table-cancel">Cancelar</button>
+                </div>
+                <p id="table-msg" class="adm-resched-msg"></p>
+                <p class="adm-resched-hint">Solo para uso interno; el cliente no la ve.</p>
+            </div>
+
+            <div id="party-form" class="adm-reschedule" style="display:none">
+                <h4>Modificar cantidad de personas</h4>
+                <div class="adm-resched-fields">
+                    <input type="number" id="party-input" min="1" max="60" style="width:90px">
+                    <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--adm-text-muted)">
+                        <input type="checkbox" id="party-force"> Forzar aforo
+                    </label>
+                    <button class="adm-btn adm-btn-sm adm-btn-confirm" id="party-save">Guardar</button>
+                    <button class="adm-btn adm-btn-sm adm-btn-ghost" id="party-cancel">Cancelar</button>
+                </div>
+                <p id="party-msg" class="adm-resched-msg"></p>
+                <p class="adm-resched-hint">Re-valida el aforo del turno salvo que fuerces.</p>
             </div>
 
             ${logs && logs.length ? `
@@ -542,6 +576,11 @@ class AdminPanel {
             html += `<a class="adm-btn adm-btn-sm adm-btn-ghost" href="https://wa.me/${phone}?text=${noAvailMsg}" target="_blank" rel="noopener">Sin disponibilidad</a>`;
         }
 
+        if (['pending', 'confirmed', 'seated'].includes(r.status)) {
+            html += `<button class="adm-btn adm-btn-sm adm-btn-ghost" data-action="assign-table">Asignar mesa</button>`;
+            html += `<button class="adm-btn adm-btn-sm adm-btn-ghost" data-action="edit-party">Modificar personas</button>`;
+        }
+
         container.innerHTML = html;
 
         container.querySelectorAll('[data-action]').forEach(btn => {
@@ -552,11 +591,170 @@ class AdminPanel {
                     this.confirmPayment(r);
                 } else if (btn.dataset.action === 'reschedule') {
                     this.openReschedule(r);
+                } else if (btn.dataset.action === 'assign-table') {
+                    this.openAssignTable(r);
+                } else if (btn.dataset.action === 'edit-party') {
+                    this.openEditParty(r);
                 } else {
                     this.updateReservation(r.id, btn.dataset.action);
                 }
             });
         });
+    }
+
+    // Mesas fijas por salón (slug → etiquetas). Solo uso interno del admin.
+    tablesForSalon(slug) {
+        const range = (prefix, a, b) => Array.from({ length: b - a + 1 }, (_, i) => `${prefix} ${a + i}`);
+        return ({
+            'chill-out': ['Chillout 1', 'Chillout 2'],
+            'arca': range('Arca', 1, 11),
+            'barco': range('Barco', 21, 24),
+            'golden': range('Golden', 31, 40),
+            'moon-terraza': range('Moon', 1, 14)
+        })[slug] || [];
+    }
+
+    openAssignTable(r) {
+        const form = document.getElementById('table-form');
+        const sel = document.getElementById('table-select');
+        const msg = document.getElementById('table-msg');
+        if (!form) return;
+        form.style.display = 'block';
+        msg.textContent = '';
+        const tables = this.tablesForSalon(r.salon?.slug);
+        sel.innerHTML = '<option value="">Sin mesa</option>' +
+            tables.map(t => `<option value="${escapeHtml(t)}" ${r.table_label === t ? 'selected' : ''}>${escapeHtml(t)}</option>`).join('');
+        document.getElementById('table-cancel').onclick = () => { form.style.display = 'none'; };
+        document.getElementById('table-save').onclick = () => this.doAssignTable(r.id);
+    }
+
+    async doAssignTable(id) {
+        if (this.actionInProgress) return;
+        const msg = document.getElementById('table-msg');
+        const label = document.getElementById('table-select').value;
+        this.actionInProgress = true;
+        const btn = document.getElementById('table-save'); btn.disabled = true;
+        try {
+            const { data, error } = await sb.rpc('admin_set_table', { p_reservation_id: id, p_table_label: label || null });
+            if (error || !data?.success) { msg.textContent = data?.error || 'Error al asignar mesa.'; btn.disabled = false; return; }
+            if (data.warning) alert('⚠ ' + data.warning);
+            const { data: fresh } = await sb.from('reservations')
+                .select('*, customer:customers(name, phone, email), salon:salons(name, slug)').eq('id', id).single();
+            this.loadReservations();
+            if (fresh) this.showReservationDetail(fresh.id, [fresh]);
+        } catch (e) { msg.textContent = 'Error de conexión.'; btn.disabled = false; }
+        finally { this.actionInProgress = false; }
+    }
+
+    openEditParty(r) {
+        const form = document.getElementById('party-form');
+        const input = document.getElementById('party-input');
+        const msg = document.getElementById('party-msg');
+        if (!form) return;
+        form.style.display = 'block';
+        msg.textContent = '';
+        input.value = r.party_size;
+        document.getElementById('party-force').checked = false;
+        document.getElementById('party-cancel').onclick = () => { form.style.display = 'none'; };
+        document.getElementById('party-save').onclick = () => this.doEditParty(r.id);
+    }
+
+    async doEditParty(id) {
+        if (this.actionInProgress) return;
+        const msg = document.getElementById('party-msg');
+        const n = parseInt(document.getElementById('party-input').value, 10);
+        const force = document.getElementById('party-force').checked;
+        if (!n || n < 1 || n > 60) { msg.textContent = 'Cantidad inválida (1–60).'; return; }
+        this.actionInProgress = true;
+        const btn = document.getElementById('party-save'); btn.disabled = true; btn.textContent = 'Guardando...';
+        try {
+            const { data, error } = await sb.rpc('admin_modify_party_size', { p_reservation_id: id, p_new_party_size: n, p_force: force });
+            if (error || !data?.success) { msg.textContent = data?.error || 'Error al modificar.'; return; }
+            const { data: fresh } = await sb.from('reservations')
+                .select('*, customer:customers(name, phone, email), salon:salons(name, slug)').eq('id', id).single();
+            document.getElementById('party-form').style.display = 'none';
+            this.loadReservations();
+            if (fresh) this.showReservationDetail(fresh.id, [fresh]);
+        } catch (e) { msg.textContent = 'Error de conexión.'; }
+        finally { this.actionInProgress = false; btn.disabled = false; btn.textContent = 'Guardar'; }
+    }
+
+    // ================================================================
+    // CREAR RESERVA (admin / 15+ personalizadas)
+    // ================================================================
+
+    closeCreate() { document.getElementById('create-modal').style.display = 'none'; }
+
+    openCreateReservation() {
+        const PLAN_DEPOSITS = { free: 100000, plata: 80000, oro: 120000, luxury: 150000, personalizada: 0 };
+        const modal = document.getElementById('create-modal');
+        const salonSel = document.getElementById('nr-salon');
+        const dateInput = document.getElementById('nr-date');
+        const timeSel = document.getElementById('nr-time');
+        const typeSel = document.getElementById('nr-type');
+        const depositInput = document.getElementById('nr-deposit');
+        const msg = document.getElementById('nr-msg');
+
+        // Reset campos
+        ['nr-name', 'nr-phone', 'nr-email', 'nr-requests', 'nr-notes'].forEach(id => { document.getElementById(id).value = ''; });
+        document.getElementById('nr-party').value = '15';
+        document.getElementById('nr-force').checked = false;
+        document.getElementById('nr-status').value = 'confirmed';
+        typeSel.value = 'personalizada';
+        depositInput.value = 0;
+        msg.style.display = 'none';
+
+        salonSel.innerHTML = (this.salons || []).filter(s => s.is_active)
+            .map(s => `<option value="${s.id}" data-slug="${s.slug}">${escapeHtml(s.name)} (aforo ${s.capacity})</option>`).join('');
+
+        dateInput.min = getLocalDateString(new Date());
+        dateInput.value = getLocalDateString(new Date());
+        const fillTimes = () => {
+            const slots = dateInput.value ? this.admGenerateTimeSlots(dateInput.value) : [];
+            timeSel.innerHTML = slots.length ? slots.map(t => `<option value="${t}">${this.fmtSlot(t)}</option>`).join('') : '<option value="">Sin horarios</option>';
+        };
+        fillTimes();
+        dateInput.onchange = fillTimes;
+        // Plan → autollenar anticipo (editable)
+        typeSel.onchange = () => { depositInput.value = PLAN_DEPOSITS[typeSel.value] ?? 0; };
+
+        modal.style.display = 'flex';
+    }
+
+    async submitCreateReservation() {
+        if (this.actionInProgress) return;
+        const v = id => document.getElementById(id).value.trim();
+        const msg = document.getElementById('nr-msg');
+        const salonSel = document.getElementById('nr-salon');
+        const body = {
+            p_name: v('nr-name'),
+            p_phone: v('nr-phone').replace(/\D/g, ''),
+            p_email: v('nr-email') || null,
+            p_salon_id: salonSel.value,
+            p_type: v('nr-type'),
+            p_date: v('nr-date'),
+            p_time: v('nr-time'),
+            p_party_size: parseInt(document.getElementById('nr-party').value, 10),
+            p_deposit: parseInt(document.getElementById('nr-deposit').value, 10) || 0,
+            p_requests: v('nr-requests') || null,
+            p_admin_notes: v('nr-notes') || null,
+            p_is_consumable: v('nr-type') === 'free',
+            p_status: v('nr-status'),
+            p_force: document.getElementById('nr-force').checked
+        };
+        if (!body.p_name || body.p_phone.length < 10 || !body.p_salon_id || !body.p_date || !body.p_time || !body.p_party_size) {
+            msg.textContent = 'Completa nombre, teléfono (10+ dígitos), salón, fecha, hora y personas.';
+            msg.style.display = 'block'; return;
+        }
+        this.actionInProgress = true;
+        const btn = document.getElementById('nr-save'); btn.disabled = true; btn.textContent = 'Creando...';
+        try {
+            const { data, error } = await sb.rpc('admin_create_reservation', body);
+            if (error || !data?.success) { msg.textContent = data?.error || 'Error al crear la reserva.'; msg.style.display = 'block'; return; }
+            this.closeCreate();
+            this.loadReservations();
+        } catch (e) { msg.textContent = 'Error de conexión.'; msg.style.display = 'block'; }
+        finally { this.actionInProgress = false; btn.disabled = false; btn.textContent = 'Crear reserva'; }
     }
 
     // ================================================================
@@ -1507,7 +1705,8 @@ class AdminPanel {
             seated: 'Marcó en mesa', completed: 'Completó', no_show: 'Marcó no-show',
             customer_cancelled: 'Cliente canceló', customer_modified: 'Cliente modificó',
             expired: 'Expiró sin pago', slot_blocked: 'Bloqueó fecha', slot_unblocked: 'Desbloqueó fecha',
-            admin_rescheduled: 'Cambió fecha/hora'
+            admin_rescheduled: 'Cambió fecha/hora', admin_set_table: 'Asignó mesa',
+            admin_modified_party_size: 'Cambió # personas', admin_created: 'Creó reserva (admin)'
         };
         return map[action] || action;
     }
@@ -1674,7 +1873,7 @@ class AdminPanel {
                         r.reservation_date === ds && r.reservation_time?.slice(0, 5) === slot
                     );
                     cellRes.forEach(r => {
-                        html += `<div class="cal-event status-${r.status}" data-id="${r.id}" title="${escapeHtml(r.customer?.name)} - ${escapeHtml(r.salon?.name)} - ${r.party_size} pers.">
+                        html += `<div class="cal-event status-${r.status} type-${r.reservation_type}" data-id="${r.id}" title="${escapeHtml(r.customer?.name)} - ${escapeHtml(r.salon?.name)} - ${r.party_size} pers.">
                             <span class="cal-event-name">${escapeHtml(r.customer?.name)}</span>
                             <span class="cal-event-meta">${escapeHtml(r.salon?.name)} · ${r.party_size}p</span>
                         </div>`;
@@ -1711,7 +1910,7 @@ class AdminPanel {
                         r.salon_id === s.id && r.reservation_time?.slice(0, 5) === slot
                     );
                     cellRes.forEach(r => {
-                        html += `<div class="cal-event status-${r.status}" data-id="${r.id}" title="${escapeHtml(r.customer?.name)} - ${r.party_size} pers.">
+                        html += `<div class="cal-event status-${r.status} type-${r.reservation_type}" data-id="${r.id}" title="${escapeHtml(r.customer?.name)} - ${r.party_size} pers.">
                             <span class="cal-event-name">${escapeHtml(r.customer?.name)}</span>
                             <span class="cal-event-meta">${r.party_size}p · ${r.reservation_type}</span>
                         </div>`;

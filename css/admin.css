@@ -1439,3 +1439,77 @@ body {
     font-size: 0.74rem;
     color: var(--adm-text-muted);
 }
+
+
+/* =====================================================================
+   COLOR POR PLAN (free/plata/oro/luxury/personalizada)
+   ===================================================================== */
+:root {
+    --plan-free: #8B8680;
+    --plan-plata: #6B8EA3;
+    --plan-oro: #D4AF37;
+    --plan-luxury: #8E3B52;
+    --plan-personalizada: #6E5AA0;
+}
+/* Tarjeta de reserva: borde izquierdo por plan */
+.adm-res-card.adm-res-type-free          { border-left: 4px solid var(--plan-free); }
+.adm-res-card.adm-res-type-plata         { border-left: 4px solid var(--plan-plata); }
+.adm-res-card.adm-res-type-oro           { border-left: 4px solid var(--plan-oro); }
+.adm-res-card.adm-res-type-luxury        { border-left: 4px solid var(--plan-luxury); }
+.adm-res-card.adm-res-type-personalizada { border-left: 4px solid var(--plan-personalizada); }
+/* Evento de calendario: el plan gana sobre el estado en el borde izquierdo */
+.cal-event.type-free          { border-left-color: var(--plan-free); }
+.cal-event.type-plata         { border-left-color: var(--plan-plata); }
+.cal-event.type-oro           { border-left-color: var(--plan-oro); }
+.cal-event.type-luxury        { border-left-color: var(--plan-luxury); }
+.cal-event.type-personalizada { border-left-color: var(--plan-personalizada); }
+
+/* Leyenda */
+.adm-plan-legend {
+    display: flex; flex-wrap: wrap; gap: 14px;
+    margin: 0 0 14px; font-family: var(--adm-sans);
+    font-size: 0.74rem; color: var(--adm-text-muted);
+}
+.adm-plan-legend span { display: inline-flex; align-items: center; }
+.adm-plan-dot {
+    display: inline-block; width: 10px; height: 10px;
+    border-radius: 2px; margin-right: 6px;
+}
+.adm-plan-dot.type-free          { background: var(--plan-free); }
+.adm-plan-dot.type-plata         { background: var(--plan-plata); }
+.adm-plan-dot.type-oro           { background: var(--plan-oro); }
+.adm-plan-dot.type-luxury        { background: var(--plan-luxury); }
+.adm-plan-dot.type-personalizada { background: var(--plan-personalizada); }
+
+/* =====================================================================
+   MODAL CREAR RESERVA (admin)
+   ===================================================================== */
+.adm-create-title {
+    font-family: var(--adm-serif); font-size: 1.4rem;
+    color: var(--adm-text); margin: 0 0 4px;
+}
+.adm-create-sub {
+    font-family: var(--adm-sans); font-size: 0.82rem;
+    color: var(--adm-text-muted); margin: 0 0 18px; line-height: 1.5;
+}
+.adm-create-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+}
+.adm-create-grid .adm-field { display: flex; flex-direction: column; gap: 5px; }
+.adm-create-grid .adm-field label {
+    font-family: var(--adm-sans); font-size: 0.62rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--adm-text-muted);
+}
+.adm-create-grid .adm-field input,
+.adm-create-grid .adm-field select,
+.adm-create-grid .adm-field textarea {
+    padding: 9px 11px; border: 1px solid var(--adm-border); border-radius: 6px;
+    background: var(--adm-surface); font-family: var(--adm-sans);
+    font-size: 0.88rem; color: var(--adm-text); width: 100%;
+}
+.adm-create-grid .adm-field-full { grid-column: 1 / -1; }
+.adm-create-actions { display: flex; gap: 12px; margin-top: 18px; }
+
+@media (max-width: 620px) {
+    .adm-create-grid { grid-template-columns: 1fr; }
+}
