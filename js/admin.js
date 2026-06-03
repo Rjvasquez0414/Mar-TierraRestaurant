@@ -520,6 +520,23 @@ class AdminPanel {
                 <p class="adm-resched-hint">Re-valida el aforo del turno salvo que fuerces.</p>
             </div>
 
+            <div id="notes-form" class="adm-reschedule" style="display:none">
+                <h4>Editar comentarios</h4>
+                <div class="adm-field" style="margin-bottom:12px">
+                    <label class="adm-detail-label">Solicitudes del cliente</label>
+                    <textarea id="notes-requests" rows="2" style="width:100%;padding:9px 11px;border:1px solid var(--adm-border);border-radius:6px;background:var(--adm-surface);font-family:var(--adm-sans);font-size:0.88rem;color:var(--adm-text)"></textarea>
+                </div>
+                <div class="adm-field" style="margin-bottom:12px">
+                    <label class="adm-detail-label">Notas internas (admin)</label>
+                    <textarea id="notes-admin" rows="2" style="width:100%;padding:9px 11px;border:1px solid var(--adm-border);border-radius:6px;background:var(--adm-surface);font-family:var(--adm-sans);font-size:0.88rem;color:var(--adm-text)"></textarea>
+                </div>
+                <div class="adm-resched-fields">
+                    <button class="adm-btn adm-btn-sm adm-btn-confirm" id="notes-save">Guardar comentarios</button>
+                    <button class="adm-btn adm-btn-sm adm-btn-ghost" id="notes-cancel">Cancelar</button>
+                </div>
+                <p id="notes-msg" class="adm-resched-msg"></p>
+            </div>
+
             ${logs && logs.length ? `
                 <div class="adm-detail-logs">
                     <h4>Historial</h4>
@@ -581,6 +598,9 @@ class AdminPanel {
             html += `<button class="adm-btn adm-btn-sm adm-btn-ghost" data-action="edit-party">Modificar personas</button>`;
         }
 
+        // Comentarios: editables en cualquier estado
+        html += `<button class="adm-btn adm-btn-sm adm-btn-ghost" data-action="edit-notes">Editar comentarios</button>`;
+
         container.innerHTML = html;
 
         container.querySelectorAll('[data-action]').forEach(btn => {
@@ -595,6 +615,8 @@ class AdminPanel {
                     this.openAssignTable(r);
                 } else if (btn.dataset.action === 'edit-party') {
                     this.openEditParty(r);
+                } else if (btn.dataset.action === 'edit-notes') {
+                    this.openEditNotes(r);
                 } else {
                     this.updateReservation(r.id, btn.dataset.action);
                 }
@@ -677,6 +699,43 @@ class AdminPanel {
             if (fresh) this.showReservationDetail(fresh.id, [fresh]);
         } catch (e) { msg.textContent = 'Error de conexión.'; }
         finally { this.actionInProgress = false; btn.disabled = false; btn.textContent = 'Guardar'; }
+    }
+
+    openEditNotes(r) {
+        const form = document.getElementById('notes-form');
+        if (!form) return;
+        form.style.display = 'block';
+        document.getElementById('notes-requests').value = r.special_requests || '';
+        document.getElementById('notes-admin').value = r.admin_notes || '';
+        document.getElementById('notes-msg').textContent = '';
+        document.getElementById('notes-cancel').onclick = () => { form.style.display = 'none'; };
+        document.getElementById('notes-save').onclick = () => this.doEditNotes(r.id);
+    }
+
+    async doEditNotes(id) {
+        if (this.actionInProgress) return;
+        const msg = document.getElementById('notes-msg');
+        const requests = document.getElementById('notes-requests').value.trim() || null;
+        const notes = document.getElementById('notes-admin').value.trim() || null;
+        this.actionInProgress = true;
+        const btn = document.getElementById('notes-save'); btn.disabled = true; btn.textContent = 'Guardando...';
+        try {
+            const { error } = await sb.from('reservations')
+                .update({ special_requests: requests, admin_notes: notes }).eq('id', id);
+            if (error) { msg.textContent = 'Error al guardar.'; btn.disabled = false; btn.textContent = 'Guardar comentarios'; return; }
+            try {
+                await sb.from('reservation_logs').insert({
+                    reservation_id: id, action: 'admin_updated_notes',
+                    details: { special_requests: requests, admin_notes: notes },
+                    performed_by: this.user.id
+                });
+            } catch (e) { /* el log no bloquea */ }
+            const { data: fresh } = await sb.from('reservations')
+                .select('*, customer:customers(name, phone, email), salon:salons(name, slug)').eq('id', id).single();
+            this.loadReservations();
+            if (fresh) this.showReservationDetail(fresh.id, [fresh]);
+        } catch (e) { msg.textContent = 'Error de conexión.'; btn.disabled = false; btn.textContent = 'Guardar comentarios'; }
+        finally { this.actionInProgress = false; }
     }
 
     // ================================================================
@@ -1706,7 +1765,8 @@ class AdminPanel {
             customer_cancelled: 'Cliente canceló', customer_modified: 'Cliente modificó',
             expired: 'Expiró sin pago', slot_blocked: 'Bloqueó fecha', slot_unblocked: 'Desbloqueó fecha',
             admin_rescheduled: 'Cambió fecha/hora', admin_set_table: 'Asignó mesa',
-            admin_modified_party_size: 'Cambió # personas', admin_created: 'Creó reserva (admin)'
+            admin_modified_party_size: 'Cambió # personas', admin_created: 'Creó reserva (admin)',
+            admin_updated_notes: 'Editó comentarios'
         };
         return map[action] || action;
     }
