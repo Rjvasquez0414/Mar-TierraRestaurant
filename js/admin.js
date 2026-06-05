@@ -537,6 +537,20 @@ class AdminPanel {
                 <p id="notes-msg" class="adm-resched-msg"></p>
             </div>
 
+            <div id="salon-form" class="adm-reschedule" style="display:none">
+                <h4>Cambiar salón / zona</h4>
+                <div class="adm-resched-fields">
+                    <select id="salon-select"></select>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--adm-text-muted)">
+                        <input type="checkbox" id="salon-force"> Forzar aforo
+                    </label>
+                    <button class="adm-btn adm-btn-sm adm-btn-confirm" id="salon-save">Mover reserva</button>
+                    <button class="adm-btn adm-btn-sm adm-btn-ghost" id="salon-cancel">Cancelar</button>
+                </div>
+                <p id="salon-msg" class="adm-resched-msg"></p>
+                <p class="adm-resched-hint">Mantiene fecha/hora y re-valida el aforo del nuevo salón. La mesa asignada se borra (pertenece al salón anterior).</p>
+            </div>
+
             ${logs && logs.length ? `
                 <div class="adm-detail-logs">
                     <h4>Historial</h4>
@@ -594,6 +608,7 @@ class AdminPanel {
         }
 
         if (['pending', 'confirmed', 'seated'].includes(r.status)) {
+            html += `<button class="adm-btn adm-btn-sm adm-btn-info" data-action="change-salon">Cambiar salón</button>`;
             html += `<button class="adm-btn adm-btn-sm adm-btn-ghost" data-action="assign-table">Asignar mesa</button>`;
             html += `<button class="adm-btn adm-btn-sm adm-btn-ghost" data-action="edit-party">Modificar personas</button>`;
         }
@@ -617,6 +632,8 @@ class AdminPanel {
                     this.openEditParty(r);
                 } else if (btn.dataset.action === 'edit-notes') {
                     this.openEditNotes(r);
+                } else if (btn.dataset.action === 'change-salon') {
+                    this.openChangeSalon(r);
                 } else {
                     this.updateReservation(r.id, btn.dataset.action);
                 }
@@ -736,6 +753,41 @@ class AdminPanel {
             if (fresh) this.showReservationDetail(fresh.id, [fresh]);
         } catch (e) { msg.textContent = 'Error de conexión.'; btn.disabled = false; btn.textContent = 'Guardar comentarios'; }
         finally { this.actionInProgress = false; }
+    }
+
+    openChangeSalon(r) {
+        const form = document.getElementById('salon-form');
+        const sel = document.getElementById('salon-select');
+        const msg = document.getElementById('salon-msg');
+        if (!form) return;
+        form.style.display = 'block';
+        msg.textContent = '';
+        document.getElementById('salon-force').checked = false;
+        // Otros salones activos (excluye el actual)
+        sel.innerHTML = (this.salons || []).filter(s => s.is_active && s.id !== r.salon_id)
+            .map(s => `<option value="${s.id}">${escapeHtml(s.name)} (aforo ${s.capacity})</option>`).join('') || '<option value="">No hay otros salones</option>';
+        document.getElementById('salon-cancel').onclick = () => { form.style.display = 'none'; };
+        document.getElementById('salon-save').onclick = () => this.doChangeSalon(r.id);
+    }
+
+    async doChangeSalon(id) {
+        if (this.actionInProgress) return;
+        const msg = document.getElementById('salon-msg');
+        const newSalon = document.getElementById('salon-select').value;
+        const force = document.getElementById('salon-force').checked;
+        if (!newSalon) { msg.textContent = 'Selecciona un salón.'; return; }
+        this.actionInProgress = true;
+        const btn = document.getElementById('salon-save'); btn.disabled = true; btn.textContent = 'Moviendo...';
+        try {
+            const { data, error } = await sb.rpc('admin_change_salon', { p_reservation_id: id, p_new_salon_id: newSalon, p_force: force });
+            if (error || !data?.success) { msg.textContent = data?.error || 'Error al cambiar de salón.'; return; }
+            const { data: fresh } = await sb.from('reservations')
+                .select('*, customer:customers(name, phone, email), salon:salons(name, slug)').eq('id', id).single();
+            document.getElementById('salon-form').style.display = 'none';
+            this.loadReservations();
+            if (fresh) this.showReservationDetail(fresh.id, [fresh]);
+        } catch (e) { msg.textContent = 'Error de conexión.'; }
+        finally { this.actionInProgress = false; btn.disabled = false; btn.textContent = 'Mover reserva'; }
     }
 
     // ================================================================
@@ -1766,7 +1818,7 @@ class AdminPanel {
             expired: 'Expiró sin pago', slot_blocked: 'Bloqueó fecha', slot_unblocked: 'Desbloqueó fecha',
             admin_rescheduled: 'Cambió fecha/hora', admin_set_table: 'Asignó mesa',
             admin_modified_party_size: 'Cambió # personas', admin_created: 'Creó reserva (admin)',
-            admin_updated_notes: 'Editó comentarios'
+            admin_updated_notes: 'Editó comentarios', admin_changed_salon: 'Cambió de salón'
         };
         return map[action] || action;
     }
