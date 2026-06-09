@@ -270,7 +270,7 @@ class ReservationWizard {
                 tagline: 'Rosas, pétalos y velas',
                 price: 150000,
                 consumable: false,
-                includes: ['12 rosas naturales', 'Pétalos sobre la mesa', 'Velas aromáticas', 'Playlist personalizada'],
+                includes: ['Rosas naturales', 'Pétalos sobre la mesa', 'Velas'],
                 icon: `<svg viewBox="0 0 32 32"><path d="M16 6c-3 0-6 3-6 7 0 5 6 13 6 13s6-8 6-13c0-4-3-7-6-7z" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="16" cy="14" r="2" fill="currentColor"/></svg>`
             }
         ];
