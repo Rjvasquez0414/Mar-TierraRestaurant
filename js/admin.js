@@ -551,6 +551,26 @@ class AdminPanel {
                 <p class="adm-resched-hint">Mantiene fecha/hora y re-valida el aforo del nuevo salón. La mesa asignada se borra (pertenece al salón anterior).</p>
             </div>
 
+            <div id="type-form" class="adm-reschedule" style="display:none">
+                <h4>Cambiar paquete</h4>
+                <div class="adm-resched-fields">
+                    <select id="type-select">
+                        <option value="free">Free</option>
+                        <option value="plata">Plata</option>
+                        <option value="oro">Oro</option>
+                        <option value="luxury">Luxury</option>
+                        <option value="personalizada">Personalizada</option>
+                    </select>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:0.8rem;color:var(--adm-text-muted)">
+                        Anticipo $<input type="number" id="type-deposit" min="0" step="1000" style="width:110px">
+                    </label>
+                    <button class="adm-btn adm-btn-sm adm-btn-confirm" id="type-save">Guardar paquete</button>
+                    <button class="adm-btn adm-btn-sm adm-btn-ghost" id="type-cancel">Cancelar</button>
+                </div>
+                <p id="type-msg" class="adm-resched-msg"></p>
+                <p class="adm-resched-hint">El anticipo se autollena con el del plan (editable). No afecta el aforo. Tras guardar, avisa al cliente si el monto cambió.</p>
+            </div>
+
             ${logs && logs.length ? `
                 <div class="adm-detail-logs">
                     <h4>Historial</h4>
@@ -609,6 +629,7 @@ class AdminPanel {
 
         if (['pending', 'confirmed', 'seated'].includes(r.status)) {
             html += `<button class="adm-btn adm-btn-sm adm-btn-info" data-action="change-salon">Cambiar salón</button>`;
+            html += `<button class="adm-btn adm-btn-sm adm-btn-info" data-action="change-type">Cambiar paquete</button>`;
             html += `<button class="adm-btn adm-btn-sm adm-btn-ghost" data-action="assign-table">Asignar mesa</button>`;
             html += `<button class="adm-btn adm-btn-sm adm-btn-ghost" data-action="edit-party">Modificar personas</button>`;
         }
@@ -634,6 +655,8 @@ class AdminPanel {
                     this.openEditNotes(r);
                 } else if (btn.dataset.action === 'change-salon') {
                     this.openChangeSalon(r);
+                } else if (btn.dataset.action === 'change-type') {
+                    this.openChangeType(r);
                 } else {
                     this.updateReservation(r.id, btn.dataset.action);
                 }
@@ -788,6 +811,50 @@ class AdminPanel {
             if (fresh) this.showReservationDetail(fresh.id, [fresh]);
         } catch (e) { msg.textContent = 'Error de conexión.'; }
         finally { this.actionInProgress = false; btn.disabled = false; btn.textContent = 'Mover reserva'; }
+    }
+
+    // Anticipo estándar por plan (debe coincidir con el del wizard / crear reserva)
+    static get PLAN_DEPOSITS() { return { free: 100000, plata: 80000, oro: 120000, luxury: 150000, personalizada: 0 }; }
+
+    openChangeType(r) {
+        const form = document.getElementById('type-form');
+        const sel = document.getElementById('type-select');
+        const dep = document.getElementById('type-deposit');
+        const msg = document.getElementById('type-msg');
+        if (!form) return;
+        form.style.display = 'block';
+        msg.textContent = '';
+        sel.value = r.reservation_type || 'free';
+        dep.value = r.deposit_amount || 0;
+        // Al cambiar de plan, autollenar el anticipo estándar (editable)
+        sel.onchange = () => { dep.value = AdminPanel.PLAN_DEPOSITS[sel.value] ?? 0; };
+        document.getElementById('type-cancel').onclick = () => { form.style.display = 'none'; };
+        document.getElementById('type-save').onclick = () => this.doChangeType(r.id);
+    }
+
+    async doChangeType(id) {
+        if (this.actionInProgress) return;
+        const msg = document.getElementById('type-msg');
+        const newType = document.getElementById('type-select').value;
+        const newDeposit = parseInt(document.getElementById('type-deposit').value, 10);
+        if (isNaN(newDeposit) || newDeposit < 0) { msg.textContent = 'Anticipo inválido.'; return; }
+        this.actionInProgress = true;
+        const btn = document.getElementById('type-save'); btn.disabled = true; btn.textContent = 'Guardando...';
+        try {
+            const { data, error } = await sb.rpc('admin_change_type', {
+                p_reservation_id: id,
+                p_new_type: newType,
+                p_new_deposit: newDeposit,
+                p_is_consumable: newType === 'free'
+            });
+            if (error || !data?.success) { msg.textContent = data?.error || 'Error al cambiar el paquete.'; return; }
+            const { data: fresh } = await sb.from('reservations')
+                .select('*, customer:customers(name, phone, email), salon:salons(name, slug)').eq('id', id).single();
+            document.getElementById('type-form').style.display = 'none';
+            this.loadReservations();
+            if (fresh) this.showReservationDetail(fresh.id, [fresh]);
+        } catch (e) { msg.textContent = 'Error de conexión.'; }
+        finally { this.actionInProgress = false; btn.disabled = false; btn.textContent = 'Guardar paquete'; }
     }
 
     // ================================================================
@@ -1818,7 +1885,8 @@ class AdminPanel {
             expired: 'Expiró sin pago', slot_blocked: 'Bloqueó fecha', slot_unblocked: 'Desbloqueó fecha',
             admin_rescheduled: 'Cambió fecha/hora', admin_set_table: 'Asignó mesa',
             admin_modified_party_size: 'Cambió # personas', admin_created: 'Creó reserva (admin)',
-            admin_updated_notes: 'Editó comentarios', admin_changed_salon: 'Cambió de salón'
+            admin_updated_notes: 'Editó comentarios', admin_changed_salon: 'Cambió de salón',
+            admin_changed_type: 'Cambió de paquete'
         };
         return map[action] || action;
     }
