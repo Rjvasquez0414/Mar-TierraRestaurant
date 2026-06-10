@@ -1556,7 +1556,7 @@ class AdminPanel {
 
         const max = Math.max(...Object.values(counts), 1);
         const hours = [];
-        for (let h = 11; h <= 22; h++) {
+        for (let h = 7; h <= 22; h++) {
             hours.push(`${String(h).padStart(2, '0')}:00`);
             if (h < 22) hours.push(`${String(h).padStart(2, '0')}:30`);
         }
@@ -1949,9 +1949,9 @@ class AdminPanel {
         const grid = document.getElementById('cal-grid');
         const todayStr = getLocalDateString();
 
-        // Time slots: 11:00 to 23:30 (30-min increments)
+        // Time slots: 07:00 to 23:30 (30-min increments)
         const slots = [];
-        for (let h = 11; h <= 23; h++) {
+        for (let h = 7; h <= 23; h++) {
             slots.push(`${String(h).padStart(2,'0')}:00`);
             slots.push(`${String(h).padStart(2,'0')}:30`);
         }
