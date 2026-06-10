@@ -17,13 +17,13 @@ const TYPE_LABELS = { free: 'Reserva Free', plata: 'Plan Plata', oro: 'Plan Oro'
 // Debe coincidir con getHours() de js/reservations-v2.js.
 //   Lun→7PM · Mar-Jue→8PM · Vie-Sáb→9PM · Dom→4PM
 const HOURS = {
-    0: { open: '11:30', lastSlot: '16:00' },
-    1: { open: '11:30', lastSlot: '19:00' },
-    2: { open: '11:30', lastSlot: '20:00' },
-    3: { open: '11:30', lastSlot: '20:00' },
-    4: { open: '11:30', lastSlot: '20:00' },
-    5: { open: '11:30', lastSlot: '21:00' },
-    6: { open: '11:30', lastSlot: '21:00' }
+    0: { open: '07:00', lastSlot: '16:00' },
+    1: { open: '07:00', lastSlot: '19:00' },
+    2: { open: '07:00', lastSlot: '20:00' },
+    3: { open: '07:00', lastSlot: '20:00' },
+    4: { open: '07:00', lastSlot: '20:00' },
+    5: { open: '07:00', lastSlot: '21:00' },
+    6: { open: '07:00', lastSlot: '21:00' }
 };
 
 let currentReservation = null;

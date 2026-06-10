@@ -875,13 +875,13 @@ class AdminPanel {
     // Horario reservable por día (debe coincidir con el wizard)
     admGetHours(dayOfWeek) {
         return ({
-            0: { open: '11:30', lastSlot: '16:00' },
-            1: { open: '11:30', lastSlot: '19:00' },
-            2: { open: '11:30', lastSlot: '20:00' },
-            3: { open: '11:30', lastSlot: '20:00' },
-            4: { open: '11:30', lastSlot: '20:00' },
-            5: { open: '11:30', lastSlot: '21:00' },
-            6: { open: '11:30', lastSlot: '21:00' }
+            0: { open: '07:00', lastSlot: '16:00' },
+            1: { open: '07:00', lastSlot: '19:00' },
+            2: { open: '07:00', lastSlot: '20:00' },
+            3: { open: '07:00', lastSlot: '20:00' },
+            4: { open: '07:00', lastSlot: '20:00' },
+            5: { open: '07:00', lastSlot: '21:00' },
+            6: { open: '07:00', lastSlot: '21:00' }
         })[dayOfWeek];
     }
 

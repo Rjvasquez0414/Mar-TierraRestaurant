@@ -1010,13 +1010,13 @@ function setupReservationEventListeners() {
 // Horarios de operación del restaurante por día de la semana
 // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
 const RESTAURANT_HOURS = {
-    0: { open: '11:30', close: '18:00', name: 'Domingo' },      // Domingo: 11:30 AM - 6:00 PM
-    1: { open: '11:30', close: '21:00', name: 'Lunes' },        // Lunes: 11:30 AM - 9:00 PM
-    2: { open: '11:30', close: '22:00', name: 'Martes' },       // Martes: 11:30 AM - 10:00 PM
-    3: { open: '11:30', close: '22:00', name: 'Miércoles' },    // Miércoles: 11:30 AM - 10:00 PM
-    4: { open: '11:30', close: '22:00', name: 'Jueves' },       // Jueves: 11:30 AM - 10:00 PM
-    5: { open: '11:30', close: '23:00', name: 'Viernes' },      // Viernes: 11:30 AM - 11:00 PM
-    6: { open: '11:30', close: '23:00', name: 'Sábado' }        // Sábado: 11:30 AM - 11:00 PM
+    0: { open: '07:00', close: '18:00', name: 'Domingo' },      // Domingo: 11:30 AM - 6:00 PM
+    1: { open: '07:00', close: '21:00', name: 'Lunes' },        // Lunes: 11:30 AM - 9:00 PM
+    2: { open: '07:00', close: '22:00', name: 'Martes' },       // Martes: 11:30 AM - 10:00 PM
+    3: { open: '07:00', close: '22:00', name: 'Miércoles' },    // Miércoles: 11:30 AM - 10:00 PM
+    4: { open: '07:00', close: '22:00', name: 'Jueves' },       // Jueves: 11:30 AM - 10:00 PM
+    5: { open: '07:00', close: '23:00', name: 'Viernes' },      // Viernes: 11:30 AM - 11:00 PM
+    6: { open: '07:00', close: '23:00', name: 'Sábado' }        // Sábado: 11:30 AM - 11:00 PM
 };
 
 // Capacidades de salones

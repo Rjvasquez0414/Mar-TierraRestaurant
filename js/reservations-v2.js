@@ -48,13 +48,13 @@ class ReservationWizard {
     //   Dom        11:30 → última reserva 4:00 PM  (servicio hasta 6:00 PM)
     getHours(dayOfWeek) {
         const hours = {
-            0: { open: '11:30', lastSlot: '16:00', close: '18:00' },
-            1: { open: '11:30', lastSlot: '19:00', close: '21:00' },
-            2: { open: '11:30', lastSlot: '20:00', close: '22:00' },
-            3: { open: '11:30', lastSlot: '20:00', close: '22:00' },
-            4: { open: '11:30', lastSlot: '20:00', close: '22:00' },
-            5: { open: '11:30', lastSlot: '21:00', close: '23:00' },
-            6: { open: '11:30', lastSlot: '21:00', close: '23:00' }
+            0: { open: '07:00', lastSlot: '16:00', close: '18:00' },
+            1: { open: '07:00', lastSlot: '19:00', close: '21:00' },
+            2: { open: '07:00', lastSlot: '20:00', close: '22:00' },
+            3: { open: '07:00', lastSlot: '20:00', close: '22:00' },
+            4: { open: '07:00', lastSlot: '20:00', close: '22:00' },
+            5: { open: '07:00', lastSlot: '21:00', close: '23:00' },
+            6: { open: '07:00', lastSlot: '21:00', close: '23:00' }
         };
         return hours[dayOfWeek];
     }
