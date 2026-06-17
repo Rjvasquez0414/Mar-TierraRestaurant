@@ -1274,7 +1274,7 @@
     </a>
 
     <!-- Supabase JS Client (CDN) -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.106.2/dist/umd/supabase.min.js" integrity="sha384-4Cjkyy4cE1EgIS0C+Y3xzGmJ2noQFRRU91yKAW8IxtPfVtbQXPMqadSc3sYnjwou" crossorigin="anonymous" defer></script>
+    <script src="js/vendor/supabase.min.js?v=20260616" defer></script>
 
     <!-- Scripts (defer mantiene orden de ejecución y no bloquea render) -->
     <script src="js/menu-data.js?v=20260601" defer></script>
@@ -1282,6 +1282,41 @@
     <script src="js/script.js?v=20260601" defer></script>
     <script src="js/supabase-config.js?v=20260601" defer></script>
     <script src="js/reservations-v2.js?v=20260609b" defer></script>
+
+    <!-- Red de seguridad del wizard de reservas: si por cualquier motivo
+         (navegador desactualizado, error de carga, JS bloqueado) los pasos
+         no se renderizan, mostrar una alternativa por WhatsApp para no perder
+         la reserva. ES5 puro a proposito, para correr hasta en navegadores viejos. -->
+    <script>
+        (function () {
+            function showReservaFallback() {
+                var el = document.getElementById('reservation-wizard');
+                if (!el || el.children.length > 0) return; // el wizard si cargo: no hacer nada
+                var wa = 'https://wa.me/573008263403?text=' +
+                    encodeURIComponent('Hola Mar&Tierra! Quiero hacer una reserva.');
+                el.innerHTML =
+                    '<div style="max-width:560px;margin:0 auto;padding:34px 28px;text-align:center;' +
+                    'background:#ffffff;border:1px solid #e7ddca;border-radius:12px;' +
+                    'font-family:Georgia,serif;color:#3a2a1a;box-shadow:0 10px 30px rgba(58,42,26,0.08)">' +
+                    '<h3 style="margin:0 0 12px;font-size:1.3rem;color:#5a1f2e">No pudimos cargar el formulario de reserva</h3>' +
+                    '<p style="margin:0 0 20px;font-size:0.95rem;line-height:1.55;color:#5a4a38">' +
+                    'Es posible que tu navegador este desactualizado. Actualizalo o pruebalo desde tu celular ' +
+                    '&mdash; o reserva directamente con nosotros por WhatsApp:</p>' +
+                    '<a href="' + wa + '" target="_blank" rel="noopener" ' +
+                    'style="display:inline-block;background:#25D366;color:#ffffff;text-decoration:none;' +
+                    'padding:14px 28px;border-radius:9px;font-weight:bold;font-size:1rem;font-family:sans-serif">' +
+                    'Reservar por WhatsApp</a>' +
+                    '<p style="margin:18px 0 0;font-size:0.85rem;color:#8a7a68;font-family:sans-serif">' +
+                    'o llamanos: +57 300 826 3403</p>' +
+                    '</div>';
+            }
+            if (window.addEventListener) {
+                window.addEventListener('load', function () { setTimeout(showReservaFallback, 1200); });
+            } else if (window.attachEvent) { // navegadores muy viejos (IE)
+                window.attachEvent('onload', function () { setTimeout(showReservaFallback, 1200); });
+            }
+        })();
+    </script>
 
     <!-- Galeria v2: PhotoSwipe 5 (modulo) + Vanilla-Tilt + init -->
     <script type="module">
