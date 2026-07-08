@@ -467,6 +467,10 @@ class AdminPanel {
                     <span class="adm-detail-label">Estado</span>
                     <span class="adm-detail-value"><span class="adm-badge adm-badge-${r.status}">${statusLabels[r.status]}</span></span>
                 </div>
+                <div class="adm-detail-item">
+                    <span class="adm-detail-label">Reserva creada el</span>
+                    <span class="adm-detail-value">${r.created_at ? new Date(r.created_at).toLocaleString('es-CO', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—'}</span>
+                </div>
                 ${r.has_valet ? `<div class="adm-detail-item" style="grid-column:1/-1;background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.25);border-radius:4px;padding:10px 14px">
                     <span class="adm-detail-label">Valet Parking</span>
                     <span class="adm-detail-value"><strong style="color:#8B6914">SI</strong> — ${r.valet_vehicles || 1} ${r.valet_vehicles === 1 ? 'vehiculo' : 'vehiculos'}</span>
