@@ -223,6 +223,12 @@ class AdminPanel {
             this.blockSlot();
         });
 
+        // Mostrar/ocultar el rango de horas según "Día completo"
+        document.getElementById('block-fullday')?.addEventListener('change', (e) => {
+            const range = document.getElementById('block-time-range');
+            if (range) range.style.display = e.target.checked ? 'none' : 'flex';
+        });
+
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 const modal = document.getElementById('reservation-modal');
@@ -1729,14 +1735,24 @@ class AdminPanel {
         const date = document.getElementById('block-date').value;
         const reason = document.getElementById('block-reason').value;
         const fullDay = document.getElementById('block-fullday').checked;
+        const startTime = document.getElementById('block-start').value;
+        const endTime = document.getElementById('block-end').value;
 
         if (!salonId || !date || !reason) return;
+
+        // Si es por rango horario, exigir ambas horas y que la inicial sea menor
+        if (!fullDay) {
+            if (!startTime || !endTime) { alert('Indica la hora de inicio y de fin, o marca "Día completo".'); return; }
+            if (startTime >= endTime) { alert('La hora de inicio debe ser anterior a la de fin.'); return; }
+        }
 
         const { error } = await sb.from('blocked_slots').insert({
             salon_id: salonId,
             blocked_date: date,
             reason: reason,
             is_full_day: fullDay,
+            start_time: fullDay ? null : startTime,
+            end_time: fullDay ? null : endTime,
             created_by: this.user.id
         });
 
@@ -1747,12 +1763,16 @@ class AdminPanel {
             const salonName = (this.salons.find(s => s.id === salonId) || {}).name || 'Todos';
             await sb.from('reservation_logs').insert({
                 reservation_id: null, action: 'slot_blocked',
-                details: { salon: salonName, date, reason, full_day: fullDay },
+                details: { salon: salonName, date, reason, full_day: fullDay,
+                           start_time: fullDay ? null : startTime, end_time: fullDay ? null : endTime },
                 performed_by: this.user.id
             });
         } catch (e) { /* no bloqueante */ }
 
         document.getElementById('block-slot-form').reset();
+        // reset() re-marca "Día completo" pero no dispara change: ocultar horas manualmente
+        const range = document.getElementById('block-time-range');
+        if (range) range.style.display = 'none';
         this.loadBlockedSlots();
     }
 
@@ -1770,12 +1790,16 @@ class AdminPanel {
             return;
         }
 
-        container.innerHTML = data.map(b => `
+        container.innerHTML = data.map(b => {
+            const when = b.is_full_day
+                ? 'Día completo'
+                : `${(b.start_time || '').slice(0, 5)}–${(b.end_time || '').slice(0, 5)}`;
+            return `
             <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--adm-border)">
-                <span>${b.salon?.name || 'Todos'} — ${new Date(b.blocked_date + 'T12:00:00').toLocaleDateString('es-CO', { month: 'short', day: 'numeric' })} — ${b.reason}</span>
+                <span>${b.salon?.name || 'Todos'} — ${new Date(b.blocked_date + 'T12:00:00').toLocaleDateString('es-CO', { month: 'short', day: 'numeric' })} · ${when} — ${escapeHtml(b.reason)}</span>
                 <button class="adm-btn adm-btn-sm adm-btn-ghost" onclick="adminPanel.removeBlock('${b.id}')">Eliminar</button>
-            </div>
-        `).join('');
+            </div>`;
+        }).join('');
     }
 
     async removeBlock(id) {

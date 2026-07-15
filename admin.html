@@ -313,7 +313,7 @@
                 </div>
                 <div class="adm-settings-section">
                     <h3>Bloquear horario</h3>
-                    <p class="adm-settings-desc">Bloquea un salón para una fecha específica (eventos privados, mantenimiento).</p>
+                    <p class="adm-settings-desc">Bloquea un salón para una fecha completa o un rango de horas específico (eventos privados, mantenimiento).</p>
                     <form id="block-slot-form" class="adm-block-form">
                         <select id="block-salon" required>
                             <option value="">Salón</option>
@@ -324,6 +324,10 @@
                             <input type="checkbox" id="block-fullday" checked>
                             <span>Día completo</span>
                         </label>
+                        <div id="block-time-range" class="adm-block-times" style="display:none;align-items:center;gap:6px">
+                            <label style="display:flex;align-items:center;gap:4px;font-size:0.8rem;color:var(--adm-text-muted)">Desde <input type="time" id="block-start"></label>
+                            <label style="display:flex;align-items:center;gap:4px;font-size:0.8rem;color:var(--adm-text-muted)">Hasta <input type="time" id="block-end"></label>
+                        </div>
                         <button type="submit" class="adm-btn adm-btn-primary">Bloquear</button>
                     </form>
                     <div id="blocked-slots-list"></div>
@@ -387,6 +391,6 @@
 
     <script src="js/vendor/supabase.min.js?v=20260616"></script>
     <script src="js/supabase-config.js"></script>
-    <script src="js/admin.js?v=20260708"></script>
+    <script src="js/admin.js?v=20260715"></script>
 </body>
 </html>
