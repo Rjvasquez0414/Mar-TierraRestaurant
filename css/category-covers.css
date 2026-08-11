@@ -1,0 +1,229 @@
+/* ===============================================
+   CATEGORY COVERS — plato insignia como portada
+   ===============================================
+   Cada categoria de la carta usa la foto de su plato
+   insignia como fondo, en vez del degradado plano.
+
+   El degradado de marca sigue debajo de la foto: es el
+   placeholder mientras carga y el tinte cromatico que
+   conserva la dualidad Mar (azul) / Tierra (marron).
+
+   Aislado: quitar el <link> y los <img class="category-cover">
+   revierte a las portadas de color anteriores.
+   =============================================== */
+
+/* ---------- La foto ---------- */
+
+.categories-grid.menu-v2 .category-cover {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 0;
+    transform: scale(1.05);
+    transform-origin: center;
+    filter: saturate(0.96) contrast(1.04) brightness(1);
+    transition:
+        transform 1100ms cubic-bezier(0.2, 0.7, 0.3, 1),
+        filter 700ms ease;
+    /* nace transparente y aparece cuando el archivo llego */
+    opacity: 0;
+    animation: ccFadeIn 900ms ease forwards;
+}
+
+@keyframes ccFadeIn {
+    to { opacity: 1; }
+}
+
+.categories-grid.menu-v2 .category-card:hover .category-cover {
+    transform: scale(1.12);
+    filter: saturate(1) contrast(1.05) brightness(1);
+}
+
+/* ---------- Legibilidad ---------- */
+
+/* El overlay tiene que ganarle a fotos de comida muy iluminadas */
+.categories-grid.menu-v2 .category-card:not(.solid) .category-overlay {
+    z-index: 1;
+    background: linear-gradient(
+        to top,
+        rgba(24, 16, 11, 0.93) 0%,
+        rgba(24, 16, 11, 0.74) 30%,
+        rgba(24, 16, 11, 0.26) 64%,
+        rgba(24, 16, 11, 0.04) 100%
+    );
+}
+
+.categories-grid.menu-v2 .category-card:not(.solid):hover .category-overlay {
+    background: linear-gradient(
+        to top,
+        rgba(24, 16, 11, 0.88) 0%,
+        rgba(24, 16, 11, 0.62) 30%,
+        rgba(24, 16, 11, 0.16) 64%,
+        rgba(24, 16, 11, 0) 100%
+    );
+}
+
+/* Tinte de marca sobre la foto — conserva la dualidad Mar/Tierra */
+.categories-grid.menu-v2 .category-card:not(.solid)::after {
+    /* ::after ya lo usa el numero outline; el tinte va en un pseudo del overlay */
+}
+
+.categories-grid.menu-v2 .category-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    /* Suficiente para leerse como marca, no tanto como para matar el plato */
+    opacity: 0.3;
+    transition: opacity 700ms ease;
+}
+
+.categories-grid.menu-v2 .category-card:hover .category-overlay::before {
+    opacity: 0.12;
+}
+
+.categories-grid.menu-v2 .category-card[data-category="mar"] .category-overlay::before {
+    background: linear-gradient(160deg, rgba(27, 58, 75, 0.62) 0%, rgba(6, 16, 24, 0.34) 100%);
+}
+
+.categories-grid.menu-v2 .category-card[data-category="tierra"] .category-overlay::before {
+    background: linear-gradient(160deg, rgba(64, 36, 22, 0.55) 0%, rgba(18, 8, 5, 0.34) 100%);
+}
+
+.categories-grid.menu-v2 .category-card[data-category="marytierra"] .category-overlay::before {
+    background: linear-gradient(135deg, rgba(27, 58, 75, 0.5) 0%, rgba(45, 24, 16, 0.45) 60%, rgba(18, 8, 5, 0.45) 100%);
+}
+
+.categories-grid.menu-v2 .category-card[data-category="compartir"] .category-overlay::before,
+.categories-grid.menu-v2 .category-card[data-category="grill"] .category-overlay::before {
+    background: linear-gradient(160deg, rgba(45, 24, 16, 0.45) 0%, rgba(18, 8, 5, 0.3) 100%);
+}
+
+/* El contenido y el numero outline por encima de todo */
+.categories-grid.menu-v2 .category-content {
+    position: absolute;
+    z-index: 3;
+}
+
+.categories-grid.menu-v2 .category-card[data-number]::after {
+    z-index: 2;
+}
+
+/* Sobre foto, el numero necesita algo mas de cuerpo */
+.categories-grid.menu-v2 .category-card:not(.solid)[data-number]::after {
+    -webkit-text-stroke-color: rgba(228, 212, 168, 0.30);
+    text-stroke-color: rgba(228, 212, 168, 0.30);
+}
+
+.categories-grid.menu-v2 .category-card:not(.solid):hover[data-number]::after {
+    -webkit-text-stroke-color: rgba(228, 212, 168, 0.5);
+    text-stroke-color: rgba(228, 212, 168, 0.5);
+}
+
+/* Un respiro de sombra bajo el texto para fotos claras */
+.categories-grid.menu-v2 .category-card:not(.solid) .category-name,
+.categories-grid.menu-v2 .category-card:not(.solid) .category-desc {
+    text-shadow: 0 2px 18px rgba(11, 7, 4, 0.6);
+}
+
+/* ---------- Credito del plato insignia ---------- */
+
+.category-signature {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 14px;
+    font-family: var(--sans-body, 'Causten', system-ui, sans-serif);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--dorado-brillante, #E4D4A8);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 520ms ease, transform 520ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.category-signature::before {
+    content: '';
+    width: 18px;
+    height: 1px;
+    flex: none;
+    background: currentColor;
+    opacity: 0.75;
+}
+
+.categories-grid.menu-v2 .category-card:hover .category-signature,
+.categories-grid.menu-v2 .category-card:focus-visible .category-signature {
+    opacity: 0.92;
+    transform: translateY(0);
+}
+
+/* En tactil no hay hover: el credito se muestra siempre y mas discreto */
+@media (hover: none) {
+    .category-signature {
+        opacity: 0.8;
+        transform: none;
+        margin-top: 11px;
+        font-size: 0.56rem;
+    }
+}
+
+/* ---------- Banner Infantil (sin foto de plato) ---------- */
+
+/* No hay fotografia de los platos infantiles todavia, asi que esta
+   pieza se resuelve como banda tipografica. La textura diagonal la
+   hace ver deliberada y no como la card a la que le falto la foto.
+
+   La banda hace literal la dualidad de marca: mitad Mar, mitad Tierra,
+   con la transicion corta para que no se enlode en verde por el medio. */
+.categories-grid.menu-v2 .category-card.banner.solid {
+    background-image:
+        repeating-linear-gradient(
+            -45deg,
+            rgba(228, 212, 168, 0.045) 0px,
+            rgba(228, 212, 168, 0.045) 1px,
+            transparent 1px,
+            transparent 12px
+        ),
+        radial-gradient(circle at 50% 50%, rgba(184, 148, 31, 0.16), transparent 62%),
+        linear-gradient(100deg, #16303E 0%, #1B3A4B 38%, #2D1810 62%, #1A0C06 100%) !important;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 768px) {
+    .categories-grid.menu-v2 .category-cover {
+        transform: scale(1.02);
+    }
+
+    /* Sin hover en movil: el overlay base tiene que bastar */
+    .categories-grid.menu-v2 .category-card:not(.solid) .category-overlay {
+        background: linear-gradient(
+            to top,
+            rgba(24, 16, 11, 0.95) 0%,
+            rgba(24, 16, 11, 0.84) 30%,
+            rgba(24, 16, 11, 0.48) 62%,
+            rgba(24, 16, 11, 0.18) 100%
+        );
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .categories-grid.menu-v2 .category-cover {
+        animation: none;
+        opacity: 1;
+        transition: none;
+    }
+
+    .categories-grid.menu-v2 .category-card:hover .category-cover {
+        transform: scale(1.05);
+    }
+
+    .category-signature {
+        transition: none;
+    }
+}

@@ -1,0 +1,427 @@
+/* ===============================================
+   HERO CINEMA — carrusel editorial del hero
+   ===============================================
+   Sustituye el fondo estatico por una secuencia
+   cinematografica: crossfade lento + Ken Burns +
+   grano de pelicula + rail de creditos tipo revista.
+
+   Aislado: eliminar el <link> y el bloque .hero-stage
+   del HTML revierte al hero anterior sin tocar nada mas.
+   =============================================== */
+
+/* El fondo lo dibujan los slides, no el .hero */
+.hero {
+    background: #0B0906 !important;
+    isolation: isolate;
+}
+
+/* ---------- Escenario ---------- */
+
+.hero-stage {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    background: #0B0906;
+}
+
+.hero-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1900ms cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity;
+}
+
+.hero-slide.is-active {
+    opacity: 1;
+}
+
+.hero-slide img {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transform: scale(1.03);
+    filter: saturate(0.94) contrast(1.04);
+}
+
+/* La capa de fondo desenfocada solo existe en escritorio (ver abajo) */
+.hero-slide-bg {
+    display: none;
+}
+
+/* Ken Burns — direccion alternada para que no se sienta mecanico */
+.hero-slide.is-active img {
+    animation: hcKenIn var(--hc-dur, 7600ms) linear forwards;
+}
+
+.hero-slide:nth-child(even).is-active img {
+    animation-name: hcKenOut;
+}
+
+/* ---------- Fotos de plato en escritorio ----------
+   Las fotos de plato son verticales (2:3). Recortarlas al 16:9 de una
+   pantalla ancha deja solo la franja central: el plato se ve como un
+   macro y no se entiende que es. En escritorio se muestran completas
+   y el resto del marco lo llena una version desenfocada de la misma
+   foto, para conservar el fondo a sangre sin mutilar el plato.
+
+   En movil no aplica: el marco ya es vertical y la foto encaja. */
+@media (min-width: 901px) {
+    .hero-slide[data-fit="contain"] .hero-slide-bg {
+        display: block;
+        object-fit: cover;
+        transform: scale(1.2);
+        filter: blur(34px) saturate(1.15) brightness(0.5);
+    }
+
+    /* Panel del plato. Va a la izquierda porque el logotipo
+       "Mar & Tierra" pesa hacia la derecha. La mascara disuelve los
+       bordes contra el fondo desenfocado: sin ella se ve como un
+       recorte rectangular pegado encima. */
+    .hero-slide[data-fit="contain"] .hero-plate {
+        position: absolute;
+        left: clamp(24px, 6vw, 108px);
+        top: 15%;
+        bottom: 15%;
+        aspect-ratio: 2 / 3;
+        overflow: hidden;
+        /* Difuminado en los cuatro bordes: dos degradados lineales
+           intersectados. Conserva la forma rectangular de la foto pero
+           disuelve el corte contra el fondo desenfocado.
+           (Un radial no sirve: sus radios en % se miden sobre el ancho
+           de la caja, no sobre la mitad, y la elipse cae fuera del panel.) */
+        -webkit-mask-image:
+            linear-gradient(to right, transparent 0%, #000 15%, #000 85%, transparent 100%),
+            linear-gradient(to bottom, transparent 0%, #000 13%, #000 87%, transparent 100%);
+        mask-image:
+            linear-gradient(to right, transparent 0%, #000 15%, #000 85%, transparent 100%),
+            linear-gradient(to bottom, transparent 0%, #000 13%, #000 87%, transparent 100%);
+        -webkit-mask-composite: source-in;
+        mask-composite: intersect;
+    }
+
+    .hero-slide[data-fit="contain"] .hero-slide-fg {
+        object-fit: cover;
+        object-position: center;
+        filter: saturate(1) contrast(1.04);
+    }
+
+    /* Sobre el plato, un Ken Burns fuerte se siente como un salto:
+       queda una deriva minima. El fondo si conserva el movimiento. */
+    .hero-slide[data-fit="contain"].is-active .hero-slide-fg,
+    .hero-slide[data-fit="contain"]:nth-child(even).is-active .hero-slide-fg {
+        animation: hcDrift var(--hc-dur, 7600ms) ease-out forwards;
+    }
+
+    .hero-slide[data-fit="contain"].is-active .hero-slide-bg,
+    .hero-slide[data-fit="contain"]:nth-child(even).is-active .hero-slide-bg {
+        animation: hcKenIn var(--hc-dur, 7600ms) linear forwards;
+    }
+}
+
+/* Pantallas anchas: el panel puede crecer sin invadir el logotipo */
+@media (min-width: 1500px) {
+    .hero-slide[data-fit="contain"] .hero-plate {
+        top: 12%;
+        bottom: 12%;
+    }
+}
+
+@keyframes hcDrift {
+    from { transform: scale(1) translate3d(0, 1.4%, 0); }
+    to   { transform: scale(1.045) translate3d(0, -0.6%, 0); }
+}
+
+@keyframes hcKenIn {
+    from { transform: scale(1.03) translate3d(0, 0, 0); }
+    to   { transform: scale(1.14) translate3d(-1.2%, -0.8%, 0); }
+}
+
+@keyframes hcKenOut {
+    from { transform: scale(1.14) translate3d(1.2%, 0.6%, 0); }
+    to   { transform: scale(1.03) translate3d(0, 0, 0); }
+}
+
+/* ---------- Capas atmosfericas ---------- */
+
+/* Scrim: mantiene legible la tipografia sobre cualquier foto.
+   Las fotos de salon son claras y las de plato son oscuras, asi que
+   un velo fijo no sirve para ambas: la intensidad se adapta por slide
+   via data-tone (lo pone hero-cinema.js). */
+.hero-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 1400ms ease;
+    background:
+        /* Halo detras del bloque de texto: oscurece donde vive la
+           tipografia y deja respirar la foto en los bordes. */
+        radial-gradient(
+            72% 54% at 50% 47%,
+            rgba(11, 9, 6, 0.74) 0%,
+            rgba(11, 9, 6, 0.56) 52%,
+            rgba(11, 9, 6, 0) 100%
+        ),
+        /* Anclaje superior (bajo el nav crema) e inferior (hacia la seccion) */
+        linear-gradient(
+            180deg,
+            rgba(11, 9, 6, 0.44) 0%,
+            rgba(11, 9, 6, 0.16) 26%,
+            rgba(11, 9, 6, 0.24) 58%,
+            rgba(11, 9, 6, 0.86) 100%
+        );
+}
+
+/* Fotos de plato: son mas contrastadas, aflojamos un poco el velo */
+.hero[data-tone="dark"] .hero-scrim {
+    opacity: 0.86;
+}
+
+/* Foto de salon: mas clara y plana, necesita el velo completo */
+.hero[data-tone="light"] .hero-scrim {
+    opacity: 1;
+}
+
+/* El grano satura las sombras de las fotos de plato */
+.hero[data-tone="dark"] .hero-grain {
+    opacity: 0.1;
+}
+
+/* Grano de pelicula */
+.hero-grain {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.15;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+}
+
+/* El contenido editorial va por encima de todas las capas */
+.hero .hero-content {
+    position: relative;
+    z-index: 3;
+}
+
+/* ---------- Rail de creditos ---------- */
+
+/* Bloque unico abajo a la izquierda: kicker / titulo / progreso.
+   Va a la izquierda para no chocar con el boton flotante de resenas
+   que vive abajo a la derecha. */
+.hero-rail {
+    position: absolute;
+    left: 0;
+    bottom: clamp(84px, 10vh, 128px);
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 0 clamp(24px, 5vw, 76px);
+    max-width: min(520px, 60vw);
+    pointer-events: none;
+}
+
+.hero-cap {
+    pointer-events: auto;
+    min-height: 46px;
+    transition: opacity 620ms ease, transform 620ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Estado de transicion entre slides */
+.hero-cap.is-swapping {
+    opacity: 0;
+    transform: translateY(9px);
+}
+
+.hero-cap-kicker {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin: 0 0 8px;
+    font-family: var(--sans-body, 'Causten', system-ui, sans-serif);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--dorado-brillante, #E4D4A8);
+}
+
+.hero-cap-kicker::before {
+    content: '';
+    width: 28px;
+    height: 1px;
+    flex: none;
+    background: currentColor;
+    opacity: 0.7;
+}
+
+/* Deliberadamente discreto: es un pie de foto, no compite con el
+   "Mar & Tierra" del centro.
+
+   Playfair y no Valerius: Valerius no trae glifos acentuados
+   (por eso el H2 del sitio dice "Gastronomicas" sin tilde) y aqui
+   aparecen nombres con tilde como "Reserva del Capitan". Playfair
+   ya viene cargado en la pagina, no agrega peticiones. */
+.hero-cap-title {
+    margin: 0;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-style: italic;
+    font-size: clamp(1.15rem, 1.7vw, 1.5rem);
+    font-weight: 400;
+    line-height: 1.12;
+    color: #FDFBF7;
+    text-shadow: 0 2px 22px rgba(11, 9, 6, 0.7);
+}
+
+/* ---------- Marcas de progreso ---------- */
+
+.hero-ticks {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    pointer-events: auto;
+}
+
+.hero-tick {
+    position: relative;
+    width: 40px;
+    height: 2px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: rgba(253, 251, 247, 0.26);
+    cursor: pointer;
+    overflow: hidden;
+    transition: background 400ms ease;
+    /* area de toque comoda sin agrandar la linea */
+    box-shadow: 0 0 0 10px transparent;
+}
+
+.hero-tick:hover {
+    background: rgba(253, 251, 247, 0.5);
+}
+
+.hero-tick::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--dorado-brillante, #E4D4A8);
+    transform: scaleX(0);
+    transform-origin: left center;
+}
+
+.hero-tick.is-active::after {
+    animation: hcFill var(--hc-dur, 7600ms) linear forwards;
+}
+
+.hero-tick.is-done::after {
+    transform: scaleX(1);
+    opacity: 0.4;
+}
+
+@keyframes hcFill {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+}
+
+.hero-tick:focus-visible {
+    outline: 2px solid var(--dorado-brillante, #E4D4A8);
+    outline-offset: 6px;
+}
+
+/* Pausa mientras el usuario interactua con el rail */
+.hero-rail:hover .hero-tick.is-active::after {
+    animation-play-state: paused;
+}
+
+/* ===============================================
+   RESPONSIVE
+   =============================================== */
+
+@media (max-width: 900px) {
+    .hero-rail {
+        left: 0;
+        right: 0;
+        bottom: clamp(72px, 9vh, 100px);
+        max-width: 100%;
+        align-items: center;
+        gap: 12px;
+        text-align: center;
+    }
+
+    .hero-cap {
+        min-height: 0;
+        max-width: 100%;
+    }
+
+    .hero-cap-kicker {
+        justify-content: center;
+        font-size: 0.6rem;
+        letter-spacing: 0.24em;
+        margin-bottom: 5px;
+    }
+
+    .hero-cap-kicker::before {
+        width: 18px;
+    }
+
+    .hero-cap-title {
+        font-size: 1.15rem;
+    }
+
+    .hero-tick {
+        width: 30px;
+    }
+}
+
+/* En landscape de telefono el hero es bajito: el rail estorba */
+@media (max-width: 900px) and (orientation: landscape) {
+    .hero-rail {
+        display: none;
+    }
+}
+
+@media (max-width: 420px) {
+    .hero-cap-title {
+        font-size: 1.02rem;
+    }
+
+    .hero-tick {
+        width: 24px;
+    }
+}
+
+/* ===============================================
+   ACCESIBILIDAD — sin movimiento
+   =============================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-slide {
+        transition-duration: 1ms;
+    }
+
+    .hero-slide.is-active img,
+    .hero-slide:nth-child(even).is-active img {
+        animation: none;
+        transform: scale(1.03);
+    }
+
+    .hero-tick.is-active::after {
+        animation: none;
+        transform: scaleX(1);
+    }
+
+    .hero-cap {
+        transition-duration: 1ms;
+    }
+}

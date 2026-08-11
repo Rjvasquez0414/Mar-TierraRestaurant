@@ -1,0 +1,487 @@
+/* ===============================================
+   CALENDARIO — cartelera de eventos
+   ===============================================
+   No es una cuadrícula de calendario: es un programa
+   impreso. Pieza destacada arriba, y debajo las demás
+   fechas como entradas de cartelera (numeral de día
+   grande, regla dorada, miniatura).
+
+   Aislado: quitar el <link> y la sección del HTML
+   revierte sin tocar nada más.
+   =============================================== */
+
+/* Sin eventos publicados (o con Supabase caído) la sección y su enlace
+   del nav desaparecen. Va como clase y con !important porque
+   showSection() resetea el display inline de las secciones marketing. */
+.ev-sin-eventos {
+    display: none !important;
+}
+
+/* ---------------------------------------------------------------
+   COMPACTACIÓN DEL NAV
+   ---------------------------------------------------------------
+   "Calendario" es el 7º item del nav y a partir de ~1300px empujaba
+   el botón "Reservar Mesa" fuera de pantalla — se perdía el CTA
+   principal del sitio. Se aprieta el tracking y el padding en esa
+   franja en vez de sacrificar un item.
+
+   Vive acá y no en styles.css para que quitar este módulo revierta
+   también su efecto colateral sobre el nav.
+   --------------------------------------------------------------- */
+@media (min-width: 993px) and (max-width: 1320px) {
+    /* El gap de 45px entre 8 elementos son 315px solo de aire: es lo
+       primero que debe ceder, antes que el tamaño de la tipografía. */
+    header #nav {
+        gap: 26px;
+    }
+
+    header #nav .nav-link {
+        font-size: 0.76rem;
+        letter-spacing: 0.6px;
+    }
+
+    header #nav .reservation-btn {
+        padding: 12px 22px;
+        font-size: 0.72rem;
+        letter-spacing: 0.8px;
+    }
+}
+
+@media (min-width: 993px) and (max-width: 1120px) {
+    header #nav {
+        gap: 17px;
+    }
+
+    header #nav .nav-link {
+        font-size: 0.68rem;
+        letter-spacing: 0;
+    }
+
+    header #nav .reservation-btn {
+        padding: 11px 15px;
+        font-size: 0.65rem;
+        letter-spacing: 0.3px;
+        white-space: nowrap;
+    }
+
+    /* El logo es lo único que puede ceder ancho sin perder legibilidad */
+    header .navbar-logo {
+        max-width: 118px;
+    }
+}
+
+.events-section {
+    position: relative;
+    padding: clamp(72px, 9vw, 132px) 0 clamp(80px, 10vw, 140px);
+    background:
+        radial-gradient(120% 60% at 50% 0%, rgba(184, 148, 31, 0.06), transparent 60%),
+        linear-gradient(180deg, #F7F3EB 0%, #FBF8F2 45%, #F4EFE5 100%);
+    overflow: hidden;
+}
+
+/* Textura de papel muy sutil */
+.events-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.28'/%3E%3C/svg%3E");
+}
+
+.ev-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 5vw, 60px);
+}
+
+/* Mientras carga: sin salto de layout ni parpadeo */
+.events-section[aria-busy="true"] .ev-destacado-slot,
+.events-section[aria-busy="true"] .ev-lista {
+    min-height: 220px;
+    opacity: 0;
+}
+
+.events-section.is-listo .ev-destacado-slot,
+.events-section.is-listo .ev-lista {
+    opacity: 1;
+    transition: opacity 700ms ease;
+}
+
+/* ---------- Tipografía compartida ---------- */
+
+.ev-kicker {
+    margin: 0 0 12px;
+    font-family: var(--sans-body, 'Causten', system-ui, sans-serif);
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--dorado-premium, #A07D34);
+}
+
+/* Playfair y no Valerius: Valerius no trae glifos acentuados y aquí
+   entran títulos escritos por el restaurante, con tildes garantizadas. */
+.ev-titulo {
+    margin: 0;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 500;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    color: var(--marron-oscuro, #2B1810);
+}
+
+.ev-subtitulo {
+    margin: 8px 0 0;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-style: italic;
+    font-size: 1.02rem;
+    line-height: 1.4;
+    color: #6E6862;
+}
+
+.ev-regla {
+    width: 44px;
+    height: 1px;
+    margin: 20px 0;
+    background: var(--dorado-premium, #A07D34);
+}
+
+.ev-meta {
+    margin: 12px 0 0;
+    font-family: var(--sans-body, 'Causten', system-ui, sans-serif);
+    font-size: 0.86rem;
+    color: #5A544E;
+}
+
+.ev-sep {
+    margin: 0 9px;
+    color: var(--dorado-premium, #A07D34);
+    opacity: 0.6;
+}
+
+/* ---------- Cupos ---------- */
+
+.ev-cupos { margin-top: 16px; }
+
+.ev-barra {
+    height: 2px;
+    background: rgba(43, 24, 16, 0.12);
+    overflow: hidden;
+}
+
+.ev-barra > span {
+    display: block;
+    height: 100%;
+    background: var(--dorado-premium, #A07D34);
+}
+
+.ev-cupos-txt {
+    margin: 8px 0 0;
+    font-family: var(--sans-body, 'Causten', system-ui, sans-serif);
+    font-size: 0.74rem;
+    letter-spacing: 0.06em;
+    color: #6E6862;
+}
+
+.ev-cupos-txt strong {
+    color: var(--marron-oscuro, #2B1810);
+    font-weight: 600;
+}
+
+/* Un evento agotado se deja visible a propósito: es prueba social */
+.ev-cupos--agotado {
+    margin: 16px 0 0;
+    font-family: var(--sans-body, 'Causten', system-ui, sans-serif);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #9A2F2F;
+}
+
+/* ---------- CTA ---------- */
+
+.ev-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 24px;
+    padding: 14px 30px;
+    border: 1px solid var(--marron-oscuro, #2B1810);
+    font-family: var(--sans-body, 'Causten', system-ui, sans-serif);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--marron-oscuro, #2B1810);
+    background: transparent;
+    transition: background 400ms ease, color 400ms ease, transform 400ms ease;
+}
+
+.ev-cta:hover {
+    background: var(--marron-oscuro, #2B1810);
+    color: #FDFBF7;
+}
+
+.ev-cta span { transition: transform 400ms ease; }
+.ev-cta:hover span { transform: translateX(4px); }
+
+.ev-cta--off {
+    border-color: rgba(43, 24, 16, 0.22);
+    color: rgba(43, 24, 16, 0.42);
+    cursor: not-allowed;
+}
+.ev-cta--off:hover { background: transparent; color: rgba(43, 24, 16, 0.42); }
+
+/* ---------- Pieza destacada ---------- */
+
+.ev-destacado {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    align-items: stretch;
+    background: #FFFDF9;
+    border: 1px solid rgba(43, 24, 16, 0.08);
+    box-shadow: 0 24px 64px rgba(43, 24, 16, 0.1);
+    cursor: pointer;
+    transition: transform 600ms cubic-bezier(0.2, 0.7, 0.3, 1),
+                box-shadow 600ms ease;
+}
+
+.ev-destacado:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 32px 80px rgba(43, 24, 16, 0.16);
+}
+
+.ev-destacado-foto {
+    position: relative;
+    overflow: hidden;
+    min-height: 400px;
+}
+
+.ev-destacado-foto img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.03);
+    transition: transform 1100ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.ev-destacado:hover .ev-destacado-foto img { transform: scale(1.09); }
+
+.ev-destacado-cuerpo {
+    padding: clamp(32px, 4vw, 56px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.ev-destacado .ev-titulo { font-size: clamp(1.9rem, 3.1vw, 2.7rem); }
+
+.ev-fecha-larga {
+    margin: 0;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.16rem;
+    color: var(--marron-oscuro, #2B1810);
+}
+
+.ev-destacado.is-agotado .ev-destacado-foto img { filter: grayscale(0.55) brightness(0.9); }
+
+/* ---------- Entradas de cartelera ---------- */
+
+.ev-lista { margin-top: clamp(40px, 5vw, 68px); }
+
+.ev-item {
+    display: grid;
+    grid-template-columns: 92px 1fr auto auto;
+    align-items: center;
+    gap: clamp(18px, 3vw, 36px);
+    padding: 28px 0;
+    border-top: 1px solid rgba(43, 24, 16, 0.13);
+    cursor: pointer;
+    transition: background 450ms ease, padding-left 450ms ease;
+}
+
+.ev-item:last-child { border-bottom: 1px solid rgba(43, 24, 16, 0.13); }
+
+.ev-item:hover {
+    background: rgba(255, 253, 249, 0.9);
+    padding-left: 14px;
+}
+
+/* Bloque de fecha */
+.ev-fecha {
+    text-align: center;
+    border-right: 1px solid rgba(160, 125, 52, 0.35);
+    padding-right: clamp(14px, 2vw, 26px);
+}
+
+.ev-dia {
+    display: block;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.7rem;
+    line-height: 1;
+    color: var(--marron-oscuro, #2B1810);
+}
+
+.ev-mes {
+    display: block;
+    margin-top: 5px;
+    font-family: var(--sans-body, 'Causten', system-ui, sans-serif);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    color: var(--dorado-premium, #A07D34);
+}
+
+.ev-item .ev-titulo { font-size: clamp(1.2rem, 1.7vw, 1.5rem); }
+.ev-item .ev-subtitulo { font-size: 0.92rem; margin-top: 5px; }
+.ev-item .ev-cupos { margin-top: 12px; max-width: 260px; }
+
+.ev-mini {
+    width: clamp(96px, 11vw, 132px);
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+}
+
+.ev-mini img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 900ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.ev-item:hover .ev-mini img { transform: scale(1.08); }
+
+.ev-flecha {
+    font-size: 1.2rem;
+    color: var(--dorado-premium, #A07D34);
+    opacity: 0.5;
+    transition: transform 450ms ease, opacity 450ms ease;
+}
+
+.ev-item:hover .ev-flecha { transform: translateX(6px); opacity: 1; }
+
+.ev-item.is-agotado .ev-dia,
+.ev-item.is-agotado .ev-titulo { color: #8B837B; }
+.ev-item.is-agotado .ev-mini img { filter: grayscale(0.6) brightness(0.95); }
+
+/* ---------- Modal de detalle ---------- */
+
+.ev-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(16px, 4vw, 48px);
+}
+
+.ev-modal.is-abierto { display: flex; }
+
+.ev-modal-fondo {
+    position: absolute;
+    inset: 0;
+    background: rgba(18, 11, 6, 0.72);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    animation: evFade 320ms ease;
+}
+
+.ev-modal-caja {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    width: min(940px, 100%);
+    max-height: 88vh;
+    overflow: hidden;
+    background: #FFFDF9;
+    box-shadow: 0 40px 100px rgba(11, 7, 4, 0.5);
+    animation: evSube 420ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+@keyframes evFade { from { opacity: 0; } }
+@keyframes evSube { from { opacity: 0; transform: translateY(18px); } }
+
+.ev-modal-foto { position: relative; min-height: 320px; overflow: hidden; }
+.ev-modal-foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+.ev-modal-cuerpo {
+    padding: clamp(28px, 3.4vw, 48px);
+    overflow-y: auto;
+}
+
+.ev-modal-cuerpo .ev-titulo { font-size: clamp(1.6rem, 2.4vw, 2.15rem); }
+
+.ev-modal-desc {
+    margin: 0 0 18px;
+    font-family: var(--sans-body, 'Causten', system-ui, sans-serif);
+    font-size: 0.95rem;
+    line-height: 1.72;
+    color: #4A443E;
+}
+
+.ev-modal-x {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    font-size: 1.7rem;
+    line-height: 1;
+    color: var(--marron-oscuro, #2B1810);
+    background: rgba(255, 253, 249, 0.92);
+    cursor: pointer;
+    transition: background 300ms ease, transform 300ms ease;
+}
+
+.ev-modal-x:hover { background: #FFFDF9; transform: rotate(90deg); }
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+    .ev-destacado { grid-template-columns: 1fr; }
+    .ev-destacado-foto { min-height: 250px; }
+
+    .ev-item {
+        grid-template-columns: 66px 1fr;
+        gap: 16px;
+        padding: 22px 0;
+    }
+
+    /* La miniatura y la flecha estorban en el ancho de un teléfono */
+    .ev-mini, .ev-flecha { display: none; }
+
+    .ev-dia { font-size: 2.1rem; }
+    .ev-item .ev-cupos { max-width: 100%; }
+
+    .ev-modal-caja { grid-template-columns: 1fr; max-height: 92vh; }
+    .ev-modal-foto { min-height: 190px; }
+}
+
+@media (hover: none) {
+    .ev-item:hover { padding-left: 0; background: transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ev-destacado,
+    .ev-destacado-foto img,
+    .ev-mini img,
+    .ev-flecha,
+    .ev-item,
+    .ev-cta,
+    .ev-cta span { transition: none; }
+
+    .ev-modal-fondo, .ev-modal-caja { animation: none; }
+    .ev-destacado:hover { transform: none; }
+}

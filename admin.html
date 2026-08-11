@@ -14,7 +14,7 @@
     <link rel="preload" href="fonts/Valerius.otf" as="font" type="font/otf" crossorigin>
     <link rel="preload" href="fonts/causten-light.otf" as="font" type="font/otf" crossorigin>
     <link rel="stylesheet" href="css/custom-fonts.css">
-    <link rel="stylesheet" href="css/admin.css?v=20260605">
+    <link rel="stylesheet" href="css/admin.css?v=20260811">
 </head>
 <body>
     <!-- Login Screen -->
@@ -60,6 +60,7 @@
             <button class="adm-tab" data-view="monitoreo">Monitoreo</button>
             <button class="adm-tab" data-view="customers">Clientes</button>
             <button class="adm-tab" data-view="stats">Estadísticas</button>
+            <button class="adm-tab" data-view="eventos">Eventos</button>
             <button class="adm-tab" data-view="settings">Configuración</button>
         </nav>
 
@@ -305,6 +306,26 @@
             <!-- ============================================
                  SETTINGS VIEW
                  ============================================ -->
+            <section id="view-eventos" class="adm-view">
+                <div class="adm-settings-section">
+                    <div class="adm-ev-head">
+                        <div>
+                            <h3>Eventos</h3>
+                            <p class="adm-settings-desc">Catas, maridajes y noches temáticas que se muestran en el sitio. Solo los <strong>publicados</strong> con fecha futura son visibles para el público.</p>
+                        </div>
+                        <button type="button" class="adm-btn adm-btn-primary" id="ev-nuevo">Nuevo evento</button>
+                    </div>
+
+                    <div class="adm-ev-filtros">
+                        <label class="adm-checkbox">
+                            <input type="checkbox" id="ev-ver-pasados">
+                            <span>Incluir pasados y archivados</span>
+                        </label>
+                    </div>
+
+                    <div id="ev-lista"></div>
+                </div>
+            </section>
             <section id="view-settings" class="adm-view">
                 <div class="adm-settings-section">
                     <h3>Salones</h3>
@@ -339,6 +360,43 @@
                 </div>
             </section>
         </main>
+    </div>
+
+
+    <!-- Crear / editar evento -->
+    <div id="ev-modal-admin" class="adm-modal-overlay" style="display:none">
+        <div class="adm-modal">
+            <button type="button" class="adm-modal-close" id="ev-cerrar">&times;</button>
+            <h3 class="adm-create-title" id="ev-modal-titulo">Nuevo evento</h3>
+            <p class="adm-create-sub">Los campos con * son obligatorios. La imagen es una URL (súbela a Cloudinary y pega el enlace).</p>
+            <div class="adm-create-grid">
+                <div class="adm-field"><label>Título *</label><input type="text" id="ev-f-title" maxlength="120"></div>
+                <div class="adm-field"><label>Enlace (slug) *</label><input type="text" id="ev-f-slug" maxlength="80" placeholder="cata-de-malbec"></div>
+                <div class="adm-field adm-field-full"><label>Subtítulo</label><input type="text" id="ev-f-subtitle" maxlength="160"></div>
+                <div class="adm-field adm-field-full"><label>Descripción</label><textarea id="ev-f-description" rows="4"></textarea></div>
+                <div class="adm-field"><label>Fecha *</label><input type="date" id="ev-f-date"></div>
+                <div class="adm-field"><label>Hora inicio *</label><input type="time" id="ev-f-start"></div>
+                <div class="adm-field"><label>Hora fin</label><input type="time" id="ev-f-end"></div>
+                <div class="adm-field"><label>Salón</label><select id="ev-f-salon"><option value="">Sin salón definido</option></select></div>
+                <div class="adm-field"><label>Precio por persona (COP)</label><input type="number" id="ev-f-price" min="0" step="1000" inputmode="numeric"></div>
+                <div class="adm-field"><label>Cupos totales</label><input type="number" id="ev-f-capacity" min="0" inputmode="numeric"></div>
+                <div class="adm-field"><label>Cupos vendidos</label><input type="number" id="ev-f-taken" min="0" inputmode="numeric" value="0"></div>
+                <div class="adm-field"><label>Estado</label><select id="ev-f-status">
+                    <option value="draft">Borrador (no visible)</option>
+                    <option value="published">Publicado (visible en el sitio)</option>
+                    <option value="archived">Archivado</option>
+                </select></div>
+                <div class="adm-field adm-field-full"><label>URL de la imagen</label><input type="url" id="ev-f-image" placeholder="https://res.cloudinary.com/..."></div>
+                <div class="adm-field adm-field-full">
+                    <label class="adm-checkbox">
+                        <input type="checkbox" id="ev-f-highlight">
+                        <span>Destacar en el sitio (solo un evento a la vez)</span>
+                    </label>
+                </div>
+            </div>
+            <p class="adm-ev-error" id="ev-error"></p>
+            <button type="button" class="adm-btn adm-btn-primary adm-btn-full" id="ev-guardar">Guardar evento</button>
+        </div>
     </div>
 
     <!-- Reservation detail modal -->
@@ -389,8 +447,9 @@
         </div>
     </div>
 
-    <script src="js/vendor/supabase.min.js?v=20260616"></script>
+    <script src="js/vendor/supabase.min.js?v=20260811"></script>
     <script src="js/supabase-config.js"></script>
-    <script src="js/admin.js?v=20260715"></script>
+    <script src="js/admin.js?v=20260811"></script>
+    <script src="js/admin-events.js?v=20260811"></script>
 </body>
 </html>

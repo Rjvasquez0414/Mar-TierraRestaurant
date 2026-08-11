@@ -94,7 +94,7 @@
     <link rel="stylesheet" href="css/redesign.css">
 
     <!-- Menú interior editorial (spread alternado tipo recetario) -->
-    <link rel="stylesheet" href="css/redesign-menu.css?v=20260601">
+    <link rel="stylesheet" href="css/redesign-menu.css?v=20260811">
 
     <!-- Mobile responsive overrides — DEBE CARGAR ÚLTIMO -->
     <link rel="stylesheet" href="css/mobile.css">
@@ -102,6 +102,15 @@
     <!-- Mobile Premium Pass — capa editorial específica para mobile
          (nav drawer editorial, modal fullscreen, sticky CTA, oro restringido) -->
     <link rel="stylesheet" href="css/redesign-mobile.css">
+
+    <!-- Portadas fotográficas de la carta (plato insignia por categoría) -->
+    <link rel="stylesheet" href="css/category-covers.css?v=20260811">
+
+    <!-- Calendario de eventos del restaurante -->
+    <link rel="stylesheet" href="css/events.css?v=20260811">
+
+    <!-- Hero cinematográfico: carrusel editorial de fondo -->
+    <link rel="stylesheet" href="css/hero-cinema.css?v=20260811">
 
     <!-- Schema.org JSON-LD: Restaurant + LocalBusiness para SEO local -->
     <script type="application/ld+json">
@@ -212,7 +221,8 @@
                 <a href="#categories" class="nav-link" onclick="showSection('categories'); return false;">Menú</a>
                 <a href="#instalaciones" class="nav-link" onclick="showSection('instalaciones'); return false;">Instalaciones</a>
                 <a href="#galeria" class="nav-link" onclick="showSection('galeria'); return false;">Galería</a>
-                <a href="#reservation-info" class="nav-link" onclick="showSection('reservation-info'); return false;">Reservas</a>
+                <a href="#calendario" class="nav-link" data-nav-calendario onclick="showSection('calendario'); return false;">Calendario</a>
+                    <a href="#reservation-info" class="nav-link" onclick="showSection('reservation-info'); return false;">Reservas</a>
                 <a href="#contact" class="nav-link" onclick="showSection('contact'); return false;">Contacto</a>
                 <button type="button" class="reservation-btn" onclick="showSection('reservation-info')" aria-label="Reservar mesa">
                     <span>Reservar Mesa</span>
@@ -247,6 +257,57 @@
 
     <!-- Hero Section — Editorial -->
     <section class="hero" id="hero">
+        <!-- Carrusel editorial de fondo. El primer slide trae src real (es el LCP);
+             los demás cargan tras el load vía js/hero-cinema.js -->
+        <div class="hero-stage" aria-hidden="true">
+            <div class="hero-slide" data-tone="light" data-kicker="Cabecera del Llano" data-title="Nuestra casa en Bucaramanga">
+                <img src="https://res.cloudinary.com/dxvl2i2fy/image/upload/f_auto,q_auto,w_1920,h_1080,c_fill,g_auto/v1764181801/_MG_8945_pjgoxy.webp"
+                     alt="" width="1920" height="1080" fetchpriority="high" decoding="async">
+            </div>
+            <div class="hero-slide" data-fit="contain" data-tone="dark" data-kicker="Ritual de Mar" data-title="Reserva del Capitán">
+                    <img class="hero-slide-bg" aria-hidden="true" decoding="async"
+                         data-hc-src="https://res.cloudinary.com/dxvl2i2fy/image/upload/f_auto,q_auto,w_600,h_338,c_fill,g_auto,e_blur:1800/v1768570229/Reserva_del_capit%C3%A1n_plato_fuerte_j4t94r.jpg" alt="">
+                    <div class="hero-plate">
+                        <img class="hero-slide-fg" decoding="async" width="1000" height="1500"
+                         data-hc-src="https://res.cloudinary.com/dxvl2i2fy/image/upload/f_auto,q_auto,w_1000,c_limit/v1768570229/Reserva_del_capit%C3%A1n_plato_fuerte_j4t94r.jpg" alt="">
+                    </div>
+            </div>
+            <div class="hero-slide" data-fit="contain" data-tone="dark" data-kicker="Mar &amp; Tierra" data-title="Filet Mignon">
+                    <img class="hero-slide-bg" aria-hidden="true" decoding="async"
+                         data-hc-src="https://res.cloudinary.com/dxvl2i2fy/image/upload/f_auto,q_auto,w_600,h_338,c_fill,g_auto,e_blur:1800/v1779924791/filet-mignon_yedcyc.jpg" alt="">
+                    <div class="hero-plate">
+                        <img class="hero-slide-fg" decoding="async" width="1000" height="1500"
+                         data-hc-src="https://res.cloudinary.com/dxvl2i2fy/image/upload/f_auto,q_auto,w_1000,c_limit/v1779924791/filet-mignon_yedcyc.jpg" alt="">
+                    </div>
+            </div>
+            <div class="hero-slide" data-fit="contain" data-tone="dark" data-kicker="Para Compartir" data-title="Flor de Loto">
+                    <img class="hero-slide-bg" aria-hidden="true" decoding="async"
+                         data-hc-src="https://res.cloudinary.com/dxvl2i2fy/image/upload/f_auto,q_auto,w_600,h_338,c_fill,g_auto,e_blur:1800/v1768570224/Flor_de_Loto_bfu9oq.jpg" alt="">
+                    <div class="hero-plate">
+                        <img class="hero-slide-fg" decoding="async" width="1000" height="1500"
+                         data-hc-src="https://res.cloudinary.com/dxvl2i2fy/image/upload/f_auto,q_auto,w_1000,c_limit/v1768570224/Flor_de_Loto_bfu9oq.jpg" alt="">
+                    </div>
+            </div>
+            <div class="hero-slide" data-fit="contain" data-tone="dark" data-kicker="Ritual de Tierra" data-title="Beef Wellington">
+                    <img class="hero-slide-bg" aria-hidden="true" decoding="async"
+                         data-hc-src="https://res.cloudinary.com/dxvl2i2fy/image/upload/f_auto,q_auto,w_600,h_338,c_fill,g_auto,e_blur:1800/v1779924791/beef-wellington_kdrakv.jpg" alt="">
+                    <div class="hero-plate">
+                        <img class="hero-slide-fg" decoding="async" width="1000" height="1500"
+                         data-hc-src="https://res.cloudinary.com/dxvl2i2fy/image/upload/f_auto,q_auto,w_1000,c_limit/v1779924791/beef-wellington_kdrakv.jpg" alt="">
+                    </div>
+            </div>
+            <div class="hero-slide" data-fit="contain" data-tone="dark" data-kicker="Grill" data-title="New York Angus">
+                    <img class="hero-slide-bg" aria-hidden="true" decoding="async"
+                         data-hc-src="https://res.cloudinary.com/dxvl2i2fy/image/upload/f_auto,q_auto,w_600,h_338,c_fill,g_auto,e_blur:1800/v1779332960/new-york-400gr-importado-angus-certified_m0hlvl.jpg" alt="">
+                    <div class="hero-plate">
+                        <img class="hero-slide-fg" decoding="async" width="1000" height="1500"
+                         data-hc-src="https://res.cloudinary.com/dxvl2i2fy/image/upload/f_auto,q_auto,w_1000,c_limit/v1779332960/new-york-400gr-importado-angus-certified_m0hlvl.jpg" alt="">
+                    </div>
+            </div>
+        </div>
+        <div class="hero-scrim" aria-hidden="true"></div>
+        <div class="hero-grain" aria-hidden="true"></div>
+
         <div class="hero-content">
             <p class="hero-eyebrow">Bucaramanga · Cocina de Autor</p>
             <h1 class="hero-title">
@@ -263,6 +324,23 @@
             </p>
             <a href="#categories" class="hero-cta" onclick="showSection('categories'); return false;">Descubrir Menú</a>
         </div>
+
+        <!-- Rail de créditos: qué se está viendo + progreso navegable -->
+        <div class="hero-rail">
+            <figcaption class="hero-cap" aria-live="polite">
+                <p class="hero-cap-kicker"></p>
+                <p class="hero-cap-title"></p>
+            </figcaption>
+            <div class="hero-ticks" role="tablist" aria-label="Galería del hero">
+                <button type="button" class="hero-tick" aria-label="Ver imagen 1"></button>
+                <button type="button" class="hero-tick" aria-label="Ver imagen 2"></button>
+                <button type="button" class="hero-tick" aria-label="Ver imagen 3"></button>
+                <button type="button" class="hero-tick" aria-label="Ver imagen 4"></button>
+                <button type="button" class="hero-tick" aria-label="Ver imagen 5"></button>
+                <button type="button" class="hero-tick" aria-label="Ver imagen 6"></button>
+            </div>
+        </div>
+
         <div class="wave-divider"></div>
     </section>
     
@@ -284,7 +362,10 @@
 
         <div class="categories-grid menu-v2">
             <!-- HERO: Mar y Tierra (la firma) -->
-            <button type="button" class="category-card featured solid" data-category="marytierra" data-number="00" onclick="showMenuSection('marytierra')" aria-label="Ver platos Mar y Tierra">
+            <button type="button" class="category-card featured" data-category="marytierra" data-number="00" onclick="showMenuSection('marytierra')" aria-label="Ver platos Mar y Tierra">
+                <img class="category-cover" loading="lazy" decoding="async" width="1400" height="1230"
+                     src="https://res.cloudinary.com/dxvl2i2fy/image/upload/f_auto,q_auto,w_1400,h_1230,c_fill,g_auto/v1779924791/filet-mignon_yedcyc.jpg"
+                     alt="Filet Mignon, plato insignia de Mar y Tierra">
                 <div class="category-overlay"></div>
                 <span class="category-badge">La firma</span>
                 <div class="category-content">
@@ -294,6 +375,7 @@
                     <div class="category-line"></div>
                     <h3 class="category-name">Mar &amp; Tierra</h3>
                     <p class="category-desc">Fusión perfecta de sabores del mar y la tierra — el corazón de nuestra carta</p>
+                    <p class="category-signature">Filet Mignon</p>
                     <div class="category-footer">
                         <span class="category-cta">Ver carta <span class="category-cta-arrow">→</span></span>
                     </div>
@@ -301,7 +383,10 @@
             </button>
 
             <!-- Para Compartir -->
-            <button type="button" class="category-card solid" data-category="compartir" data-number="01" onclick="showMenuSection('compartir')" aria-label="Ver platos Para Compartir">
+            <button type="button" class="category-card" data-category="compartir" data-number="01" onclick="showMenuSection('compartir')" aria-label="Ver platos Para Compartir">
+                <img class="category-cover" loading="lazy" decoding="async" width="900" height="790"
+                     src="https://res.cloudinary.com/dxvl2i2fy/image/upload/f_auto,q_auto,w_900,h_790,c_fill,g_auto/v1768570224/Flor_de_Loto_bfu9oq.jpg"
+                     alt="Flor de Loto, carpaccio de res con burrata">
                 <div class="category-overlay"></div>
                 <div class="category-content">
                     <span class="category-icon" aria-hidden="true">
@@ -310,6 +395,7 @@
                     <div class="category-line"></div>
                     <h3 class="category-name">Para Compartir</h3>
                     <p class="category-desc">Ceviches, tartares y entradas para iniciar</p>
+                    <p class="category-signature">Flor de Loto</p>
                     <div class="category-footer">
                         <span class="category-cta">Ver <span class="category-cta-arrow">→</span></span>
                     </div>
@@ -317,7 +403,10 @@
             </button>
 
             <!-- Ritual de Mar -->
-            <button type="button" class="category-card solid" data-category="mar" data-number="02" onclick="showMenuSection('mar')" aria-label="Ver platos Ritual de Mar">
+            <button type="button" class="category-card" data-category="mar" data-number="02" onclick="showMenuSection('mar')" aria-label="Ver platos Ritual de Mar">
+                <img class="category-cover" loading="lazy" decoding="async" width="900" height="790"
+                     src="https://res.cloudinary.com/dxvl2i2fy/image/upload/f_auto,q_auto,w_900,h_790,c_fill,g_auto/v1768570225/Pulpo_Ancestral_xai8i2.jpg"
+                     alt="Pulpo Ancestral, plato insignia del Ritual de Mar">
                 <div class="category-overlay"></div>
                 <div class="category-content">
                     <span class="category-icon" aria-hidden="true">
@@ -326,6 +415,7 @@
                     <div class="category-line"></div>
                     <h3 class="category-name">Ritual de Mar</h3>
                     <p class="category-desc">Pescados y mariscos con técnicas de autor</p>
+                    <p class="category-signature">Pulpo Ancestral</p>
                     <div class="category-footer">
                         <span class="category-cta">Ver <span class="category-cta-arrow">→</span></span>
                     </div>
@@ -333,7 +423,10 @@
             </button>
 
             <!-- Ritual de Tierra -->
-            <button type="button" class="category-card solid" data-category="tierra" data-number="03" onclick="showMenuSection('tierra')" aria-label="Ver platos Ritual de Tierra">
+            <button type="button" class="category-card" data-category="tierra" data-number="03" onclick="showMenuSection('tierra')" aria-label="Ver platos Ritual de Tierra">
+                <img class="category-cover" loading="lazy" decoding="async" width="900" height="790"
+                     src="https://res.cloudinary.com/dxvl2i2fy/image/upload/f_auto,q_auto,w_900,h_790,c_fill,g_auto/v1779924791/beef-wellington_kdrakv.jpg"
+                     alt="Beef Wellington, plato insignia del Ritual de Tierra">
                 <div class="category-overlay"></div>
                 <div class="category-content">
                     <span class="category-icon" aria-hidden="true">
@@ -342,6 +435,7 @@
                     <div class="category-line"></div>
                     <h3 class="category-name">Ritual de Tierra</h3>
                     <p class="category-desc">Carnes selectas y platos de tradición</p>
+                    <p class="category-signature">Beef Wellington</p>
                     <div class="category-footer">
                         <span class="category-cta">Ver <span class="category-cta-arrow">→</span></span>
                     </div>
@@ -349,7 +443,10 @@
             </button>
 
             <!-- Grill -->
-            <button type="button" class="category-card solid" data-category="grill" data-number="04" onclick="showMenuSection('grill')" aria-label="Ver platos Grill">
+            <button type="button" class="category-card" data-category="grill" data-number="04" onclick="showMenuSection('grill')" aria-label="Ver platos Grill">
+                <img class="category-cover" loading="lazy" decoding="async" width="900" height="790"
+                     src="https://res.cloudinary.com/dxvl2i2fy/image/upload/f_auto,q_auto,w_900,h_790,c_fill,g_auto/v1779332960/new-york-400gr-importado-angus-certified_m0hlvl.jpg"
+                     alt="New York Angus, corte insignia del Grill">
                 <div class="category-overlay"></div>
                 <div class="category-content">
                     <span class="category-icon" aria-hidden="true">
@@ -358,6 +455,7 @@
                     <div class="category-line"></div>
                     <h3 class="category-name">Grill</h3>
                     <p class="category-desc">Cortes a la parrilla con chimichurri de la casa</p>
+                    <p class="category-signature">New York Angus</p>
                     <div class="category-footer">
                         <span class="category-cta">Ver <span class="category-cta-arrow">→</span></span>
                     </div>
@@ -848,6 +946,31 @@
     </div>
 
     <!-- Sección de Reservas — Wizard v2 (Supabase) -->
+
+    <!-- ===== CALENDARIO DE EVENTOS ===== -->
+    <section class="events-section" id="calendario" aria-busy="true" aria-labelledby="ev-h2">
+        <div class="ev-wrap">
+            <div class="section-header" data-numeral="IV">
+                <p class="section-overtitle">Nuestra Agenda</p>
+                <h2 class="section-title" id="ev-h2">Calendario de Eventos</h2>
+                <div class="ornament">
+                    <div class="ornament-line"></div>
+                    <div class="ornament-center"></div>
+                    <div class="ornament-line"></div>
+                </div>
+                <p class="section-description">
+                    Catas, maridajes y noches de autor &mdash; experiencias de cupo limitado
+                    que ocurren una sola vez
+                </p>
+            </div>
+
+            <div class="ev-destacado-slot"></div>
+            <div class="ev-lista"></div>
+        </div>
+    </section>
+
+    <div class="ev-modal" id="ev-modal"></div>
+
     <section class="reservation-info-section" id="reservation-info">
         <div class="reservation-info-container">
             <div class="section-header" data-numeral="IV">
@@ -1211,6 +1334,7 @@
                         <li><a href="#hero">Inicio</a></li>
                         <li><a href="#categories">Menú</a></li>
                         <li><a href="#instalaciones">Instalaciones</a></li>
+                        <li data-nav-calendario><a href="#calendario">Calendario</a></li>
                         <li><a href="#reservation-info">Reservas</a></li>
                         <li><a href="#contact">Contacto</a></li>
                     </ul>
@@ -1274,14 +1398,14 @@
     </a>
 
     <!-- Supabase JS Client (CDN) -->
-    <script src="js/vendor/supabase.min.js?v=20260616" defer></script>
+    <script src="js/vendor/supabase.min.js?v=20260811" defer></script>
 
     <!-- Scripts (defer mantiene orden de ejecución y no bloquea render) -->
-    <script src="js/menu-data.js?v=20260601" defer></script>
-    <script src="js/menu-schema.js?v=20260601" defer></script>
-    <script src="js/script.js?v=20260601" defer></script>
-    <script src="js/supabase-config.js?v=20260601" defer></script>
-    <script src="js/reservations-v2.js?v=20260609b" defer></script>
+    <script src="js/menu-data.js?v=20260811" defer></script>
+    <script src="js/menu-schema.js?v=20260811" defer></script>
+    <script src="js/script.js?v=20260811" defer></script>
+    <script src="js/supabase-config.js?v=20260811" defer></script>
+    <script src="js/reservations-v2.js?v=20260811" defer></script>
 
     <!-- Red de seguridad del wizard de reservas: si por cualquier motivo
          (navegador desactualizado, error de carga, JS bloqueado) los pasos
@@ -1379,7 +1503,14 @@
     <script src="js/instalaciones.js" defer></script>
 
     <!-- Script de Mejoras Profesionales -->
-    <script src="js/enhancements.js" defer></script>
+    <script src="js/enhancements.js?v=20260811" defer></script>
+
+    <!-- Calendario de eventos -->
+    <script src="js/events-demo.js?v=20260811" defer></script>
+    <script src="js/events.js?v=20260811" defer></script>
+
+    <!-- Carrusel editorial del hero -->
+    <script src="js/hero-cinema.js?v=20260811" defer></script>
 
     <!-- Lightbox custom (gallery.js) desactivado en favor de PhotoSwipe (gallery-v2.js)
          Para revertir: descomentar la linea de abajo y quitar gallery-v2.css/js -->

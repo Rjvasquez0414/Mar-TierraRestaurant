@@ -1513,3 +1513,102 @@ body {
 @media (max-width: 620px) {
     .adm-create-grid { grid-template-columns: 1fr; }
 }
+
+/* ===============================================
+   EVENTOS — vista del Calendario
+   =============================================== */
+
+.adm-ev-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 6px;
+}
+
+.adm-ev-head h3 { margin: 0; }
+
+.adm-ev-filtros { margin: 14px 0 18px; }
+
+.adm-ev-row {
+    display: grid;
+    grid-template-columns: 150px 1fr auto auto;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 0;
+    border-top: 1px solid var(--adm-border, rgba(43, 24, 16, 0.12));
+}
+
+.adm-ev-row:last-child {
+    border-bottom: 1px solid var(--adm-border, rgba(43, 24, 16, 0.12));
+}
+
+.adm-ev-cuando {
+    font-size: 0.82rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--adm-text-muted, #6E6862);
+}
+
+.adm-ev-main strong { font-weight: 600; }
+
+.adm-ev-sub {
+    margin-top: 3px;
+    font-size: 0.78rem;
+    color: var(--adm-text-muted, #6E6862);
+}
+
+.adm-ev-star { color: #C9A961; }
+.adm-ev-dim { opacity: 0.6; }
+.adm-ev-lleno { color: #9A2F2F; font-weight: 600; }
+
+.adm-ev-estado {
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.adm-ev-estado--published { background: rgba(46, 125, 74, 0.13); color: #2E7D4A; }
+.adm-ev-estado--draft     { background: rgba(110, 104, 98, 0.14); color: #6E6862; }
+.adm-ev-estado--archived  { background: rgba(154, 47, 47, 0.11);  color: #9A2F2F; }
+
+.adm-ev-acciones { display: flex; gap: 7px; flex-wrap: wrap; }
+
+.adm-ev-vacio {
+    padding: 26px 0;
+    font-size: 0.86rem;
+    color: var(--adm-text-muted, #6E6862);
+}
+
+.adm-ev-vacio code {
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(43, 24, 16, 0.07);
+    font-size: 0.9em;
+}
+
+.adm-ev-error {
+    min-height: 18px;
+    margin: 10px 0 4px;
+    font-size: 0.8rem;
+    color: #9A2F2F;
+}
+
+.adm-field-full { grid-column: 1 / -1; }
+
+.adm-field textarea {
+    width: 100%;
+    padding: 9px 11px;
+    border: 1px solid var(--adm-border, rgba(43, 24, 16, 0.2));
+    border-radius: 6px;
+    font: inherit;
+    font-size: 0.86rem;
+    resize: vertical;
+}
+
+@media (max-width: 780px) {
+    .adm-ev-row { grid-template-columns: 1fr; gap: 8px; }
+    .adm-ev-head { flex-direction: column; }
+}

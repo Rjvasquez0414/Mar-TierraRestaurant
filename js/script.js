@@ -478,10 +478,10 @@ class MenuApp {
         // Marketing sections que fluyen juntas en el home.
         // Al navegar a cualquiera de ellas: NO se ocultan las otras,
         // solo se hace scroll. Esto preserva el flow tipico de landing.
-        const MARKETING = ['hero', 'categories', 'instalaciones', 'galeria', 'testimonios', 'contact'];
+        const MARKETING = ['hero', 'categories', 'instalaciones', 'galeria', 'testimonios', 'calendario', 'contact'];
         // Page-mode: secciones que reemplazan al home (deep-link)
         const PAGE_MODE_SELECTORS = '.menu-section, .reservation-info-section';
-        const MARKETING_SELECTORS = '.hero, .categories-section, .instalaciones-section, .gallery-section, .testimonials-section, .contact-section';
+        const MARKETING_SELECTORS = '.hero, .categories-section, .instalaciones-section, .gallery-section, .testimonials-section, .events-section, .contact-section';
 
         const isMarketing = MARKETING.includes(sectionId);
 
