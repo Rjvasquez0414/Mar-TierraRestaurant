@@ -297,8 +297,8 @@ function initPerformanceOptimizations() {
 
     // Preload critical images
     const criticalImages = [
-        'images/EspaciosRestaurante/almaterra/_MG_8912.JPG',
-        'images/EspaciosRestaurante/arca/_MG_8885.JPG'
+        'images/EspaciosRestaurante/almaterra/_MG_8912.webp',
+        'images/EspaciosRestaurante/arca/_MG_8885.webp'
     ];
 
     criticalImages.forEach(src => {
