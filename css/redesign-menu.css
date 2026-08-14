@@ -743,7 +743,9 @@
         gap: 0;
     }
     .menu-section .filter-btn {
-        padding: 6px 14px !important;
+        /* 6px de padding dejaban el boton en 23px de alto: la mitad de lo que
+           necesita un pulgar. Solo crece el area tactil, el texto no cambia. */
+        padding: 16px 14px !important;
         font-size: 0.58rem !important;
         letter-spacing: 0.32em !important;
     }

@@ -301,10 +301,20 @@
     border-radius: 0;
     background: rgba(253, 251, 247, 0.26);
     cursor: pointer;
-    overflow: hidden;
     transition: background 400ms ease;
-    /* area de toque comoda sin agrandar la linea */
-    box-shadow: 0 0 0 10px transparent;
+}
+
+/* Area de toque. La marca mide 2px de alto: con el dedo es inalcanzable.
+   Antes se intentaba con box-shadow transparente, pero la sombra no cuenta
+   para la deteccion del toque — solo pinta. Un pseudo-elemento estirado si.
+   Va en ::before porque el ::after es la barra de progreso. */
+.hero-tick::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -21px;
+    bottom: -21px;   /* 2 + 21 + 21 = 44px tactiles */
 }
 
 .hero-tick:hover {

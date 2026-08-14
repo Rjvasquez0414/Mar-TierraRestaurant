@@ -185,6 +185,27 @@ body.legal-page {
     color: var(--legal-accent);
 }
 
+/* En celular estos enlaces median 17px de alto y el de volver 24px: muy poco
+   para el dedo. Se les da altura tactil sin mover la composicion. */
+@media (max-width: 768px) {
+    .legal-footer a {
+        display: inline-block;
+        padding: 12px 6px;
+        margin: 0;
+    }
+
+    .legal-back {
+        display: inline-block;
+        padding: 10px 0;
+    }
+
+    .legal-page a[href^="tel:"],
+    .legal-page a[href*="wa.me"] {
+        display: inline-block;
+        padding: 8px 0;
+    }
+}
+
 
 /* --- Focus accesible --- */
 .legal-page a:focus-visible,
