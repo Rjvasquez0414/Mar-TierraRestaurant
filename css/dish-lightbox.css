@@ -1,0 +1,98 @@
+/* ===============================================
+   DISH LIGHTBOX — senal de "tocable" + visor a pantalla completa
+   ===============================================
+   Acompana a js/dish-lightbox.js. Solo actua cuando ese modulo
+   marca el contenedor con .dl-on, o sea cuando el plato abierto
+   tiene foto propia (no el placeholder).
+
+   Se usa ::before porque redesign-menu.css ya ocupa el ::after de
+   .dish-modal-image con el marco interior.
+   =============================================== */
+
+/* ---------- La foto se anuncia como tocable ---------- */
+
+.dish-modal-image.dl-on,
+.dish-modal-image.dl-on img {
+    cursor: zoom-in;
+}
+
+/* El overlay (degradado + etiquetas) se monta sobre la foto y le roba
+   los clics y el cursor. Nada dentro de el es interactivo, asi que lo
+   dejamos pasar. */
+.dish-modal-image.dl-on .image-overlay {
+    pointer-events: none;
+}
+
+/* Icono de expandir. Abajo a la derecha: arriba a la derecha esta el
+   boton de cerrar del modal y a la izquierda caen las etiquetas
+   (POPULAR, NUEVO...). Es la unica esquina libre. */
+.dish-modal-image.dl-on::before {
+    content: '';
+    position: absolute;
+    right: 26px;
+    bottom: 26px;
+    width: 34px;
+    height: 34px;
+    z-index: 3;
+    border-radius: 50%;
+    background-color: rgba(43, 24, 16, 0.72);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 15px 15px;
+    /* Flechas hacia las esquinas — "ampliar" */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FDFBF7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='15 3 21 3 21 9'/%3E%3Cpolyline points='9 21 3 21 3 15'/%3E%3Cline x1='21' y1='3' x2='14' y2='10'/%3E%3Cline x1='3' y1='21' x2='10' y2='14'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* En escritorio aparece al pasar el mouse: el cursor de lupa ya avisa. */
+.dish-modal-overlay.active .dish-modal-image.dl-on:hover::before {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* En tactil no hay hover, asi que se queda visible: es la unica pista
+   de que la foto se puede ampliar. */
+@media (hover: none) {
+    .dish-modal-overlay.active .dish-modal-image.dl-on::before {
+        opacity: 1;
+        transform: scale(1);
+        right: 16px;
+        bottom: 16px;
+    }
+}
+
+/* Foco visible para quien navega con teclado */
+.dish-modal-image.dl-on:focus-visible {
+    outline: 2px solid var(--dorado, #D4AF37);
+    outline-offset: -4px;
+}
+
+/* ---------- El visor ---------- */
+
+/* La foto entera, sin recorte: es justo lo que el modal no puede dar. */
+.pswp__img {
+    object-fit: contain;
+}
+
+/* El notch y la barra de gestos del celular se comen los controles
+   de PhotoSwipe, que van pegados a los bordes. */
+.pswp__top-bar {
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
+    box-sizing: content-box;
+}
+
+.pswp__button--close {
+    margin-right: 4px;
+}
+
+/* Area de toque comoda en celular (44px es el minimo razonable) */
+@media (max-width: 768px) {
+    .pswp__button {
+        width: 48px;
+        height: 48px;
+    }
+}
