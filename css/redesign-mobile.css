@@ -1183,18 +1183,34 @@
     .rw-progress {
         margin-bottom: 40px;
     }
+    /* Los tres pasos se alinean por el circulo, no por el centro del bloque.
+       "Fecha y lugar" ocupa mas lineas que "Experiencia" y "Confirmar", y con
+       align-items:center eso levantaba el circulo 1 unos 14px sobre los otros
+       dos. Con flex-start los tres quedan a la misma altura ocupe lo que ocupe
+       la etiqueta. */
+    .rw-progress {
+        align-items: flex-start;
+    }
+    .rw-step {
+        flex: 1 1 0;
+        min-width: 0;
+    }
     .rw-step-line {
-        flex: 0 0 28px;
-        margin: 0 8px;
+        flex: 0 0 20px;
+        /* 16px = mitad del circulo, para que la linea caiga a su altura */
+        margin: 16px 4px 0;
     }
     .rw-step-num {
         width: 32px;
         height: 32px;
         font-size: 0.72rem;
+        flex-shrink: 0;
     }
     .rw-step-label {
         font-size: 0.52rem;
-        letter-spacing: 0.18em;
+        letter-spacing: 0.14em;
+        text-align: center;
+        line-height: 1.4;
     }
 
     .rw-title {
