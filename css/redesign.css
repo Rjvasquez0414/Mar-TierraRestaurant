@@ -1316,6 +1316,18 @@ button:focus-visible,
    17. RESERVATION WIZARD — editorial 3-step booking flow
    ===================================================================== */
 
+/* Valerius no trae glifos acentuados: el wizard mostraba "¿Cuando nos
+   visitas?", "¿Cuantos seran?" y "numero de personas" sin tildes, y aqui
+   son preguntas directas al cliente, no titulos decorativos.
+
+   Se redefine la variable solo dentro del wizard en vez de parchear las 13
+   reglas que la usan (titulo, subtitulo, campos, nombres de salon y de plan,
+   nota de pago, pantalla de exito...). Revertir = borrar este bloque.
+   Mismo criterio que ya se aplico en el modulo de eventos. */
+#reservation-wizard {
+    --serif-display: 'Playfair Display', 'Cormorant Garamond', serif;
+}
+
 .rw-container {
     max-width: 920px;
     margin: 0 auto;
