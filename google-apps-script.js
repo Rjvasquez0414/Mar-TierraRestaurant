@@ -1257,8 +1257,8 @@ function sendInitialConfirmationEmail(data) {
               </p>
               <p style="margin-top: 15px;">
                 Una vez realizado el pago, envíe el comprobante al WhatsApp:
-                <a href="https://wa.me/573008263403?text=Hola%2C%20adjunto%20comprobante%20de%20pago%20para%20mi%20reserva"
-                   class="whatsapp-link">+57 300 826 3403</a>
+                <a href="https://wa.me/573146798708?text=Hola%2C%20adjunto%20comprobante%20de%20pago%20para%20mi%20reserva"
+                   class="whatsapp-link">+57 314 679 8708</a>
               </p>
               <div class="important-notice">
                 Este número es <strong>únicamente</strong> para enviar comprobantes de pago. No se realizan reservas por este medio.
@@ -1277,7 +1277,7 @@ function sendInitialConfirmationEmail(data) {
               <p style="margin: 5px 0; color: #4A3429;">
                 Cra 35a #46-102, Barrio Cabecera del Llano<br>
                 Bucaramanga, Colombia<br>
-                Teléfono: 300 826 3403
+                Teléfono: 314 679 8708
               </p>
             </div>
           </div>
@@ -1448,7 +1448,7 @@ function sendPaymentConfirmationEmail(data) {
               <p style="margin: 5px 0; color: #4A3429;">
                 Cra 35a #46-102, Barrio Cabecera del Llano<br>
                 Bucaramanga, Colombia<br>
-                Teléfono: 300 826 3403
+                Teléfono: 314 679 8708
               </p>
             </div>
           </div>
@@ -1636,8 +1636,8 @@ function sendReminderEmail(data) {
             <div class="whatsapp-section">
               <p style="margin-top: 0;">Si ya realizó el pago, envíe el comprobante al WhatsApp:</p>
               <p style="font-size: 18px; margin: 15px 0;">
-                <a href="https://wa.me/573008263403?text=Hola%2C%20adjunto%20comprobante%20de%20pago%20para%20mi%20reserva"
-                   class="whatsapp-link">+57 300 826 3403</a>
+                <a href="https://wa.me/573146798708?text=Hola%2C%20adjunto%20comprobante%20de%20pago%20para%20mi%20reserva"
+                   class="whatsapp-link">+57 314 679 8708</a>
               </p>
               <div class="important-notice">
                 Este número es <strong>únicamente</strong> para enviar comprobantes de pago. No se realizan reservas por este medio.
@@ -1917,7 +1917,7 @@ function sendFinalConfirmationEmail(data) {
               <p style="color: #4A3429; margin: 5px 0;">
                 Cra 35a #46-102, Barrio Cabecera del Llano<br>
                 Bucaramanga, Colombia<br>
-                Teléfono: 300 826 3403
+                Teléfono: 314 679 8708
               </p>
             </div>
           </div>
@@ -2541,7 +2541,7 @@ function sendReservationReminderEmail(data) {
               <strong>Mar&Tierra Restaurant</strong><br>
               Cra 35a #46-102, Barrio Cabecera del Llano<br>
               Bucaramanga, Colombia<br>
-              📞 300 826 3403
+              📞 314 679 8708
             </p>
 
             <div style="background: #fff3cd; padding: 15px; border-radius: 5px; margin: 20px 0;">
@@ -3004,7 +3004,7 @@ function cancelReservation() {
         htmlBody: `
           <p>Estimado/a ${name},</p>
           <p>Le informamos que su reserva ha sido cancelada.</p>
-          <p>Si tiene alguna pregunta, contáctenos al 300 826 3403.</p>
+          <p>Si tiene alguna pregunta, contáctenos al 314 679 8708.</p>
           <p>Saludos,<br>Mar&Tierra Restaurant</p>
         `
       });

@@ -311,7 +311,7 @@ $$);
 
 **Requisitos para producción:**
 - Cuenta de Meta Business Verification (1–2 semanas de aprobación).
-- Número dedicado (no se puede usar el WhatsApp Business actual de 300 826 3403 *al mismo tiempo* — hay que decidir si migrar ese número a la Cloud API o conseguir uno nuevo).
+- Número dedicado (no se puede usar el WhatsApp Business actual de 314 679 8708 *al mismo tiempo* — hay que decidir si migrar ese número a la Cloud API o conseguir uno nuevo).
 - Plantillas de mensaje pre-aprobadas por Meta (las 5 listadas arriba).
 
 **Costo:** Meta cobra ~$0.0050–0.015 USD por mensaje de conversación enviado. Para 200 reservas/mes ≈ $3 USD/mes.
@@ -446,7 +446,7 @@ Comparado con cualquier SaaS de reservas ($50–200 USD/mes), el ahorro paga el 
 
 ## 11. Decisiones que necesito de ti antes de implementar
 
-1. **¿Migrar el número actual (+57 300 826 3403) a WhatsApp Cloud API, o conseguir un número nuevo?** Migrar es más limpio pero deja el WhatsApp Business actual sin servicio durante la transición.
+1. **¿Migrar el número actual (+57 314 679 8708) a WhatsApp Cloud API, o conseguir un número nuevo?** Migrar es más limpio pero deja el WhatsApp Business actual sin servicio durante la transición.
 2. **¿Quiénes son los "usuarios staff" con acceso al admin?** ¿Sólo tú? ¿Maître? ¿Cocina? Define roles iniciales.
 3. **¿Qué política de anticipos quieres para Fase 1?** El esquema soporta `deposit_amount` y `deposit_paid`, pero hay que decidir si Fase 1 ya integra pasarela de pago (PayU, Wompi) o se cobra en sede.
 4. **¿Quieres que el admin muestre planos visuales de cada salón con mesas?** (Bonito pero +1 semana de trabajo.)
