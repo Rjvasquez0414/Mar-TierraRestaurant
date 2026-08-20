@@ -560,7 +560,7 @@ window.menuConfig = {
             neighborhood: "Barrio Cabecera del Llano",
             city: "Bucaramanga, Colombia"
         },
-        phone: "300 826 3403",
+        phone: "314 679 8708",
         instagram: "@marytierrarestaurantbga"
     }
 };

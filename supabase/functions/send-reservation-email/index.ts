@@ -149,7 +149,7 @@ function buildCustomerEmail(data: ReservationEmail): string {
             <tr><td>
               <p style="margin:0 0 12px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8B8680;">Que sigue</p>
               <p style="margin:0 0 8px;font-size:14px;color:#3A332E;line-height:1.6;">1. Realiza el anticipo de <strong>${formatPrice(data.depositAmount)}</strong></p>
-              <p style="margin:0 0 8px;font-size:14px;color:#3A332E;line-height:1.6;">2. Envia el comprobante por WhatsApp al <strong>300 826 3403</strong></p>
+              <p style="margin:0 0 8px;font-size:14px;color:#3A332E;line-height:1.6;">2. Envia el comprobante por WhatsApp al <strong>314 679 8708</strong></p>
               <p style="margin:0 0 16px;font-size:14px;color:#3A332E;line-height:1.6;">3. Confirmamos tu reserva al verificar el pago (8:00 a.m. a 10:00 p.m.)</p>
               <p style="margin:0 0 4px;font-size:14px;color:#2B1810;"><strong>Bancolombia</strong> - Cuenta Corriente</p>
               <p style="margin:0 0 2px;font-size:14px;color:#3A332E;">No. Cuenta: <strong>30200003995</strong></p>
@@ -170,7 +170,7 @@ function buildCustomerEmail(data: ReservationEmail): string {
         <tr><td style="padding:24px 40px;border-top:1px solid rgba(43,24,16,0.08);text-align:center;">
           <p style="margin:0 0 8px;font-size:13px;font-style:italic;color:#8B8680;">Donde el mar y la tierra se complementan.</p>
           <p style="margin:0;font-size:12px;color:#8B8680;">Cra 35a #46-102, Cabecera del Llano, Bucaramanga</p>
-          <p style="margin:4px 0 0;font-size:12px;color:#8B8680;">+57 300 826 3403 &middot; @marytierrarestaurantbga</p>
+          <p style="margin:4px 0 0;font-size:12px;color:#8B8680;">+57 314 679 8708 &middot; @marytierrarestaurantbga</p>
         </td></tr>
 
       </table>
@@ -247,7 +247,7 @@ serve(async (req) => {
             <p style="margin:0 0 4px;font-size:14px;color:#3A332E;">Llave Bancolombia: <strong>0071901458</strong></p>
             <p style="margin:0 0 4px;font-size:14px;color:#3A332E;">NIT: 901857854</p>
             <p style="margin:0 0 12px;font-size:14px;color:#3A332E;">Titular: MYT RESTAURANT SAS</p>
-            <p style="margin:0;font-size:13px;font-style:italic;color:#8B8680;">Envia el comprobante por WhatsApp al 300 826 3403</p>
+            <p style="margin:0;font-size:13px;font-style:italic;color:#8B8680;">Envia el comprobante por WhatsApp al 314 679 8708</p>
           </div>
           <p style="margin:0;font-size:13px;color:#8B8680;font-style:italic;">Si ya realizaste el pago, puedes ignorar este mensaje. Tu reserva sera confirmada tras verificar el comprobante.</p>
         </td></tr>
@@ -305,7 +305,7 @@ serve(async (req) => {
         </td></tr>
         <tr><td style="padding:24px 40px;border-top:1px solid rgba(43,24,16,0.08);text-align:center;">
           <p style="margin:0 0 6px;font-size:13px;font-style:italic;color:#8B8680;">Donde el mar y la tierra se complementan.</p>
-          <p style="margin:0;font-size:12px;color:#8B8680;">+57 300 826 3403 &middot; Cra 35a #46-102, Bucaramanga</p>
+          <p style="margin:0;font-size:12px;color:#8B8680;">+57 314 679 8708 &middot; Cra 35a #46-102, Bucaramanga</p>
         </td></tr>
       </table>
     </td></tr>
@@ -368,7 +368,7 @@ serve(async (req) => {
         </td></tr>
         <tr><td style="padding:24px 40px;border-top:1px solid rgba(43,24,16,0.08);text-align:center;">
           <p style="margin:0 0 6px;font-size:13px;font-style:italic;color:#8B8680;">Donde el mar y la tierra se complementan.</p>
-          <p style="margin:0;font-size:12px;color:#8B8680;">+57 300 826 3403 &middot; Cra 35a #46-102, Bucaramanga</p>
+          <p style="margin:0;font-size:12px;color:#8B8680;">+57 314 679 8708 &middot; Cra 35a #46-102, Bucaramanga</p>
         </td></tr>
       </table>
     </td></tr>
