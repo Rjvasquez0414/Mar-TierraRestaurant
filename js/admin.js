@@ -2,7 +2,7 @@
 // Mar&Tierra — Admin Panel (Supabase)
 // =====================================================================
 
-const MT_WA = '573146798708';
+const MT_WA = '573015062669';
 
 function escapeHtml(text) {
     if (text == null) return '';

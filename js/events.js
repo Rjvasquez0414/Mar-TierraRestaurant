@@ -13,7 +13,7 @@
 (function () {
     'use strict';
 
-    var WA = '573146798708';
+    var WA = '573015062669';
     var MESES = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN',
                  'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
     var MESES_LARGO = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',

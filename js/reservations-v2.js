@@ -206,7 +206,7 @@ class ReservationWizard {
                     <div class="rw-large-group-content">
                         <p class="rw-large-group-title">Experiencia Personalizada</p>
                         <p class="rw-large-group-text">Para grupos de 15+ personas ofrecemos experiencias a la medida: menú personalizado, decoración exclusiva, saxofonista, DJ, fotógrafo y más.</p>
-                        <a href="https://wa.me/573146798708?text=${encodeURIComponent('Hola Mar&Tierra! Quisiera organizar una experiencia personalizada.\n\n- Fecha tentativa: \n- Numero de personas: \n- Tipo de evento: \n\nQuedo atento(a).')}"
+                        <a href="https://wa.me/573015062669?text=${encodeURIComponent('Hola Mar&Tierra! Quisiera organizar una experiencia personalizada.\n\n- Fecha tentativa: \n- Numero de personas: \n- Tipo de evento: \n\nQuedo atento(a).')}"
                            class="rw-wa-btn" target="_blank" rel="noopener">
                             <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.52 3.48A11.93 11.93 0 0 0 12 0C5.37 0 .02 5.37 0 12c0 2.12.55 4.18 1.6 6.01L0 24l6.18-1.62A11.94 11.94 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.2-1.25-6.21-3.48-8.52z"/></svg>
                             Cotizar por WhatsApp
@@ -306,7 +306,7 @@ class ReservationWizard {
                             <h4>Experiencia Personalizada</h4>
                             <p>Saxofonista, DJ, fotógrafo, violinista y más — cotiza tu evento a la medida.</p>
                         </div>
-                        <a href="https://wa.me/573146798708?text=${encodeURIComponent('Hola Mar&Tierra! Me interesa una experiencia personalizada.\n\n- Fecha: ' + (this.data.date || '') + '\n- Hora: ' + (this.data.time ? this.formatTime(this.data.time) : '') + '\n- Personas: ' + (this.data.partySize || '') + '\n- Salon: ' + (this.data.salonName || '') + '\n\nQue opciones tienen?')}"
+                        <a href="https://wa.me/573015062669?text=${encodeURIComponent('Hola Mar&Tierra! Me interesa una experiencia personalizada.\n\n- Fecha: ' + (this.data.date || '') + '\n- Hora: ' + (this.data.time ? this.formatTime(this.data.time) : '') + '\n- Personas: ' + (this.data.partySize || '') + '\n- Salon: ' + (this.data.salonName || '') + '\n\nQue opciones tienen?')}"
                            class="rw-wa-btn rw-wa-sm" target="_blank" rel="noopener">
                             Cotizar
                         </a>
@@ -407,7 +407,7 @@ class ReservationWizard {
                         <p>NIT: 901857854</p>
                         <p>Titular: MYT RESTAURANT SAS</p>
                     </div>
-                    <p class="rw-payment-note">Al reservar, tu cupo queda <strong>apartado por 24 horas</strong>. Realiza el anticipo y envía el comprobante al <strong>314 679 8708</strong> para confirmar. Verificamos tu pago en horario de atención (<strong>8:00 a.m. a 10:00 p.m.</strong>). Si no pagas en 24 h, el cupo se libera.</p>
+                    <p class="rw-payment-note">Al reservar, tu cupo queda <strong>apartado por 24 horas</strong>. Realiza el anticipo y envía el comprobante al <strong>301 506 2669</strong> para confirmar. Verificamos tu pago en horario de atención (<strong>8:00 a.m. a 10:00 p.m.</strong>). Si no pagas en 24 h, el cupo se libera.</p>
                 </div>
 
                 <div class="rw-policies">
@@ -470,13 +470,13 @@ class ReservationWizard {
                     <h4>¿Qué sigue?</h4>
                     <ol>
                         <li><strong>Realiza el anticipo de ${this.formatPrice(this.data.deposit)}</strong> a la cuenta Bancolombia (los datos están en tu correo de confirmación).</li>
-                        <li><strong>Envía el comprobante</strong> por WhatsApp al 314 679 8708.</li>
+                        <li><strong>Envía el comprobante</strong> por WhatsApp al 301 506 2669.</li>
                         <li>Confirmamos tu reserva al <strong>verificar el pago</strong>, en horario de atención (<strong>8:00 a.m. a 10:00 p.m.</strong>).</li>
                     </ol>
                 </div>
 
                 <div class="rw-success-actions">
-                    <a href="https://wa.me/573146798708?text=${waMsg}"
+                    <a href="https://wa.me/573015062669?text=${waMsg}"
                        class="rw-btn rw-btn-wa" target="_blank" rel="noopener">
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20.52 3.48A11.93 11.93 0 0 0 12 0C5.37 0 .02 5.37 0 12c0 2.12.55 4.18 1.6 6.01L0 24l6.18-1.62A11.94 11.94 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.2-1.25-6.21-3.48-8.52z"/></svg>
                         Escribir por WhatsApp
